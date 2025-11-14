@@ -6,42 +6,43 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// IMPORTANT: This MUST match the territories in src/types/chat.ts exactly
 const TERRITORIES = {
   greenville: {
     name: "Greenville",
-    counties: ["Greenville County, SC", "Spartanburg County, SC", "Anderson County, SC", "Pickens County, SC", "Oconee County, SC", "Laurens County, SC", "Cherokee County, SC", "Union County, SC", "Buncombe County, NC", "Henderson County, NC", "Transylvania County, NC", "Polk County, NC", "Rutherford County, NC", "McDowell County, NC", "Yancey County, NC", "Mitchell County, NC", "Madison County, NC", "Haywood County, NC"]
+    counties: ["Abbeville County, SC", "Anderson County, SC", "Buncombe County, NC", "Greenwood County, SC", "Greenville County, SC", "Haywood County, NC", "Henderson County, NC", "Jackson County, NC", "Laurens County, SC", "Madison County, NC", "Oconee County, SC", "Pickens County, SC", "Polk County, NC", "Rutherford County, NC", "Spartanburg County, SC", "Transylvania County, NC", "Yancey County, NC"]
   },
   columbia: {
     name: "Columbia",
-    counties: ["Richland County, SC", "Lexington County, SC", "Kershaw County, SC", "Fairfield County, SC", "Newberry County, SC", "Saluda County, SC", "Calhoun County, SC", "Orangeburg County, SC", "Sumter County, SC", "Clarendon County, SC", "Lee County, SC"]
+    counties: ["Barnwell County, SC", "Bamberg County, SC", "Calhoun County, SC", "Edgefield County, SC", "Fairfield County, SC", "Kershaw County, SC", "Lee County, SC", "Lexington County, SC", "McCormick County, SC", "Newberry County, SC", "Richland County, SC", "Saluda County, SC", "Sumter County, SC", "Aiken County, SC", "Clarendon County, SC", "Orangeburg County, SC"]
   },
-  charleston: {
-    name: "Charleston",
-    counties: ["Charleston County, SC", "Berkeley County, SC", "Dorchester County, SC", "Colleton County, SC", "Hampton County, SC", "Jasper County, SC", "Beaufort County, SC"]
-  },
-  myrtleBeach: {
-    name: "Myrtle Beach",
-    counties: ["Horry County, SC", "Georgetown County, SC", "Williamsburg County, SC", "Marion County, SC", "Dillon County, SC", "Marlboro County, SC"]
-  },
-  statesville: {
-    name: "Statesville",
-    counties: ["Iredell County, NC", "Catawba County, NC", "Lincoln County, NC", "Gaston County, NC", "Mecklenburg County, NC", "Cabarrus County, NC", "Rowan County, NC", "Davidson County, NC", "Davie County, NC", "Yadkin County, NC", "Wilkes County, NC", "Alexander County, NC", "Caldwell County, NC", "Burke County, NC"]
+  greensboro: {
+    name: "Greensboro",
+    counties: ["Davidson County, NC", "Davie County, NC", "Forsyth County, NC", "Guilford County, NC", "Randolph County, NC", "Yadkin County, NC"]
   },
   oxford: {
     name: "Oxford",
-    counties: ["Granville County, NC", "Vance County, NC", "Warren County, NC", "Franklin County, NC", "Wake County, NC", "Durham County, NC", "Person County, NC", "Orange County, NC", "Chatham County, NC", "Johnston County, NC", "Nash County, NC", "Edgecombe County, NC", "Halifax County, NC", "Northampton County, NC"]
+    counties: ["Alamance County, NC", "Caswell County, NC", "Durham County, NC", "Granville County, NC", "Orange County, NC", "Person County, NC", "Vance County, NC"]
+  },
+  monroe: {
+    name: "Monroe",
+    counties: ["Cherokee County, SC", "Chester County, SC", "Chesterfield County, SC", "Cleveland County, NC", "Gaston County, NC", "Lancaster County, SC", "Union County, NC", "Union County, SC", "York County, SC"]
+  },
+  smithfield: {
+    name: "Smithfield",
+    counties: ["Carteret County, NC", "Craven County, NC", "Edgecombe County, NC", "Franklin County, NC", "Greene County, NC", "Halifax County, NC", "Johnston County, NC", "Jones County, NC", "Lenoir County, NC", "Nash County, NC", "Pitt County, NC", "Sampson County, NC", "Warren County, NC", "Wayne County, NC", "Wilson County, NC", "Duplin County, NC"]
+  },
+  sanford: {
+    name: "Sanford",
+    counties: ["Anson County, NC", "Chatham County, NC", "Cumberland County, NC", "Harnett County, NC", "Hoke County, NC", "Lee County, NC", "Montgomery County, NC", "Moore County, NC", "Richmond County, NC", "Robeson County, NC", "Scotland County, NC", "Bladen County, NC", "Wake County, NC"]
+  },
+  statesville: {
+    name: "Statesville",
+    counties: ["Alexander County, NC", "Burke County, NC", "Cabarrus County, NC", "Caldwell County, NC", "Catawba County, NC", "Iredell County, NC", "Lincoln County, NC", "McDowell County, NC", "Rowan County, NC", "Stanly County, NC", "Wilkes County, NC", "Mecklenburg County, NC"]
   },
   wilmington: {
     name: "Wilmington",
-    counties: ["New Hanover County, NC", "Brunswick County, NC", "Pender County, NC", "Onslow County, NC", "Duplin County, NC", "Sampson County, NC", "Bladen County, NC", "Columbus County, NC", "Robeson County, NC"]
-  },
-  wallaceNC: {
-    name: "Wallace, NC",
-    counties: ["Duplin County, NC", "Sampson County, NC", "Pender County, NC", "Onslow County, NC", "Jones County, NC", "Lenoir County, NC", "Wayne County, NC", "Greene County, NC"]
-  },
-  virginiaBeach: {
-    name: "Virginia Beach",
-    counties: ["Virginia Beach, VA", "Norfolk, VA", "Chesapeake, VA", "Portsmouth, VA", "Suffolk, VA", "Hampton, VA", "Newport News, VA", "York County, VA", "James City County, VA", "Gloucester County, VA", "Mathews County, VA", "Middlesex County, VA", "Isle of Wight County, VA", "Southampton County, VA", "Surry County, VA"]
+    counties: ["Brunswick County, NC", "Columbus County, NC", "New Hanover County, NC", "Pender County, NC", "Onslow County, NC", "Horry County, SC", "Dillon County, SC"]
   }
 };
 

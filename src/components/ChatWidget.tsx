@@ -18,6 +18,8 @@ export const ChatWidget = () => {
   const [selectedTerritory, setSelectedTerritory] = useState<string | null>(null);
   const [showLocationInput, setShowLocationInput] = useState(false);
   const [locationInput, setLocationInput] = useState('');
+  const [calendarLoading, setCalendarLoading] = useState(false);
+  const [calendarError, setCalendarError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
