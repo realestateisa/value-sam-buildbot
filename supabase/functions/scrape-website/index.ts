@@ -73,10 +73,11 @@ serve(async (req) => {
         console.log('Scraping URL:', url);
         
         // First, delete all existing chunks for this URL to avoid stale data
+        // Use LIKE pattern because chunks are stored as url#chunk-0, url#chunk-1, etc.
         const { error: deleteError } = await supabase
           .from('website_content')
           .delete()
-          .eq('url', url);
+          .like('url', `${url}%`);
 
         if (deleteError) {
           console.error(`Failed to delete old chunks for ${url}:`, deleteError);
