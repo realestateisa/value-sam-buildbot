@@ -68,7 +68,7 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'text-embedding-3-small',
+            model: 'google/gemini-2.5-flash-lite',
             input: item.chunk_text,
           }),
         });
