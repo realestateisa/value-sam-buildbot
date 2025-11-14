@@ -351,27 +351,23 @@ export const ChatWidget = () => {
                 </div>
               ))}
               {showLocationInput && !showCalendar && (
-                <div className="flex justify-start">
-                  <div className="bg-muted rounded-lg p-3 max-w-[80%]">
-                    <div className="space-y-3">
-                      <div className="flex gap-2">
-                        <Input
-                          value={locationInput}
-                          onChange={(e) => setLocationInput(e.target.value)}
-                          onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
-                          placeholder="Enter county or city..."
-                          className="flex-1"
-                          disabled={isLoading}
-                        />
-                        <Button
-                          onClick={handleLocationSubmit}
-                          size="sm"
-                          disabled={isLoading}
-                        >
-                          {isLoading ? 'Detecting...' : 'Submit'}
-                        </Button>
-                      </div>
-                    </div>
+                <div className="p-4 border-t bg-muted/30">
+                  <div className="flex gap-2">
+                    <Input
+                      value={locationInput}
+                      onChange={(e) => setLocationInput(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
+                      placeholder="Enter county or city..."
+                      className="flex-1"
+                      disabled={isLoading}
+                    />
+                    <Button
+                      onClick={handleLocationSubmit}
+                      size="sm"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Detecting...' : 'Submit'}
+                    </Button>
                   </div>
                 </div>
               )}
