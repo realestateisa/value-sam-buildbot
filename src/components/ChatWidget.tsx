@@ -226,7 +226,7 @@ export const ChatWidget = () => {
       namespace: territory.calNamespace,
       elementOrSelector: `#${containerId}`,
       calLink: territory.calLink,
-      config: { layout: 'month_view', theme: 'light' }
+      config: { layout: 'month_view', theme: 'light', hideEventTypeDetails: true }
     });
   }, [showCalendar, selectedTerritory]);
 
