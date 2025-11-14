@@ -55,7 +55,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      match_website_content: {
+        Args: {
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          chunk_text: string
+          id: string
+          metadata: Json
+          similarity: number
+          title: string
+          url: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
