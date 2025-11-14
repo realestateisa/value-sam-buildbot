@@ -9,6 +9,14 @@ import { Message, TERRITORIES } from '@/types/chat';
 import { detectTerritory } from '@/utils/territoryDetection';
 import { useToast } from '@/hooks/use-toast';
 
+const TERRITORY_ADDRESSES: Record<string, string> = {
+  oxford: '3015 S Jefferson Davis Hwy, Sanford, NC 27332',
+  greenville: '783 East Butler Rd, Suite D, Mauldin, SC 29662',
+  smithfield: '721 Seafood House Rd, Selma, NC 27576',
+  statesville: '201 Absher Park Rd, Statesville, NC 28625',
+  sanford: '3015 S Jefferson Davis Hwy, Sanford, NC 27332',
+};
+
 export const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -274,6 +282,47 @@ export const ChatWidget = () => {
               <X className="h-4 w-4" />
             </Button>
           </div>
+
+          {/* Appointment Type Banner */}
+          {showCalendar && selectedTerritory && (
+            <div className="border-b bg-muted p-4">
+              {(() => {
+                const territory = Object.values(TERRITORIES).find(t => t.calNamespace === selectedTerritory);
+                if (!territory) return null;
+                
+                const territoryKey = Object.keys(TERRITORIES).find(
+                  key => TERRITORIES[key as keyof typeof TERRITORIES].calNamespace === selectedTerritory
+                );
+                
+                const isInPerson = territory.appointmentType === 'in-person';
+                const address = territoryKey ? TERRITORY_ADDRESSES[territoryKey] : null;
+                
+                return (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      {isInPerson ? (
+                        <div className="h-2 w-2 rounded-full bg-primary" />
+                      ) : (
+                        <div className="h-2 w-2 rounded-full bg-blue-500" />
+                      )}
+                      <span className="font-semibold text-sm">
+                        {isInPerson ? 'In-Person Appointment' : 'Virtual Appointment'}
+                      </span>
+                    </div>
+                    {isInPerson && address ? (
+                      <p className="text-sm text-muted-foreground">
+                        Design Studio Location: {address}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        A virtual meeting link will be provided after booking.
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+          )}
 
           {/* Messages */}
           <ScrollArea className="flex-1 p-4" ref={scrollRef}>
