@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 export const AdminPanel = () => {
   const { toast } = useToast();
@@ -17,6 +18,44 @@ export const AdminPanel = () => {
   const [isEmbeddingLoading, setIsEmbeddingLoading] = useState(false);
   const [scrapeResults, setScrapeResults] = useState<any>(null);
   const [embeddingResults, setEmbeddingResults] = useState<any>(null);
+  const [ragStatus, setRagStatus] = useState<{
+    totalPages: number;
+    pagesWithEmbeddings: number;
+    isReady: boolean;
+    loading: boolean;
+  }>({ totalPages: 0, pagesWithEmbeddings: 0, isReady: false, loading: true });
+
+  const checkRagStatus = async () => {
+    try {
+      const { data: allPages, error: countError } = await supabase
+        .from('website_content')
+        .select('id', { count: 'exact', head: true });
+
+      const { data: embeddedPages, error: embeddedError } = await supabase
+        .from('website_content')
+        .select('id', { count: 'exact', head: true })
+        .not('embedding', 'is', null);
+
+      if (countError || embeddedError) throw countError || embeddedError;
+
+      const total = allPages?.length || 0;
+      const embedded = embeddedPages?.length || 0;
+      
+      setRagStatus({
+        totalPages: total,
+        pagesWithEmbeddings: embedded,
+        isReady: total > 0 && total === embedded,
+        loading: false,
+      });
+    } catch (error) {
+      console.error('Error checking RAG status:', error);
+      setRagStatus(prev => ({ ...prev, loading: false }));
+    }
+  };
+
+  useEffect(() => {
+    checkRagStatus();
+  }, []);
 
   const handleLoadSitemap = async () => {
     if (!sitemapUrl) {
@@ -102,6 +141,7 @@ export const AdminPanel = () => {
       if (error) throw error;
 
       setScrapeResults(data);
+      checkRagStatus();
       toast({
         title: 'Scraping Complete',
         description: `Successfully scraped ${data.results?.length || 0} URLs`,
@@ -130,6 +170,7 @@ export const AdminPanel = () => {
       if (error) throw error;
 
       setEmbeddingResults(data);
+      checkRagStatus();
       toast({
         title: 'Embeddings Generated',
         description: `Processed ${data.processed} chunks successfully`,
@@ -153,9 +194,70 @@ https://www.valuebuildhomes.com/about`;
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <h1 className="text-3xl font-bold mb-8">RAG Admin Panel</h1>
+      
+      <Card className="border-2">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>RAG System Status</CardTitle>
+            {ragStatus.loading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : ragStatus.isReady ? (
+              <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+                <CheckCircle2 className="h-4 w-4 mr-1" />
+                Ready
+              </Badge>
+            ) : ragStatus.totalPages === 0 ? (
+              <Badge variant="secondary">
+                <AlertCircle className="h-4 w-4 mr-1" />
+                No Content
+              </Badge>
+            ) : (
+              <Badge variant="destructive">
+                <XCircle className="h-4 w-4 mr-1" />
+                Not Ready
+              </Badge>
+            )}
+          </div>
+          <CardDescription>
+            Current state of your RAG system and database
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Total Pages Scraped</p>
+              <p className="text-2xl font-bold">{ragStatus.totalPages}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Pages with Embeddings</p>
+              <p className="text-2xl font-bold">{ragStatus.pagesWithEmbeddings}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Completion Rate</p>
+              <p className="text-2xl font-bold">
+                {ragStatus.totalPages > 0 
+                  ? Math.round((ragStatus.pagesWithEmbeddings / ragStatus.totalPages) * 100)
+                  : 0}%
+              </p>
+            </div>
+          </div>
+          {!ragStatus.isReady && ragStatus.totalPages > 0 && (
+            <p className="text-sm text-muted-foreground mt-4">
+              Generate embeddings for all scraped content to activate the RAG system.
+            </p>
+          )}
+          {ragStatus.isReady && (
+            <p className="text-sm text-green-600 mt-4 font-medium">
+              ✓ Your chatbot is ready to answer questions using RAG
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
-          <CardTitle>RAG Admin Panel</CardTitle>
+          <CardTitle>Content Management</CardTitle>
           <CardDescription>
             Scrape website content and generate embeddings for the chatbot
           </CardDescription>
