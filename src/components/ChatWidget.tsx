@@ -178,37 +178,57 @@ export const ChatWidget = () => {
   };
 
   useEffect(() => {
-    if (showCalendar && selectedTerritory) {
-      // Load Cal.com script if not already loaded
-      if (!document.querySelector('script[src="https://app.cal.com/embed/embed.js"]')) {
-        const script = document.createElement('script');
-        script.src = 'https://app.cal.com/embed/embed.js';
-        script.async = true;
-        document.body.appendChild(script);
+    if (!showCalendar || !selectedTerritory) return;
+
+    const territory = Object.values(TERRITORIES).find(t => t.calNamespace === selectedTerritory) as any;
+    if (!territory) return;
+
+    let canceled = false;
+
+    const initInline = () => {
+      const Cal = (window as any).Cal;
+      if (!Cal) return false;
+      try {
+        Cal("inline", {
+          elementOrSelector: `#cal-inline-${selectedTerritory}`,
+          calLink: territory.calLink,
+          config: { layout: "month_view", theme: "light" },
+        });
+        return true;
+      } catch (e) {
+        console.error("Cal init error:", e);
+        return false;
       }
+    };
 
-      // Initialize the calendar after a short delay to ensure script is loaded
-      const timer = setTimeout(() => {
-        const Cal = (window as any).Cal;
-        if (Cal) {
-          Cal.ns[selectedTerritory] = Cal.ns[selectedTerritory] || Cal;
-          
-          const territory = Object.values(TERRITORIES).find(t => t.calNamespace === selectedTerritory);
-          if (territory) {
-            Cal.ns[selectedTerritory]("inline", {
-              elementOrSelector: `#cal-inline-${selectedTerritory}`,
-              calLink: territory.calLink,
-              config: {
-                layout: "month_view",
-                theme: "light"
-              }
-            });
-          }
-        }
-      }, 500);
-
-      return () => clearTimeout(timer);
+    // Ensure the script is loaded
+    let script = document.querySelector('script[src="https://app.cal.com/embed/embed.js"]') as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
+      script.src = 'https://app.cal.com/embed/embed.js';
+      script.async = true;
+      document.body.appendChild(script);
     }
+
+    const onLoad = () => { if (!canceled) initInline(); };
+    script.addEventListener('load', onLoad);
+
+    // Fallback polling in case script was cached and onload doesn't fire
+    const iv = window.setInterval(() => {
+      if ((window as any).Cal) {
+        clearInterval(iv);
+        if (!canceled) initInline();
+      }
+    }, 100);
+
+    // Try immediate init too (in case Cal already present)
+    if ((window as any).Cal) initInline();
+
+    return () => {
+      canceled = true;
+      script?.removeEventListener('load', onLoad);
+      clearInterval(iv);
+    };
   }, [showCalendar, selectedTerritory]);
 
   return (
