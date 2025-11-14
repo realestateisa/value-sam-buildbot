@@ -221,12 +221,19 @@ export const ChatWidget = () => {
     // Queue init with namespace and inline render (processed once script loads)
     w.Cal('init', territory.calNamespace, { origin: 'https://app.cal.com' });
     
+    // Configure UI settings
+    w.Cal('ui', {
+      hideEventTypeDetails: true,
+      layout: 'month_view',
+      styles: { branding: { brandColor: '#000000' } }
+    });
+    
     // Queue inline render using the namespace
     w.Cal('inline', {
       namespace: territory.calNamespace,
       elementOrSelector: `#${containerId}`,
       calLink: territory.calLink,
-      config: { layout: 'month_view', theme: 'light', hideEventTypeDetails: true }
+      config: { theme: 'light' }
     });
   }, [showCalendar, selectedTerritory]);
 
