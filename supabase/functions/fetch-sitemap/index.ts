@@ -1,6 +1,5 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -30,23 +29,18 @@ serve(async (req) => {
 
     const xmlText = await response.text();
     
-    // Parse XML to extract URLs
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlText, "text/xml");
-    
-    if (!doc) {
-      throw new Error('Failed to parse sitemap XML');
-    }
-
-    const urlElements = doc.querySelectorAll('url loc');
+    // Parse XML to extract URLs using regex
+    // Match all <loc>URL</loc> tags in the sitemap
+    const locRegex = /<loc>(.*?)<\/loc>/g;
     const urls: string[] = [];
-
-    urlElements.forEach((element) => {
-      const url = element.textContent?.trim();
+    
+    let match;
+    while ((match = locRegex.exec(xmlText)) !== null) {
+      const url = match[1].trim();
       if (url) {
         urls.push(url);
       }
-    });
+    }
 
     if (urls.length === 0) {
       console.warn('No URLs found in sitemap');
