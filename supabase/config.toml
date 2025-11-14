@@ -1,0 +1,7 @@
+project_id = "bhsnjbisxeuguhggjyzv"
+
+[auth]
+enabled = true
+
+[functions.chat-with-sam]
+verify_jwt = false
