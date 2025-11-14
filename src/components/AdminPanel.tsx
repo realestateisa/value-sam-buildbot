@@ -19,32 +19,62 @@ export const AdminPanel = () => {
   const [scrapeResults, setScrapeResults] = useState<any>(null);
   const [embeddingResults, setEmbeddingResults] = useState<any>(null);
   const [ragStatus, setRagStatus] = useState<{
-    totalPages: number;
-    pagesWithEmbeddings: number;
+    totalUrls: number;
+    totalChunks: number;
+    chunksWithEmbeddings: number;
     isReady: boolean;
     loading: boolean;
-  }>({ totalPages: 0, pagesWithEmbeddings: 0, isReady: false, loading: true });
+  }>({ totalUrls: 0, totalChunks: 0, chunksWithEmbeddings: 0, isReady: false, loading: true });
 
   const checkRagStatus = async () => {
     try {
-      const { data: allPages, error: countError } = await supabase
+      setRagStatus(prev => ({ ...prev, loading: true }));
+      
+      // Count total chunks in database
+      const { count: totalChunks, error: countError } = await supabase
         .from('website_content')
-        .select('id', { count: 'exact', head: true });
+        .select('*', { count: 'exact', head: true });
 
-      const { data: embeddedPages, error: embeddedError } = await supabase
+      if (countError) {
+        console.error('Error counting chunks:', countError);
+        setRagStatus(prev => ({ ...prev, loading: false }));
+        return;
+      }
+
+      // Count distinct URLs
+      const { data: urlData, error: urlError } = await supabase
         .from('website_content')
-        .select('id', { count: 'exact', head: true })
+        .select('url');
+
+      if (urlError) {
+        console.error('Error counting URLs:', urlError);
+        setRagStatus(prev => ({ ...prev, loading: false }));
+        return;
+      }
+
+      const uniqueUrls = new Set(urlData?.map(item => item.url) || []).size;
+
+      // Count chunks with embeddings
+      const { count: withEmbeddings, error: embeddingError } = await supabase
+        .from('website_content')
+        .select('*', { count: 'exact', head: true })
         .not('embedding', 'is', null);
 
-      if (countError || embeddedError) throw countError || embeddedError;
+      if (embeddingError) {
+        console.error('Error counting embeddings:', embeddingError);
+        setRagStatus(prev => ({ ...prev, loading: false }));
+        return;
+      }
 
-      const total = allPages?.length || 0;
-      const embedded = embeddedPages?.length || 0;
-      
+      const total = totalChunks || 0;
+      const embedded = withEmbeddings || 0;
+      const isReady = total > 0 && total === embedded;
+
       setRagStatus({
-        totalPages: total,
-        pagesWithEmbeddings: embedded,
-        isReady: total > 0 && total === embedded,
+        totalUrls: uniqueUrls,
+        totalChunks: total,
+        chunksWithEmbeddings: embedded,
+        isReady,
         loading: false,
       });
     } catch (error) {
@@ -200,24 +230,34 @@ https://www.valuebuildhomes.com/about`;
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>RAG System Status</CardTitle>
-            {ragStatus.loading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-            ) : ragStatus.isReady ? (
-              <Badge variant="default" className="bg-green-500 hover:bg-green-600">
-                <CheckCircle2 className="h-4 w-4 mr-1" />
-                Ready
-              </Badge>
-            ) : ragStatus.totalPages === 0 ? (
-              <Badge variant="secondary">
-                <AlertCircle className="h-4 w-4 mr-1" />
-                No Content
-              </Badge>
-            ) : (
-              <Badge variant="destructive">
-                <XCircle className="h-4 w-4 mr-1" />
-                Not Ready
-              </Badge>
-            )}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={checkRagStatus}
+                disabled={ragStatus.loading}
+              >
+                {ragStatus.loading ? "Checking..." : "Refresh"}
+              </Button>
+              {ragStatus.loading ? (
+                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              ) : ragStatus.isReady ? (
+                <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+                  <CheckCircle2 className="h-4 w-4 mr-1" />
+                  Ready
+                </Badge>
+              ) : ragStatus.totalChunks === 0 ? (
+                <Badge variant="secondary">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  No Content
+                </Badge>
+              ) : (
+                <Badge variant="destructive">
+                  <XCircle className="h-4 w-4 mr-1" />
+                  Not Ready
+                </Badge>
+              )}
+            </div>
           </div>
           <CardDescription>
             Current state of your RAG system and database
@@ -226,23 +266,29 @@ https://www.valuebuildhomes.com/about`;
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Total Pages Scraped</p>
-              <p className="text-2xl font-bold">{ragStatus.totalPages}</p>
+              <p className="text-sm text-muted-foreground">URLs Scraped</p>
+              <p className="text-2xl font-bold">{ragStatus.totalUrls}</p>
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Pages with Embeddings</p>
-              <p className="text-2xl font-bold">{ragStatus.pagesWithEmbeddings}</p>
+              <p className="text-sm text-muted-foreground">Total Chunks</p>
+              <p className="text-2xl font-bold">{ragStatus.totalChunks}</p>
             </div>
             <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Chunks with Embeddings</p>
+              <p className="text-2xl font-bold">{ragStatus.chunksWithEmbeddings}</p>
+            </div>
+          </div>
+          <div className="mt-4 pt-4 border-t">
+            <div className="flex justify-between items-center">
               <p className="text-sm text-muted-foreground">Completion Rate</p>
-              <p className="text-2xl font-bold">
-                {ragStatus.totalPages > 0 
-                  ? Math.round((ragStatus.pagesWithEmbeddings / ragStatus.totalPages) * 100)
+              <p className="text-xl font-bold">
+                {ragStatus.totalChunks > 0 
+                  ? Math.round((ragStatus.chunksWithEmbeddings / ragStatus.totalChunks) * 100)
                   : 0}%
               </p>
             </div>
           </div>
-          {!ragStatus.isReady && ragStatus.totalPages > 0 && (
+          {!ragStatus.isReady && ragStatus.totalChunks > 0 && (
             <p className="text-sm text-muted-foreground mt-4">
               Generate embeddings for all scraped content to activate the RAG system.
             </p>

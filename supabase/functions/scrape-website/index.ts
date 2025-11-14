@@ -72,6 +72,19 @@ serve(async (req) => {
       try {
         console.log('Scraping URL:', url);
         
+        // First, delete all existing chunks for this URL to avoid stale data
+        const { error: deleteError } = await supabase
+          .from('website_content')
+          .delete()
+          .eq('url', url);
+
+        if (deleteError) {
+          console.error(`Failed to delete old chunks for ${url}:`, deleteError);
+          // Continue anyway - we'll try to insert new data
+        } else {
+          console.log(`Cleaned up old chunks for ${url}`);
+        }
+        
         // Scrape the URL using Firecrawl API directly
         const scrapeResponse = await fetch('https://api.firecrawl.dev/v1/scrape', {
           method: 'POST',
