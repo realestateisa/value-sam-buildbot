@@ -16,6 +16,8 @@ export const ChatWidget = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedTerritory, setSelectedTerritory] = useState<string | null>(null);
+  const [showLocationInput, setShowLocationInput] = useState(false);
+  const [locationInput, setLocationInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -103,21 +105,34 @@ export const ChatWidget = () => {
   };
 
   const handleBookAppointment = () => {
-    const bookingMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: 'I want to book an appointment',
-      timestamp: new Date(),
-    };
-    
-    const responseMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      role: 'assistant',
-      content: "I'd be happy to help you schedule an appointment! First, could you tell me where you're planning to build? This will help me connect you with the right team in your area.",
-      timestamp: new Date(),
-    };
+    setShowLocationInput(true);
+  };
 
-    setMessages(prev => [...prev, bookingMessage, responseMessage]);
+  const handleLocationSubmit = () => {
+    if (!locationInput.trim()) return;
+
+    const territory = detectTerritory(locationInput);
+    
+    if (territory) {
+      setSelectedTerritory(territory.calNamespace);
+      setShowCalendar(true);
+      setShowLocationInput(false);
+      
+      const territoryMessage: Message = {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: `Great! I've found that ${territory.name} territory serves your area. This territory offers ${territory.appointmentType} appointments. Please select a time that works for you from the calendar below.`,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, territoryMessage]);
+      setLocationInput('');
+    } else {
+      toast({
+        title: "Location not found",
+        description: "I couldn't find that location in our service areas. Please try entering a county name (e.g., 'Greenville County, SC' or 'Durham County, NC').",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleRequestCallback = () => {
@@ -232,8 +247,29 @@ export const ChatWidget = () => {
             </div>
           )}
 
-          {/* Action Buttons */}
-          {!showCalendar && messages.length === 1 && (
+          {/* Location Input or Action Buttons */}
+          {showLocationInput ? (
+            <div className="p-4 border-t">
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Where do you plan to build?
+              </label>
+              <div className="flex gap-2">
+                <Input
+                  value={locationInput}
+                  onChange={(e) => setLocationInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
+                  placeholder="Enter county or city (e.g., Greenville, SC)"
+                  className="flex-1"
+                />
+                <Button
+                  onClick={handleLocationSubmit}
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  Submit
+                </Button>
+              </div>
+            </div>
+          ) : !showCalendar && messages.length === 1 && (
             <div className="p-4 border-t space-y-2">
               <Button
                 onClick={handleBookAppointment}
