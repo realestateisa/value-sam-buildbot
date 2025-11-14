@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.search-content]
 verify_jwt = false
+
+[functions.fetch-sitemap]
+verify_jwt = false

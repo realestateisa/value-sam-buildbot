@@ -31,32 +31,21 @@ export const AdminPanel = () => {
     setIsLoadingSitemap(true);
 
     try {
-      const response = await fetch(sitemapUrl);
-      if (!response.ok) throw new Error('Failed to fetch sitemap');
+      const { data, error } = await supabase.functions.invoke('fetch-sitemap', {
+        body: { sitemapUrl }
+      });
 
-      const xmlText = await response.text();
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+      if (error) throw error;
 
-      const urlElements = xmlDoc.getElementsByTagName('url');
-      const extractedUrls: string[] = [];
-
-      for (let i = 0; i < urlElements.length; i++) {
-        const locElement = urlElements[i].getElementsByTagName('loc')[0];
-        if (locElement && locElement.textContent) {
-          extractedUrls.push(locElement.textContent);
-        }
-      }
-
-      if (extractedUrls.length === 0) {
+      if (!data.success || !data.urls || data.urls.length === 0) {
         throw new Error('No URLs found in sitemap');
       }
 
-      setSitemapUrls(extractedUrls);
-      setSelectedUrls(new Set(extractedUrls));
+      setSitemapUrls(data.urls);
+      setSelectedUrls(new Set(data.urls));
       toast({
         title: 'Sitemap Loaded',
-        description: `Found ${extractedUrls.length} URLs`,
+        description: `Found ${data.count} URLs`,
       });
     } catch (error) {
       console.error('Sitemap loading error:', error);
