@@ -245,7 +245,7 @@ export const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className={`fixed bottom-6 left-6 flex flex-col shadow-2xl z-50 transition-all ${showCalendar ? 'w-[600px] h-[840px]' : 'w-[400px] h-[600px]'}`}>
+        <Card className={`fixed bottom-6 left-6 flex flex-col shadow-2xl z-50 transition-all ${showCalendar ? 'w-[720px] h-[1008px]' : 'w-[400px] h-[600px]'}`}>
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground">
             <div className="flex items-center gap-2">
