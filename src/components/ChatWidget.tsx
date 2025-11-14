@@ -218,18 +218,12 @@ export const ChatWidget = () => {
     const container = document.getElementById(containerId);
     if (container) container.innerHTML = '';
 
-    // Queue init and inline render (processed once script loads)
+    // Queue init with namespace and inline render (processed once script loads)
     w.Cal('init', territory.calNamespace, { origin: 'https://app.cal.com' });
     
-    // Use namespace-based inline rendering
-    if (!w.Cal.ns[territory.calNamespace]) {
-      w.Cal.ns[territory.calNamespace] = function (...args: any[]) {
-        (w.Cal as any).q = (w.Cal as any).q || [];
-        (w.Cal as any).q.push(['ns', territory.calNamespace, ...args]);
-      };
-    }
-    
-    w.Cal.ns[territory.calNamespace]('inline', {
+    // Queue inline render using the namespace
+    w.Cal('inline', {
+      namespace: territory.calNamespace,
       elementOrSelector: `#${containerId}`,
       calLink: territory.calLink,
       config: { layout: 'month_view', theme: 'light' }
