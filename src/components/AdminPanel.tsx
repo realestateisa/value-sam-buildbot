@@ -8,19 +8,95 @@ import { Loader2 } from 'lucide-react';
 
 export const AdminPanel = () => {
   const { toast } = useToast();
+  const [sitemapUrl, setSitemapUrl] = useState<string>('https://www.valuebuildhomes.com/sitemap.xml');
   const [urls, setUrls] = useState<string>('');
+  const [sitemapUrls, setSitemapUrls] = useState<string[]>([]);
+  const [selectedUrls, setSelectedUrls] = useState<Set<string>>(new Set());
+  const [isLoadingSitemap, setIsLoadingSitemap] = useState(false);
   const [isScrapingLoading, setIsScrapingLoading] = useState(false);
   const [isEmbeddingLoading, setIsEmbeddingLoading] = useState(false);
   const [scrapeResults, setScrapeResults] = useState<any>(null);
   const [embeddingResults, setEmbeddingResults] = useState<any>(null);
 
+  const handleLoadSitemap = async () => {
+    if (!sitemapUrl) {
+      toast({
+        title: 'Error',
+        description: 'Please enter a sitemap URL',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsLoadingSitemap(true);
+
+    try {
+      const response = await fetch(sitemapUrl);
+      if (!response.ok) throw new Error('Failed to fetch sitemap');
+
+      const xmlText = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+
+      const urlElements = xmlDoc.getElementsByTagName('url');
+      const extractedUrls: string[] = [];
+
+      for (let i = 0; i < urlElements.length; i++) {
+        const locElement = urlElements[i].getElementsByTagName('loc')[0];
+        if (locElement && locElement.textContent) {
+          extractedUrls.push(locElement.textContent);
+        }
+      }
+
+      if (extractedUrls.length === 0) {
+        throw new Error('No URLs found in sitemap');
+      }
+
+      setSitemapUrls(extractedUrls);
+      setSelectedUrls(new Set(extractedUrls));
+      toast({
+        title: 'Sitemap Loaded',
+        description: `Found ${extractedUrls.length} URLs`,
+      });
+    } catch (error) {
+      console.error('Sitemap loading error:', error);
+      toast({
+        title: 'Failed to Load Sitemap',
+        description: error instanceof Error ? error.message : 'Failed to parse sitemap',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoadingSitemap(false);
+    }
+  };
+
+  const toggleUrlSelection = (url: string) => {
+    const newSelected = new Set(selectedUrls);
+    if (newSelected.has(url)) {
+      newSelected.delete(url);
+    } else {
+      newSelected.add(url);
+    }
+    setSelectedUrls(newSelected);
+  };
+
+  const selectAllUrls = () => {
+    setSelectedUrls(new Set(sitemapUrls));
+  };
+
+  const deselectAllUrls = () => {
+    setSelectedUrls(new Set());
+  };
+
   const handleScrapeWebsite = async () => {
-    const urlList = urls.split('\n').filter(url => url.trim());
+    const urlList = sitemapUrls.length > 0 
+      ? Array.from(selectedUrls)
+      : urls.split('\n').filter(url => url.trim());
     
     if (urlList.length === 0) {
       toast({
         title: 'Error',
-        description: 'Please enter at least one URL',
+        description: 'Please select at least one URL to scrape',
         variant: 'destructive',
       });
       return;
@@ -99,18 +175,92 @@ https://www.valuebuildhomes.com/about`;
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium mb-2 block">
-                Website URLs (one per line)
+                Load from Sitemap
               </label>
-              <Textarea
-                value={urls}
-                onChange={(e) => setUrls(e.target.value)}
-                placeholder={defaultUrls}
-                className="min-h-[150px] font-mono text-sm"
-              />
+              <div className="flex gap-2">
+                <Textarea
+                  value={sitemapUrl}
+                  onChange={(e) => setSitemapUrl(e.target.value)}
+                  placeholder="https://www.valuebuildhomes.com/sitemap.xml"
+                  className="h-10 resize-none"
+                />
+                <Button
+                  onClick={handleLoadSitemap}
+                  disabled={isLoadingSitemap}
+                  variant="secondary"
+                >
+                  {isLoadingSitemap ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    'Load Sitemap'
+                  )}
+                </Button>
+              </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Enter URLs to scrape, one per line. Default Value Build Homes pages are suggested above.
+                Automatically fetch URLs from website sitemap
               </p>
             </div>
+
+            {sitemapUrls.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium">
+                    Select URLs to Scrape ({selectedUrls.size} selected)
+                  </label>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={selectAllUrls}
+                      variant="ghost"
+                      size="sm"
+                    >
+                      Select All
+                    </Button>
+                    <Button
+                      onClick={deselectAllUrls}
+                      variant="ghost"
+                      size="sm"
+                    >
+                      Deselect All
+                    </Button>
+                  </div>
+                </div>
+                <div className="border rounded-lg p-4 max-h-[300px] overflow-y-auto space-y-2">
+                  {sitemapUrls.map((url) => (
+                    <label
+                      key={url}
+                      className="flex items-center gap-2 p-2 hover:bg-muted rounded cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedUrls.has(url)}
+                        onChange={() => toggleUrlSelection(url)}
+                        className="h-4 w-4"
+                      />
+                      <span className="text-sm font-mono truncate flex-1">
+                        {url}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {sitemapUrls.length === 0 && (
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Or Enter URLs Manually (one per line)
+                </label>
+                <Textarea
+                  value={urls}
+                  onChange={(e) => setUrls(e.target.value)}
+                  placeholder={defaultUrls}
+                  className="min-h-[150px] font-mono text-sm"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Enter URLs to scrape, one per line.
+                </p>
+              </div>
+            )}
 
             <Button
               onClick={handleScrapeWebsite}
