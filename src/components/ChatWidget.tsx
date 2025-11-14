@@ -183,66 +183,45 @@ export const ChatWidget = () => {
     const territory = Object.values(TERRITORIES).find(t => t.calNamespace === selectedTerritory);
     if (!territory) return;
 
-    // Load Cal.com embed script
-    const loadCalScript = () => {
-      return new Promise<void>((resolve) => {
-        const existingScript = document.querySelector('script[src="https://app.cal.com/embed/embed.js"]');
-        
-        if (existingScript) {
-          // Script already exists, check if Cal is available
-          if ((window as any).Cal) {
-            resolve();
-          } else {
-            existingScript.addEventListener('load', () => resolve());
-          }
-          return;
-        }
+    const w = window as any;
 
-        // Create and load the script
-        const script = document.createElement('script');
-        script.src = 'https://app.cal.com/embed/embed.js';
-        script.async = true;
-        script.onload = () => resolve();
-        document.head.appendChild(script);
-      });
-    };
+    // Ensure Cal stub exists BEFORE loading script (prevents 'Cal is not defined')
+    if (!w.Cal) {
+      const Cal = function (...args: any[]) {
+        (Cal as any).q = (Cal as any).q || [];
+        (Cal as any).q.push(args);
+      } as any;
+      w.Cal = Cal;
+    }
 
-    const initCalendar = async () => {
-      try {
-        await loadCalScript();
-        
-        // Wait for Cal to be available
-        let attempts = 0;
-        while (!(window as any).Cal && attempts < 50) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          attempts++;
-        }
+    // Ensure Cal embed CSS
+    if (!document.querySelector('link[href="https://app.cal.com/embed/embed.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://app.cal.com/embed/embed.css';
+      document.head.appendChild(link);
+    }
 
-        const Cal = (window as any).Cal;
-        if (!Cal) {
-          console.error('Cal.com embed failed to load');
-          return;
-        }
+    // Ensure Cal embed JS
+    if (!document.querySelector('script[src="https://app.cal.com/embed/embed.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://app.cal.com/embed/embed.js';
+      script.async = true;
+      document.head.appendChild(script);
+    }
 
-        // Initialize the calendar
-        Cal("init", { origin: "https://app.cal.com" });
-        
-        Cal("inline", {
-          elementOrSelector: `#cal-inline-${selectedTerritory}`,
-          calLink: territory.calLink,
-          config: {
-            layout: "month_view",
-            theme: "light"
-          }
-        });
-        
-        console.log('Cal.com calendar initialized successfully');
-      } catch (error) {
-        console.error('Error initializing calendar:', error);
-      }
-    };
+    // Clear any previous inline render
+    const containerId = `cal-inline-${selectedTerritory}`;
+    const container = document.getElementById(containerId);
+    if (container) container.innerHTML = '';
 
-    initCalendar();
+    // Queue init and inline render (processed once script loads)
+    w.Cal('init', { origin: 'https://app.cal.com' });
+    w.Cal('inline', {
+      elementOrSelector: `#${containerId}`,
+      calLink: territory.calLink,
+      config: { layout: 'month_view', theme: 'light' }
+    });
   }, [showCalendar, selectedTerritory]);
 
   return (
