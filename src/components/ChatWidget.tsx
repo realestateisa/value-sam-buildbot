@@ -115,6 +115,13 @@ export const ChatWidget = () => {
   };
 
   const handleBookAppointment = () => {
+    const appointmentMessage: Message = {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: "Great! To help you book an appointment, could you tell me where you're planning to build your home? Please enter a county or city (e.g., Greenville, SC).",
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, appointmentMessage]);
     setShowLocationInput(true);
   };
 
@@ -343,7 +350,32 @@ export const ChatWidget = () => {
                   </div>
                 </div>
               ))}
-              {isLoading && (
+              {showLocationInput && !showCalendar && (
+                <div className="flex justify-start">
+                  <div className="bg-muted rounded-lg p-3 max-w-[80%]">
+                    <div className="space-y-3">
+                      <div className="flex gap-2">
+                        <Input
+                          value={locationInput}
+                          onChange={(e) => setLocationInput(e.target.value)}
+                          onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
+                          placeholder="Enter county or city..."
+                          className="flex-1"
+                          disabled={isLoading}
+                        />
+                        <Button
+                          onClick={handleLocationSubmit}
+                          size="sm"
+                          disabled={isLoading}
+                        >
+                          {isLoading ? 'Detecting...' : 'Submit'}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {isLoading && !showLocationInput && (
                 <div className="flex justify-start">
                   <div className="bg-muted rounded-lg p-3">
                     <div className="flex gap-1">
@@ -367,30 +399,8 @@ export const ChatWidget = () => {
             </div>
           )}
 
-          {/* Location Input or Action Buttons */}
-          {showLocationInput ? (
-            <div className="p-4 border-t">
-              <label className="text-sm font-medium text-foreground mb-2 block">
-                Where do you plan to build?
-              </label>
-              <div className="flex gap-2">
-                <Input
-                  value={locationInput}
-                  onChange={(e) => setLocationInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
-                  placeholder="Enter county or city (e.g., Greenville, SC)"
-                  className="flex-1"
-                />
-                <Button
-                  onClick={handleLocationSubmit}
-                  className="bg-primary hover:bg-primary/90"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Detecting...' : 'Submit'}
-                </Button>
-              </div>
-            </div>
-          ) : !showCalendar && messages.length === 1 && (
+          {/* Action Buttons */}
+          {!showLocationInput && !showCalendar && messages.length === 1 && (
             <div className="p-4 border-t space-y-2">
               <Button
                 onClick={handleBookAppointment}
