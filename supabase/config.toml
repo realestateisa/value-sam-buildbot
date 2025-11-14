@@ -5,3 +5,6 @@ enabled = true
 
 [functions.chat-with-sam]
 verify_jwt = false
+
+[functions.detect-territory]
+verify_jwt = false

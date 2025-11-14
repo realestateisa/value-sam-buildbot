@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
-import { Message } from '@/types/chat';
+import { Message, TERRITORIES } from '@/types/chat';
 import { detectTerritory } from '@/utils/territoryDetection';
 import { useToast } from '@/hooks/use-toast';
 
@@ -108,30 +108,54 @@ export const ChatWidget = () => {
     setShowLocationInput(true);
   };
 
-  const handleLocationSubmit = () => {
+  const handleLocationSubmit = async () => {
     if (!locationInput.trim()) return;
 
-    const territory = detectTerritory(locationInput);
-    
-    if (territory) {
-      setSelectedTerritory(territory.calNamespace);
-      setShowCalendar(true);
-      setShowLocationInput(false);
-      
-      const territoryMessage: Message = {
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: `Great! I've found that ${territory.name} territory serves your area. This territory offers ${territory.appointmentType} appointments. Please select a time that works for you from the calendar below.`,
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, territoryMessage]);
-      setLocationInput('');
-    } else {
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('detect-territory', {
+        body: { location: locationInput }
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        const { territoryKey, territory } = data;
+        
+        // Map territory keys to Cal.com namespaces
+        const territoryData = TERRITORIES[territoryKey as keyof typeof TERRITORIES];
+        
+        if (territoryData) {
+          setSelectedTerritory(territoryData.calNamespace);
+          setShowCalendar(true);
+          setShowLocationInput(false);
+          
+          const territoryMessage: Message = {
+            id: Date.now().toString(),
+            role: 'assistant',
+            content: `Great! I've found that ${territory.name} territory serves your area. This territory offers ${territoryData.appointmentType} appointments. Please select a time that works for you from the calendar below.`,
+            timestamp: new Date(),
+          };
+          setMessages(prev => [...prev, territoryMessage]);
+          setLocationInput('');
+        }
+      } else {
+        toast({
+          title: "Location not found",
+          description: data.message || "I couldn't find that location in our service areas. Please try entering a county name or city in NC, SC, or VA.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error detecting territory:', error);
       toast({
-        title: "Location not found",
-        description: "I couldn't find that location in our service areas. Please try entering a county name (e.g., 'Greenville County, SC' or 'Durham County, NC').",
+        title: "Error",
+        description: "There was an error processing your location. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -155,14 +179,35 @@ export const ChatWidget = () => {
 
   useEffect(() => {
     if (showCalendar && selectedTerritory) {
-      const script = document.createElement('script');
-      script.src = 'https://app.cal.com/embed/embed.js';
-      script.async = true;
-      document.body.appendChild(script);
+      // Load Cal.com script if not already loaded
+      if (!document.querySelector('script[src="https://app.cal.com/embed/embed.js"]')) {
+        const script = document.createElement('script');
+        script.src = 'https://app.cal.com/embed/embed.js';
+        script.async = true;
+        document.body.appendChild(script);
+      }
 
-      return () => {
-        document.body.removeChild(script);
-      };
+      // Initialize the calendar after a short delay to ensure script is loaded
+      const timer = setTimeout(() => {
+        const Cal = (window as any).Cal;
+        if (Cal) {
+          Cal.ns[selectedTerritory] = Cal.ns[selectedTerritory] || Cal;
+          
+          const territory = Object.values(TERRITORIES).find(t => t.calNamespace === selectedTerritory);
+          if (territory) {
+            Cal.ns[selectedTerritory]("inline", {
+              elementOrSelector: `#cal-inline-${selectedTerritory}`,
+              calLink: territory.calLink,
+              config: {
+                layout: "month_view",
+                theme: "light"
+              }
+            });
+          }
+        }
+      }, 500);
+
+      return () => clearTimeout(timer);
     }
   }, [showCalendar, selectedTerritory]);
 
@@ -239,9 +284,9 @@ export const ChatWidget = () => {
 
           {/* Calendar Embed */}
           {showCalendar && selectedTerritory && (
-            <div className="border-t p-4 h-[300px] overflow-auto">
+            <div className="border-t p-4 h-[600px] overflow-auto">
               <div
-                id={`my-cal-inline-${selectedTerritory}`}
+                id={`cal-inline-${selectedTerritory}`}
                 style={{ width: '100%', height: '100%' }}
               />
             </div>
@@ -264,8 +309,9 @@ export const ChatWidget = () => {
                 <Button
                   onClick={handleLocationSubmit}
                   className="bg-primary hover:bg-primary/90"
+                  disabled={isLoading}
                 >
-                  Submit
+                  {isLoading ? 'Detecting...' : 'Submit'}
                 </Button>
               </div>
             </div>
