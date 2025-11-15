@@ -70,8 +70,17 @@ serve(async (req) => {
       throw new Error('No user message found');
     }
 
-    const apiUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations/${sessionId}/messages`;
+    const apiUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/chat/completions`;
     console.log('Calling CustomGPT API:', apiUrl);
+
+    const payload = {
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...messages
+      ],
+      stream: false,
+      lang: 'en'
+    };
 
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -80,10 +89,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify({
-        response_source: 'default',
-        prompt: lastUserMessage.content,
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -110,8 +116,12 @@ serve(async (req) => {
     const data = await response.json();
     console.log('Received CustomGPT response:', data);
 
-    // CustomGPT returns the response in a different format
-    const aiMessage = data.data?.openai_response || data.response || 'Sorry, I could not process your request.';
+    // Support both OpenAI-like and CustomGPT response shapes
+    const aiMessage =
+      data?.choices?.[0]?.message?.content ||
+      data?.data?.openai_response ||
+      data?.response ||
+      'Sorry, I could not process your request.';
 
     return new Response(
       JSON.stringify({ 
