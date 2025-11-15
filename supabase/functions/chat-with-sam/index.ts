@@ -70,17 +70,9 @@ serve(async (req) => {
       throw new Error('No user message found');
     }
 
-    const apiUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/chat/completions`;
+    // Use the conversations endpoint to get citations
+    const apiUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations/${sessionId}/messages`;
     console.log('Calling CustomGPT API:', apiUrl);
-
-    const payload = {
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...messages
-      ],
-      stream: false,
-      lang: 'en'
-    };
 
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -89,7 +81,11 @@ serve(async (req) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        prompt: lastUserMessage.content,
+        response_source: 'default',
+        stream: false,
+      }),
     });
 
     if (!response.ok) {
@@ -116,15 +112,9 @@ serve(async (req) => {
     const data = await response.json();
     console.log('Received CustomGPT response:', data);
 
-    // Support both OpenAI-like and CustomGPT response shapes
-    const aiMessage =
-      data?.choices?.[0]?.message?.content ||
-      data?.data?.openai_response ||
-      data?.response ||
-      'Sorry, I could not process your request.';
-
-    // Extract citation IDs and fetch their details
-    const citationIds = data?.choices?.[0]?.message?.citations || [];
+    // Extract the message and citation IDs from the conversation response
+    const aiMessage = data.data?.openai_response || data.response || 'Sorry, I could not process your request.';
+    const citationIds = data.data?.citations || [];
     let citations = [];
 
     if (citationIds.length > 0) {
