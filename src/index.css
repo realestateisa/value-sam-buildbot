@@ -105,4 +105,10 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Force proper word wrapping for all text */
+  p, span, div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
 }
