@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Calendar, Phone } from 'lucide-react';
+import { MessageCircle, X, Send, Calendar, Phone, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -28,6 +28,7 @@ export const ChatWidget = () => {
   const [locationInput, setLocationInput] = useState('');
   const [calendarLoading, setCalendarLoading] = useState(false);
   const [calendarError, setCalendarError] = useState<string | null>(null);
+  const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -99,6 +100,7 @@ export const ChatWidget = () => {
         role: 'assistant',
         content: data.message,
         timestamp: new Date(),
+        citations: data.citations || [],
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -337,7 +339,7 @@ export const ChatWidget = () => {
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                 >
                   <div
                     className={`max-w-[80%] rounded-lg p-3 ${
@@ -348,6 +350,82 @@ export const ChatWidget = () => {
                   >
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                   </div>
+
+                  {/* Citations */}
+                  {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
+                    <div className="mt-2 w-full max-w-[80%]">
+                      <div className="text-xs font-medium text-muted-foreground mb-2">
+                        Here's how we found this answer
+                      </div>
+                      {(() => {
+                        const currentIndex = expandedCitations[message.id] || 0;
+                        const citation = message.citations![currentIndex];
+                        const totalCitations = message.citations!.length;
+                        
+                        return (
+                          <Card className="p-3 bg-background border">
+                            <div className="flex items-start gap-2">
+                              <ExternalLink className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <a
+                                  href={citation.page_url || citation.file_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-sm font-medium text-primary hover:underline line-clamp-1"
+                                >
+                                  {citation.page_title || citation.file_name || 'Reference'}
+                                </a>
+                                {citation.excerpt && (
+                                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                    {citation.excerpt}
+                                  </p>
+                                )}
+                                <p className="text-xs text-muted-foreground mt-1 truncate">
+                                  {citation.page_url || citation.file_url}
+                                </p>
+                              </div>
+                            </div>
+                            
+                            {totalCitations > 1 && (
+                              <div className="flex items-center justify-between mt-3 pt-3 border-t">
+                                <span className="text-xs text-muted-foreground">
+                                  {currentIndex + 1} of {totalCitations}
+                                </span>
+                                <div className="flex gap-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={() => {
+                                      setExpandedCitations(prev => ({
+                                        ...prev,
+                                        [message.id]: currentIndex > 0 ? currentIndex - 1 : totalCitations - 1
+                                      }));
+                                    }}
+                                  >
+                                    <ChevronLeft className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={() => {
+                                      setExpandedCitations(prev => ({
+                                        ...prev,
+                                        [message.id]: (currentIndex + 1) % totalCitations
+                                      }));
+                                    }}
+                                  >
+                                    <ChevronRight className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
+                          </Card>
+                        );
+                      })()}
+                    </div>
+                  )}
                 </div>
               ))}
               {showLocationInput && !showCalendar && (

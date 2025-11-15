@@ -1,8 +1,18 @@
+export interface Citation {
+  id: string;
+  page_url?: string;
+  file_url?: string;
+  page_title?: string;
+  file_name?: string;
+  excerpt?: string;
+}
+
 export interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  citations?: Citation[];
 }
 
 export interface Territory {
