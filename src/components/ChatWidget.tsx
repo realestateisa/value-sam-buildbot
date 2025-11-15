@@ -361,19 +361,32 @@ export const ChatWidget = () => {
                         const currentIndex = expandedCitations[message.id] || 0;
                         const citation = message.citations![currentIndex];
                         const totalCitations = message.citations!.length;
+                        const url = citation.page_url || citation.file_url || '';
+                        const domain = url ? new URL(url).hostname : '';
+                        const faviconUrl = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=32` : '';
                         
                         return (
                           <Card className="p-3 bg-background border">
-                            <div className="flex items-start gap-2">
-                              <ExternalLink className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
+                            <div className="flex items-start gap-3">
+                              {faviconUrl && (
+                                <img 
+                                  src={faviconUrl} 
+                                  alt="" 
+                                  className="w-6 h-6 rounded flex-shrink-0 mt-0.5"
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                  }}
+                                />
+                              )}
                               <div className="flex-1 min-w-0">
                                 <a
-                                  href={citation.page_url || citation.file_url}
+                                  href={url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-sm font-medium text-primary hover:underline line-clamp-1"
+                                  className="text-sm font-medium text-primary hover:underline line-clamp-1 flex items-center gap-1"
                                 >
                                   {citation.page_title || citation.file_name || 'Reference'}
+                                  <ExternalLink className="h-3 w-3 flex-shrink-0" />
                                 </a>
                                 {citation.excerpt && (
                                   <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
@@ -381,7 +394,7 @@ export const ChatWidget = () => {
                                   </p>
                                 )}
                                 <p className="text-xs text-muted-foreground mt-1 truncate">
-                                  {citation.page_url || citation.file_url}
+                                  {url}
                                 </p>
                               </div>
                             </div>
