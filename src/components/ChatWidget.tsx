@@ -355,7 +355,7 @@ export const ChatWidget = () => {
 
                   {/* Citations */}
                   {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                    <div className="mt-2 w-full overflow-hidden">
+                    <div className={`mt-2 w-full overflow-hidden ${showCalendar ? 'max-w-[468px]' : 'max-w-[368px]'}`}>
                       <div className="text-xs font-medium text-muted-foreground mb-2">
                         Here's how we found this answer
                       </div>
