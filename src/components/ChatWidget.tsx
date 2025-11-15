@@ -342,7 +342,9 @@ export const ChatWidget = () => {
                   className={`flex flex-col overflow-hidden ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-lg p-3 overflow-hidden ${
+                    className={`rounded-lg p-3 overflow-hidden ${
+                      showCalendar ? 'max-w-[360px]' : 'max-w-[280px]'
+                    } ${
                       message.role === 'user'
                         ? 'bg-primary text-primary-foreground'
                         : 'bg-muted'
@@ -353,7 +355,7 @@ export const ChatWidget = () => {
 
                   {/* Citations */}
                   {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                    <div className="mt-2 w-full max-w-[80%] overflow-hidden">
+                    <div className={`mt-2 w-full overflow-hidden ${showCalendar ? 'max-w-[360px]' : 'max-w-[280px]'}`}>
                       <div className="text-xs font-medium text-muted-foreground mb-2">
                         Here's how we found this answer
                       </div>
