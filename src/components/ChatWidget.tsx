@@ -362,22 +362,17 @@ export const ChatWidget = () => {
                         const citation = message.citations![currentIndex];
                         const totalCitations = message.citations!.length;
                         const url = citation.page_url || citation.file_url || '';
-                        const domain = url ? new URL(url).hostname : '';
-                        const faviconUrl = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=32` : '';
+                        // Always use Value Build Homes favicon since citations are from their website
+                        const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                         
                         return (
                           <Card className="p-3 bg-background border">
                             <div className="flex items-start gap-3">
-                              {faviconUrl && (
-                                <img 
-                                  src={faviconUrl} 
-                                  alt="" 
-                                  className="w-6 h-6 rounded flex-shrink-0 mt-0.5"
-                                  onError={(e) => {
-                                    e.currentTarget.style.display = 'none';
-                                  }}
-                                />
-                              )}
+                              <img 
+                                src={faviconUrl} 
+                                alt="Value Build Homes" 
+                                className="w-6 h-6 rounded flex-shrink-0 mt-0.5"
+                              />
                               <div className="flex-1 min-w-0">
                                 <a
                                   href={url}
