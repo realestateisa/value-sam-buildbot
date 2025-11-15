@@ -334,12 +334,12 @@ export const ChatWidget = () => {
           )}
 
           {/* Messages */}
-          <ScrollArea className="flex-1 p-4 overflow-hidden" ref={scrollRef}>
-            <div className="space-y-4 overflow-hidden">
+          <ScrollArea className="flex-1 p-4 pr-6 overflow-hidden" ref={scrollRef}>
+            <div className="space-y-4">
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex flex-col w-full overflow-hidden ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                  className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                 >
                   <div
                     className={`rounded-lg p-3 overflow-hidden ${
