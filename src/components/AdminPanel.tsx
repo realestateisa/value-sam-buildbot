@@ -25,6 +25,13 @@ export const AdminPanel = () => {
     isReady: boolean;
     loading: boolean;
   }>({ totalUrls: 0, totalChunks: 0, chunksWithEmbeddings: 0, isReady: false, loading: true });
+  const [batchSize, setBatchSize] = useState<number>(50);
+  const [isClearingData, setIsClearingData] = useState(false);
+  const [scrapingProgress, setScrapingProgress] = useState<{
+    current: number;
+    total: number;
+    currentUrl: string;
+  }>({ current: 0, total: 0, currentUrl: '' });
 
   const checkRagStatus = async () => {
     try {
@@ -41,7 +48,7 @@ export const AdminPanel = () => {
         return;
       }
 
-      // Count distinct URLs
+      // Count distinct BASE URLs (remove #chunk-X suffix)
       const { data: urlData, error: urlError } = await supabase
         .from('website_content')
         .select('url');
@@ -52,7 +59,15 @@ export const AdminPanel = () => {
         return;
       }
 
-      const uniqueUrls = new Set(urlData?.map(item => item.url) || []).size;
+      // Extract base URLs by removing chunk suffixes
+      const baseUrls = new Set(
+        urlData?.map(item => {
+          const url = item.url;
+          // Remove #chunk-X suffix if present
+          return url.replace(/#chunk-\d+$/, '');
+        }) || []
+      );
+      const uniqueUrls = baseUrls.size;
 
       // Count chunks with embeddings
       const { count: withEmbeddings, error: embeddingError } = await supabase
@@ -146,15 +161,50 @@ export const AdminPanel = () => {
     setSelectedUrls(new Set());
   };
 
-  const handleScrapeWebsite = async () => {
-    const urlList = sitemapUrls.length > 0 
-      ? Array.from(selectedUrls)
-      : urls.split('\n').filter(url => url.trim());
-    
-    if (urlList.length === 0) {
+  const handleClearAllData = async () => {
+    if (!confirm('Are you sure you want to delete all scraped content and embeddings? This action cannot be undone.')) {
+      return;
+    }
+
+    setIsClearingData(true);
+    try {
+      const { error } = await supabase
+        .from('website_content')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all rows
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'All data cleared successfully',
+      });
+
+      // Reset states
+      setScrapeResults(null);
+      setEmbeddingResults(null);
+      await checkRagStatus();
+    } catch (error: any) {
+      console.error('Error clearing data:', error);
       toast({
         title: 'Error',
-        description: 'Please select at least one URL to scrape',
+        description: error.message || 'Failed to clear data',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsClearingData(false);
+    }
+  };
+
+  const handleScrapeWebsite = async () => {
+    const urlsToScrape = sitemapUrls.length > 0 
+      ? Array.from(selectedUrls)
+      : urls.split('\n').map(url => url.trim()).filter(url => url);
+
+    if (urlsToScrape.length === 0) {
+      toast({
+        title: 'Error',
+        description: 'Please enter at least one URL or load from sitemap',
         variant: 'destructive',
       });
       return;
@@ -162,29 +212,78 @@ export const AdminPanel = () => {
 
     setIsScrapingLoading(true);
     setScrapeResults(null);
+    setScrapingProgress({ current: 0, total: urlsToScrape.length, currentUrl: '' });
 
     try {
-      const { data, error } = await supabase.functions.invoke('scrape-website', {
-        body: { urls: urlList }
-      });
+      console.log('Starting to scrape websites...', { urlCount: urlsToScrape.length });
 
-      if (error) throw error;
+      // Process in batches
+      const batches = [];
+      for (let i = 0; i < urlsToScrape.length; i += batchSize) {
+        batches.push(urlsToScrape.slice(i, i + batchSize));
+      }
 
-      setScrapeResults(data);
-      checkRagStatus();
+      let allResults: any[] = [];
+      let successCount = 0;
+      let failCount = 0;
+
+      for (let i = 0; i < batches.length; i++) {
+        const batch = batches[i];
+        setScrapingProgress({ 
+          current: i * batchSize, 
+          total: urlsToScrape.length, 
+          currentUrl: `Processing batch ${i + 1} of ${batches.length}...` 
+        });
+
+        const { data, error } = await supabase.functions.invoke('scrape-website', {
+          body: { urls: batch }
+        });
+
+        if (error) {
+          console.error('Batch scraping error:', error);
+          failCount += batch.length;
+          continue;
+        }
+
+        const batchSuccessCount = data.results?.filter((r: any) => r.success).length || 0;
+        const batchFailCount = data.results?.filter((r: any) => !r.success).length || 0;
+        
+        successCount += batchSuccessCount;
+        failCount += batchFailCount;
+        allResults = [...allResults, ...data.results];
+
+        console.log(`Batch ${i + 1} completed:`, { batchSuccessCount, batchFailCount });
+      }
+
+      setScrapeResults({ results: allResults });
+
       toast({
         title: 'Scraping Complete',
-        description: `Successfully scraped ${data.results?.length || 0} URLs`,
+        description: `Successfully scraped ${successCount} pages. ${failCount > 0 ? `Failed: ${failCount}` : ''}`,
       });
-    } catch (error) {
-      console.error('Scraping error:', error);
+
+      // Refresh RAG status after scraping
+      await checkRagStatus();
+
+      // Auto-generate embeddings if scraping was successful
+      if (successCount > 0) {
+        toast({
+          title: 'Starting Embeddings',
+          description: 'Automatically generating embeddings for scraped content...',
+        });
+        setTimeout(() => handleGenerateEmbeddings(), 1000);
+      }
+    } catch (error: any) {
+      console.error('Error scraping website:', error);
+      setScrapeResults({ error: error.message });
       toast({
-        title: 'Scraping Failed',
-        description: error instanceof Error ? error.message : 'Failed to scrape website',
+        title: 'Error',
+        description: error.message || 'Failed to scrape website',
         variant: 'destructive',
       });
     } finally {
       setIsScrapingLoading(false);
+      setScrapingProgress({ current: 0, total: 0, currentUrl: '' });
     }
   };
 
@@ -298,6 +397,29 @@ https://www.valuebuildhomes.com/about`;
               ✓ Your chatbot is ready to answer questions using RAG
             </p>
           )}
+          {ragStatus.totalChunks > 0 && (
+            <div className="mt-4 pt-4 border-t">
+              <Button
+                onClick={handleClearAllData}
+                disabled={isClearingData}
+                variant="destructive"
+                size="sm"
+                className="w-full"
+              >
+                {isClearingData ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Clearing...
+                  </>
+                ) : (
+                  'Clear All Data'
+                )}
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                Remove all scraped content and embeddings from the database
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -396,6 +518,43 @@ https://www.valuebuildhomes.com/about`;
                 <p className="text-xs text-muted-foreground mt-1">
                   Enter URLs to scrape, one per line.
                 </p>
+              </div>
+            )}
+
+            <div>
+              <label className="text-sm font-medium mb-2 block">
+                Batch Size
+              </label>
+              <input
+                type="number"
+                value={batchSize}
+                onChange={(e) => setBatchSize(Math.max(1, Math.min(100, parseInt(e.target.value) || 50)))}
+                min="1"
+                max="100"
+                className="w-full px-3 py-2 border rounded-md"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Number of URLs to scrape per batch (1-100). Smaller batches reduce timeout risk.
+              </p>
+            </div>
+
+            {isScrapingLoading && scrapingProgress.total > 0 && (
+              <div className="space-y-2 p-4 bg-muted rounded-lg">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Scraping Progress</span>
+                  <span className="text-sm text-muted-foreground">
+                    {scrapingProgress.current} / {scrapingProgress.total}
+                  </span>
+                </div>
+                <div className="w-full bg-background rounded-full h-2">
+                  <div
+                    className="bg-primary h-2 rounded-full transition-all duration-300"
+                    style={{
+                      width: `${(scrapingProgress.current / scrapingProgress.total) * 100}%`,
+                    }}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">{scrapingProgress.currentUrl}</p>
               </div>
             )}
 
