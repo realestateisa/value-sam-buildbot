@@ -353,7 +353,7 @@ export const ChatWidget = () => {
 
                   {/* Citations */}
                   {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                    <div className="mt-2 w-full max-w-[80%]">
+                    <div className="mt-2 w-full max-w-[80%] overflow-hidden">
                       <div className="text-xs font-medium text-muted-foreground mb-2">
                         Here's how we found this answer
                       </div>
@@ -367,29 +367,31 @@ export const ChatWidget = () => {
                         const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                         
                         return (
-                          <Card className="p-3 bg-background border">
-                            <div className="flex items-start gap-3">
+                          <Card className="p-3 bg-background border overflow-hidden">
+                            <div className="flex items-start gap-3 overflow-hidden">
                               <img 
                                 src={faviconUrl} 
                                 alt="Value Build Homes" 
                                 className="w-6 h-6 rounded flex-shrink-0 mt-0.5"
                               />
-                              <div className="flex-1 min-w-0">
+                              <div className="flex-1 min-w-0 overflow-hidden">
                                 <a
                                   href={url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-sm font-medium text-primary hover:underline line-clamp-1 flex items-center gap-1"
+                                  className="text-sm font-medium text-primary hover:underline block truncate"
                                 >
-                                  {citation.title || 'Reference'}
-                                  <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                                  <span className="inline-flex items-center gap-1 max-w-full">
+                                    <span className="truncate">{citation.title || 'Reference'}</span>
+                                    <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                                  </span>
                                 </a>
                                 {citation.description && (
                                   <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                                     {citation.description}
                                   </p>
                                 )}
-                                <p className="text-xs text-muted-foreground mt-1 truncate">
+                                <p className="text-xs text-muted-foreground mt-1 truncate break-all">
                                   {url}
                                 </p>
                               </div>
