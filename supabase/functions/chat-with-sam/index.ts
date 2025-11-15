@@ -59,6 +59,7 @@ serve(async (req) => {
     }
 
     console.log('Processing chat request with', messages.length, 'messages');
+    console.log('Using Project ID:', CUSTOMGPT_PROJECT_ID);
 
     // Generate a unique session ID for this conversation or use a default
     const sessionId = 'default-session';
@@ -69,7 +70,10 @@ serve(async (req) => {
       throw new Error('No user message found');
     }
 
-    const response = await fetch(`https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations/${sessionId}/messages`, {
+    const apiUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations/${sessionId}/messages`;
+    console.log('Calling CustomGPT API:', apiUrl);
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${CUSTOMGPT_API_KEY}`,
