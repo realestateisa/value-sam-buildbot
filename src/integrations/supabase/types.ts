@@ -14,62 +14,13 @@ export type Database = {
   }
   public: {
     Tables: {
-      website_content: {
-        Row: {
-          chunk_text: string
-          content: string
-          created_at: string | null
-          embedding: string | null
-          id: string
-          last_scraped_at: string | null
-          metadata: Json | null
-          title: string | null
-          url: string
-        }
-        Insert: {
-          chunk_text: string
-          content: string
-          created_at?: string | null
-          embedding?: string | null
-          id?: string
-          last_scraped_at?: string | null
-          metadata?: Json | null
-          title?: string | null
-          url: string
-        }
-        Update: {
-          chunk_text?: string
-          content?: string
-          created_at?: string | null
-          embedding?: string | null
-          id?: string
-          last_scraped_at?: string | null
-          metadata?: Json | null
-          title?: string | null
-          url?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      match_website_content: {
-        Args: {
-          match_count?: number
-          match_threshold?: number
-          query_embedding: string
-        }
-        Returns: {
-          chunk_text: string
-          id: string
-          metadata: Json
-          similarity: number
-          title: string
-          url: string
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never

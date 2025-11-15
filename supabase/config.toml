@@ -8,15 +8,3 @@ verify_jwt = false
 
 [functions.detect-territory]
 verify_jwt = false
-
-[functions.scrape-website]
-verify_jwt = false
-
-[functions.generate-embeddings]
-verify_jwt = false
-
-[functions.search-content]
-verify_jwt = false
-
-[functions.fetch-sitemap]
-verify_jwt = false
