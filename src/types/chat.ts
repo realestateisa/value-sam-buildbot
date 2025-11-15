@@ -1,10 +1,9 @@
 export interface Citation {
-  id: string;
-  page_url?: string;
-  file_url?: string;
-  page_title?: string;
-  file_name?: string;
-  excerpt?: string;
+  id: number;
+  title?: string;
+  description?: string;
+  image?: string;
+  url: string;
 }
 
 export interface Message {

@@ -361,16 +361,7 @@ export const ChatWidget = () => {
                         const currentIndex = expandedCitations[message.id] || 0;
                         const citation = message.citations![currentIndex];
                         const totalCitations = message.citations!.length;
-                        // Extract the actual URL from citation, ensuring it's an external link
-                        let url = citation.page_url || citation.file_url || '';
-                        
-                        // If the URL is a relative or local URL, try to construct the full valuebuildhomes.com URL
-                        if (url && !url.startsWith('http')) {
-                          url = `https://valuebuildhomes.com${url.startsWith('/') ? url : '/' + url}`;
-                        } else if (url && url.includes('lovableproject.com')) {
-                          // If it's pointing to our app, default to homepage
-                          url = 'https://valuebuildhomes.com';
-                        }
+                        const url = citation.url;
                         
                         // Always use Value Build Homes favicon since citations are from their website
                         const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
@@ -390,12 +381,12 @@ export const ChatWidget = () => {
                                   rel="noopener noreferrer"
                                   className="text-sm font-medium text-primary hover:underline line-clamp-1 flex items-center gap-1"
                                 >
-                                  {citation.page_title || citation.file_name || 'Reference'}
+                                  {citation.title || 'Reference'}
                                   <ExternalLink className="h-3 w-3 flex-shrink-0" />
                                 </a>
-                                {citation.excerpt && (
+                                {citation.description && (
                                   <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                    {citation.excerpt}
+                                    {citation.description}
                                   </p>
                                 )}
                                 <p className="text-xs text-muted-foreground mt-1 truncate">
