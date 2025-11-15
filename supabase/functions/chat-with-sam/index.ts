@@ -61,18 +61,41 @@ serve(async (req) => {
     console.log('Processing chat request with', messages.length, 'messages');
     console.log('Using Project ID:', CUSTOMGPT_PROJECT_ID);
 
-    // Generate a unique session ID for this conversation or use a default
-    const sessionId = 'default-session';
-    
     // Get the last user message as the prompt
     const lastUserMessage = messages.filter(m => m.role === 'user').pop();
     if (!lastUserMessage) {
       throw new Error('No user message found');
     }
 
-    // Use the conversations endpoint to get citations
+    // Step 1: Create a conversation to get a session_id
+    const createConversationUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations`;
+    console.log('Creating conversation:', createConversationUrl);
+
+    const createConversationResponse = await fetch(createConversationUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${CUSTOMGPT_API_KEY}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        name: `Chat-${Date.now()}`,
+      }),
+    });
+
+    if (!createConversationResponse.ok) {
+      const errorText = await createConversationResponse.text();
+      console.error('Failed to create conversation:', createConversationResponse.status, errorText);
+      throw new Error(`Failed to create conversation: ${createConversationResponse.status}`);
+    }
+
+    const conversationData = await createConversationResponse.json();
+    const sessionId = conversationData.data.session_id;
+    console.log('Created conversation with session_id:', sessionId);
+
+    // Step 2: Send message to the conversation
     const apiUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations/${sessionId}/messages`;
-    console.log('Calling CustomGPT API:', apiUrl);
+    console.log('Sending message to conversation:', apiUrl);
 
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -84,7 +107,7 @@ serve(async (req) => {
       body: JSON.stringify({
         prompt: lastUserMessage.content,
         response_source: 'default',
-        stream: false,
+        stream: 0,
       }),
     });
 
