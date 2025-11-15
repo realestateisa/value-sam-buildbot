@@ -269,7 +269,7 @@ export const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className={`fixed bottom-6 left-6 flex flex-col shadow-2xl z-50 transition-all ${showCalendar ? 'w-[500px] h-[720px]' : 'w-[400px] h-[600px]'}`}>
+        <Card className={`fixed bottom-6 left-6 flex flex-col shadow-2xl z-50 transition-all overflow-hidden ${showCalendar ? 'w-[500px] h-[720px]' : 'w-[400px] h-[600px]'}`}>
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground">
             <div className="flex items-center gap-2">
@@ -334,12 +334,12 @@ export const ChatWidget = () => {
           )}
 
           {/* Messages */}
-          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-            <div className="space-y-4">
+          <ScrollArea className="flex-1 p-4 overflow-hidden" ref={scrollRef}>
+            <div className="space-y-4 overflow-hidden">
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                  className={`flex flex-col overflow-hidden ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                 >
                   <div
                     className={`max-w-[80%] rounded-lg p-3 ${
@@ -348,7 +348,7 @@ export const ChatWidget = () => {
                         : 'bg-muted'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
                   </div>
 
                   {/* Citations */}
