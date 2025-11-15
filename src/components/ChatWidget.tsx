@@ -361,7 +361,17 @@ export const ChatWidget = () => {
                         const currentIndex = expandedCitations[message.id] || 0;
                         const citation = message.citations![currentIndex];
                         const totalCitations = message.citations!.length;
-                        const url = citation.page_url || citation.file_url || '';
+                        // Extract the actual URL from citation, ensuring it's an external link
+                        let url = citation.page_url || citation.file_url || '';
+                        
+                        // If the URL is a relative or local URL, try to construct the full valuebuildhomes.com URL
+                        if (url && !url.startsWith('http')) {
+                          url = `https://valuebuildhomes.com${url.startsWith('/') ? url : '/' + url}`;
+                        } else if (url && url.includes('lovableproject.com')) {
+                          // If it's pointing to our app, default to homepage
+                          url = 'https://valuebuildhomes.com';
+                        }
+                        
                         // Always use Value Build Homes favicon since citations are from their website
                         const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                         
