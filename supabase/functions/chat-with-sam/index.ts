@@ -47,27 +47,38 @@ serve(async (req) => {
       throw new Error('Messages array is required');
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
+    const CUSTOMGPT_API_KEY = Deno.env.get('CUSTOMGPT_API_KEY');
+    const CUSTOMGPT_PROJECT_ID = Deno.env.get('CUSTOMGPT_PROJECT_ID');
+    
+    if (!CUSTOMGPT_API_KEY) {
+      throw new Error('CUSTOMGPT_API_KEY is not configured');
+    }
+    
+    if (!CUSTOMGPT_PROJECT_ID) {
+      throw new Error('CUSTOMGPT_PROJECT_ID is not configured');
     }
 
     console.log('Processing chat request with', messages.length, 'messages');
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    // Generate a unique session ID for this conversation or use a default
+    const sessionId = 'default-session';
+    
+    // Get the last user message as the prompt
+    const lastUserMessage = messages.filter(m => m.role === 'user').pop();
+    if (!lastUserMessage) {
+      throw new Error('No user message found');
+    }
+
+    const response = await fetch(`https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations/${sessionId}/messages`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Authorization': `Bearer ${CUSTOMGPT_API_KEY}`,
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          ...messages
-        ],
-        temperature: 0.7,
-        max_tokens: 1000,
+        response_source: 'default',
+        prompt: lastUserMessage.content,
       }),
     });
 
@@ -93,11 +104,14 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log('Received AI response');
+    console.log('Received CustomGPT response:', data);
+
+    // CustomGPT returns the response in a different format
+    const aiMessage = data.data?.openai_response || data.response || 'Sorry, I could not process your request.';
 
     return new Response(
       JSON.stringify({ 
-        message: data.choices[0].message.content 
+        message: aiMessage
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
