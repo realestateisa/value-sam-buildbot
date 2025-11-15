@@ -339,7 +339,7 @@ export const ChatWidget = () => {
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex flex-col overflow-hidden ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                  className={`flex flex-col w-full overflow-hidden ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                 >
                   <div
                     className={`rounded-lg p-3 overflow-hidden ${
