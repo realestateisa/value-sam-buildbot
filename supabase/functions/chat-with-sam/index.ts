@@ -123,9 +123,44 @@ serve(async (req) => {
       data?.response ||
       'Sorry, I could not process your request.';
 
+    // Extract citation IDs and fetch their details
+    const citationIds = data?.choices?.[0]?.message?.citations || [];
+    let citations = [];
+
+    if (citationIds.length > 0) {
+      console.log('Fetching citation details for IDs:', citationIds);
+      
+      // Fetch details for each citation
+      const citationPromises = citationIds.map(async (citationId: string) => {
+        try {
+          const citationUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/citations/${citationId}`;
+          const citationResponse = await fetch(citationUrl, {
+            headers: {
+              'Authorization': `Bearer ${CUSTOMGPT_API_KEY}`,
+              'Accept': 'application/json',
+            },
+          });
+
+          if (citationResponse.ok) {
+            const citationData = await citationResponse.json();
+            return citationData.data;
+          }
+          return null;
+        } catch (err) {
+          console.error('Error fetching citation:', citationId, err);
+          return null;
+        }
+      });
+
+      const citationResults = await Promise.all(citationPromises);
+      citations = citationResults.filter(c => c !== null);
+      console.log('Fetched citations:', citations);
+    }
+
     return new Response(
       JSON.stringify({ 
-        message: aiMessage
+        message: aiMessage,
+        citations: citations
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
