@@ -397,22 +397,24 @@ export const ChatWidget = () => {
                         key={message.id}
                         className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                       >
-                        <div
-                          className={`rounded-lg p-2.5 min-w-0 ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'} ${
-                            message.role === 'user'
-                              ? 'bg-primary text-primary-foreground shadow-sm'
-                              : 'bg-muted'
-                          }`}
-                        >
-                          <p className="text-sm whitespace-normal break-words overflow-wrap-anywhere">{message.content}</p>
-                        </div>
+                        {/* Shared width wrapper for message bubble and citations */}
+                        <div className={`flex flex-col min-w-0 ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'} w-full space-y-2`}>
+                          <div
+                            className={`rounded-lg p-2.5 w-full ${
+                              message.role === 'user'
+                                ? 'bg-primary text-primary-foreground shadow-sm'
+                                : 'bg-muted'
+                            }`}
+                          >
+                            <p className="text-sm whitespace-normal break-words">{message.content}</p>
+                          </div>
 
-                        {/* Citations */}
-                        {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                          <div className={`mt-2 w-full min-w-0 overflow-hidden ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'}`}>
-                            <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
-                              Here's how we found this answer
-                            </div>
+                          {/* Citations */}
+                          {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
+                            <div className="w-full min-w-0">
+                              <div className="text-xs font-medium text-muted-foreground mb-2 break-words">
+                                Here's how we found this answer
+                              </div>
                             {(() => {
                               const currentIndex = expandedCitations[message.id] || 0;
                               const citation = message.citations![currentIndex];
@@ -491,6 +493,7 @@ export const ChatWidget = () => {
                             })()}
                           </div>
                         )}
+                        </div>
                       </div>
                     ))}
                     
