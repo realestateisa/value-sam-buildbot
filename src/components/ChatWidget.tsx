@@ -434,11 +434,11 @@ export const ChatWidget = () => {
                   {messages.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex flex-col w-full min-w-0 ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                      className={`flex flex-col w-full min-w-0 ${message.role === 'user' ? 'items-end pr-3' : 'items-start'}`}
                     >
                       {message.role === 'assistant' && message.citations && message.citations.length > 0 ? (
                         // Assistant with citations: shared wrapper
-                        <div className="flex flex-col min-w-0 max-w-[calc(100%-24px)] sm:max-w-[85%] space-y-2">
+                        <div className="flex flex-col min-w-0 max-w-[calc(100%-32px)] sm:max-w-[85%] space-y-2">
                           <div className="rounded-lg p-2.5 bg-muted">
                             <p className="text-sm whitespace-normal break-words">{message.content}</p>
                           </div>
@@ -527,7 +527,7 @@ export const ChatWidget = () => {
                       </div>
                       ) : (
                         // User message or assistant without citations: natural width
-                        <div className={`rounded-lg p-2.5 max-w-[calc(100%-24px)] sm:max-w-[85%] min-w-0 break-words ${
+                        <div className={`rounded-lg p-2.5 max-w-[calc(100%-32px)] sm:max-w-[85%] min-w-0 break-words ${
                           message.role === 'user'
                             ? 'bg-primary text-primary-foreground shadow-sm'
                             : 'bg-muted'
