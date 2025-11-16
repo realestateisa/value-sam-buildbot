@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Message, TERRITORIES } from '@/types/chat';
 import { detectTerritory } from '@/utils/territoryDetection';
 import { useToast } from '@/hooks/use-toast';
+import logo from '@/assets/logo.png';
 import TypingIndicator from '@/components/TypingIndicator';
 
 const TERRITORY_ADDRESSES: Record<string, string> = {
@@ -241,10 +242,10 @@ export const ChatWidget = () => {
       {/* Chat Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 left-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50"
+        className="fixed bottom-6 left-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 p-0"
         size="icon"
       >
-        {isOpen ? <X className="h-8 w-8" /> : <MessageCircle className="h-8 w-8" />}
+        {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-12 w-12 rounded-full" />}
       </Button>
 
       {/* Chat Window */}
@@ -253,7 +254,7 @@ export const ChatWidget = () => {
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground">
             <div className="flex items-center gap-2">
-              <MessageCircle className="h-5 w-5" />
+              <img src={logo} alt="Value Build Homes" className="h-8 w-8 rounded-full bg-white p-1" />
               <div>
                 <h3 className="font-semibold">SAM</h3>
                 <p className="text-xs opacity-90">Digital Assistant</p>
