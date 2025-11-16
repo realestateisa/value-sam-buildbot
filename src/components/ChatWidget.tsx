@@ -492,17 +492,9 @@ export const ChatWidget = () => {
           {/* Calendar Embed */}
           {showCalendar && selectedTerritory && (
             <div className="border-t p-4 bg-background">
-              {calendarLoading && (
-                <div className="w-full min-h-[400px] flex items-center justify-center">
-                  <div className="text-center space-y-2">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
-                    <p className="text-sm text-muted-foreground">Loading available times...</p>
-                  </div>
-                </div>
-              )}
               <div 
                 id={`cal-inline-${selectedTerritory}`}
-                className={`w-full min-h-[400px] ${calendarLoading ? 'hidden' : ''}`}
+                className="w-full min-h-[400px]"
               />
             </div>
           )}
