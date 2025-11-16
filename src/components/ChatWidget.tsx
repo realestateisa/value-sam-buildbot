@@ -570,7 +570,7 @@ export const ChatWidget = () => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Ask me anything about Value Build Homes..."
+                  placeholder="Ask me anything.."
                   disabled={isLoading}
                   className="flex-1 text-sm"
                 />
