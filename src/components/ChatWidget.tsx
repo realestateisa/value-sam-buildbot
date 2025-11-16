@@ -245,7 +245,7 @@ export const ChatWidget = () => {
         className="fixed bottom-6 left-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 p-0"
         size="icon"
       >
-        {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-12 w-12 rounded-full" />}
+        {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-14 w-14 rounded-full" />}
       </Button>
 
       {/* Chat Window */}
@@ -254,7 +254,7 @@ export const ChatWidget = () => {
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground">
             <div className="flex items-center gap-2">
-              <img src={logo} alt="Value Build Homes" className="h-8 w-8 rounded-full bg-white p-1" />
+              <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-1" />
               <div>
                 <h3 className="font-semibold">SAM</h3>
                 <p className="text-xs opacity-90">Digital Assistant</p>
