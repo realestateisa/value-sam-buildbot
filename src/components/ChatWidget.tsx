@@ -486,9 +486,9 @@ export const ChatWidget = () => {
                         )}
                         <div className="flex flex-col">
                           <div
-                            className={`rounded-lg p-2.5 min-w-0 ${
+                            className={`rounded-lg p-2.5 ${
                               message.role === 'user' 
-                                ? 'max-w-[calc(var(--chat-width)_*_0.78)]'
+                                ? 'max-w-[85%] w-fit'
                                 : 'w-[calc(var(--chat-width)_*_0.78)] flex-none'
                             } ${
                               message.role === 'user'
