@@ -31,7 +31,10 @@ export const ChatWidget = () => {
   const [calendarLoading, setCalendarLoading] = useState(false);
   const [calendarError, setCalendarError] = useState<string | null>(null);
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
+  const [footerPad, setFooterPad] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const actionRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -46,14 +49,30 @@ export const ChatWidget = () => {
     }
   }, [isOpen]);
 
+  // Measure footer heights to ensure ScrollArea content isn't hidden
+  const measureFooterHeight = () => {
+    const actionHeight = actionRef.current?.offsetHeight || 0;
+    const inputHeight = inputRef.current?.offsetHeight || 0;
+    setFooterPad(actionHeight + inputHeight);
+  };
+
+  // Measure footers when visibility changes
   useEffect(() => {
-    if (scrollRef.current) {
-      const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    measureFooterHeight();
+    window.addEventListener('resize', measureFooterHeight);
+    return () => window.removeEventListener('resize', measureFooterHeight);
+  }, [showCalendar, showLocationInput, isLoading]);
+
+  // Auto-scroll with requestAnimationFrame after layout settles
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    requestAnimationFrame(() => {
+      const scrollElement = scrollRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
       if (scrollElement) {
         scrollElement.scrollTop = scrollElement.scrollHeight;
       }
-    }
-  }, [messages, isLoading]);
+    });
+  }, [messages, isLoading, footerPad]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -391,8 +410,8 @@ export const ChatWidget = () => {
 
             {/* Chat Messages - hidden when calendar or location input is shown */}
             {!showCalendar && !showLocationInput && (
-              <ScrollArea className="flex-1 p-3 pr-5" ref={scrollRef}>
-                <div className="space-y-3">
+              <ScrollArea className="flex-1 overflow-x-hidden" ref={scrollRef}>
+                <div className="space-y-3" style={{ padding: '12px 20px 12px 12px', paddingBottom: footerPad + 12 }}>
                   {messages.map((message) => (
                     <div
                       key={message.id}
@@ -521,7 +540,7 @@ export const ChatWidget = () => {
 
           {/* Action Buttons */}
           {!showLocationInput && !showCalendar && (
-        <div className="p-3 border-t">
+        <div className="p-3 border-t" ref={actionRef}>
           <Button
                 onClick={handleBookAppointment}
                 className="w-full font-medium transition-all duration-200"
@@ -535,7 +554,7 @@ export const ChatWidget = () => {
 
           {/* Message Input - hidden when calendar or location input is shown */}
           {!showCalendar && !showLocationInput && (
-            <div className="p-3 border-t">
+            <div className="p-3 border-t" ref={inputRef}>
               <div className="flex gap-1.5">
                 <Input
                   value={inputValue}
