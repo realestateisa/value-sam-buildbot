@@ -61,7 +61,7 @@ export const ChatWidget = () => {
     measureFooterHeight();
     window.addEventListener('resize', measureFooterHeight);
     return () => window.removeEventListener('resize', measureFooterHeight);
-  }, [showCalendar, showLocationInput, isLoading]);
+  }, [showCalendar, showLocationInput, isLoading, isOpen]);
 
   // Auto-scroll with requestAnimationFrame after layout settles
   useEffect(() => {
@@ -384,7 +384,7 @@ export const ChatWidget = () => {
           )}
 
           {/* Content Wrapper - proper flex container for all content */}
-          <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 flex flex-col min-h-0">
             {/* Red Overlay Appointment Form */}
             {showLocationInput && !showCalendar && (
               <div className="flex-1 flex flex-col items-center justify-center bg-[#E93424] p-8 animate-fade-in relative">
@@ -546,7 +546,7 @@ export const ChatWidget = () => {
 
             {/* Calendar View - standalone when active */}
             {showCalendar && selectedTerritory && (
-              <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="flex-1 flex flex-col min-h-0">
                 <div 
                   id={`cal-inline-${selectedTerritory}`}
                   className="flex-1 w-full overflow-auto"
