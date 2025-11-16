@@ -52,7 +52,7 @@ export const ChatWidget = () => {
       const welcomeMessage: Message = {
         id: '1',
         role: 'assistant',
-        content: "Hey there! I'm Sam, what can I answer for you?",
+        content: "Hey there👋🏻! I'm Sam, what can I answer for you?",
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
