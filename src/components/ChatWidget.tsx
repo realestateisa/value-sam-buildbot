@@ -499,11 +499,6 @@ export const ChatWidget = () => {
                               return (
                                 <Card className={`w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
                                   <div className="flex items-start gap-2 overflow-hidden min-w-0">
-                                    <img 
-                                      src={faviconUrl} 
-                                      alt="Value Build Homes" 
-                                      className="w-5 h-5 rounded-full flex-shrink-0 mt-0.5"
-                                    />
                                     <div className="flex-1 min-w-0 overflow-hidden">
                                       <a
                                         href={url}
