@@ -462,6 +462,29 @@ export const ChatWidget = () => {
             </ScrollArea>
           )}
 
+          {/* Location Input Form */}
+          {showLocationInput && !showCalendar && (
+            <div className="p-4 border-t space-y-3">
+              <div className="flex gap-2">
+                <Input
+                  value={locationInput}
+                  onChange={(e) => setLocationInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
+                  placeholder="Enter your city or county..."
+                  disabled={isLoading}
+                  className="flex-1"
+                />
+                <Button
+                  onClick={handleLocationSubmit}
+                  disabled={isLoading || !locationInput.trim()}
+                  size="icon"
+                >
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                </Button>
+              </div>
+            </div>
+          )}
+
           {/* Calendar View - standalone when active */}
           {showCalendar && selectedTerritory && (
             <div className="flex-1 flex flex-col overflow-hidden">
