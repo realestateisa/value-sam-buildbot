@@ -12,6 +12,10 @@ export interface Message {
   content: string;
   timestamp: Date;
   citations?: Citation[];
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
 export interface Territory {
