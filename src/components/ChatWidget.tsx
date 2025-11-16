@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -481,7 +481,7 @@ export const ChatWidget = () => {
                       size="sm"
                       disabled={isLoading || !locationInput.trim()}
                     >
-                      Next
+                      {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Next'}
                     </Button>
                   </div>
                 </div>
