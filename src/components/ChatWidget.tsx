@@ -409,8 +409,8 @@ export const ChatWidget = () => {
 
                         {/* Citations */}
                         {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                          <div className={`mt-2 w-full overflow-hidden ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'}`}>
-                            <div className="text-xs font-medium text-muted-foreground mb-2">
+                          <div className={`mt-2 w-full min-w-0 overflow-hidden ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'}`}>
+                            <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how we found this answer
                             </div>
                             {(() => {
@@ -424,7 +424,7 @@ export const ChatWidget = () => {
                               
                               return (
                                 <Card className={`${showCalendar ? 'p-3' : 'p-2.5'} bg-background border overflow-hidden shadow-sm`}>
-                                  <div className="flex items-start gap-2 overflow-hidden">
+                                  <div className="flex items-start gap-2 min-w-0 overflow-hidden">
                                     <img 
                                       src={faviconUrl} 
                                       alt="Value Build Homes" 
@@ -435,19 +435,19 @@ export const ChatWidget = () => {
                                         href={url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-sm font-medium text-primary hover:underline block truncate"
+                                        className="text-primary hover:underline flex items-center gap-1 min-w-0 group"
                                       >
-                                        <span className="inline-flex items-center gap-1 max-w-full">
-                                          <h4 className={`${showCalendar ? 'text-base' : 'text-sm'} font-medium truncate`}>{citation.title || 'Reference'}</h4>
-                                          <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                                        </span>
+                                        <h4 className={`${showCalendar ? 'text-base' : 'text-sm'} font-medium truncate flex-1 min-w-0`}>
+                                          {citation.title || 'Reference'}
+                                        </h4>
+                                        <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                                       </a>
                                       {citation.description && (
                                         <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2`}>
                                           {citation.description}
                                         </p>
                                       )}
-                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate break-all">
+                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
                                         {url}
                                       </p>
                                     </div>
