@@ -512,7 +512,7 @@ export const ChatWidget = () => {
 
                           {/* Citations */}
                           {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                            <div className="mt-2 min-w-0 overflow-hidden w-[calc(var(--chat-width)_*_0.78)] flex-none animate-fade-in">
+                            <div className="mt-2 min-w-0 overflow-hidden max-w-full animate-fade-in" style={{ width: 'calc(var(--chat-width) * 0.78)' }}>
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how I found this answer
                             </div>
