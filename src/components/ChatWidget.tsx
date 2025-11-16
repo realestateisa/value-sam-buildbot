@@ -233,28 +233,43 @@ export const ChatWidget = () => {
       document.head.appendChild(script);
     }
 
-    // Clear any previous inline render
     const containerId = `cal-inline-${selectedTerritory}`;
-    const container = document.getElementById(containerId);
-    if (container) container.innerHTML = '';
+    
+    // Wait for container to exist in DOM before rendering calendar
+    const renderCalendar = () => {
+      const container = document.getElementById(containerId);
+      if (!container) {
+        // Container not in DOM yet, wait and retry
+        requestAnimationFrame(renderCalendar);
+        return;
+      }
 
-    // Queue init with namespace and inline render (processed once script loads)
-    w.Cal('init', territory.calNamespace, { origin: 'https://app.cal.com' });
-    
-    // Configure UI settings
-    w.Cal('ui', {
-      hideEventTypeDetails: true,
-      layout: 'month_view',
-      styles: { branding: { brandColor: '#000000' } }
-    });
-    
-    // Queue inline render using the namespace
-    w.Cal('inline', {
-      namespace: territory.calNamespace,
-      elementOrSelector: `#${containerId}`,
-      calLink: territory.calLink,
-      config: { theme: 'light' }
-    });
+      // Clear any previous inline render
+      container.innerHTML = '';
+
+      // Queue init with namespace and inline render (processed once script loads)
+      w.Cal('init', territory.calNamespace, { origin: 'https://app.cal.com' });
+      
+      // Configure UI settings
+      w.Cal('ui', {
+        hideEventTypeDetails: true,
+        layout: 'month_view',
+        styles: { branding: { brandColor: '#000000' } }
+      });
+      
+      // Queue inline render using the namespace
+      w.Cal('inline', {
+        namespace: territory.calNamespace,
+        elementOrSelector: `#${containerId}`,
+        calLink: territory.calLink,
+        config: { theme: 'light' }
+      });
+      
+      setCalendarLoading(false);
+    };
+
+    // Start the rendering process
+    renderCalendar();
   }, [showCalendar, selectedTerritory]);
 
   return (
