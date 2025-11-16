@@ -41,7 +41,7 @@ export const ChatWidget = () => {
       const welcomeMessage: Message = {
         id: '1',
         role: 'assistant',
-        content: "Hi! I'm SAM, your Value Build Homes assistant. I can help you learn about our custom home building services and schedule appointments. What can I help you with?",
+        content: "Hi! I'm Sam, your Value Build Homes assistant. I can help you learn about our custom home building services and schedule appointments. What can I help you with?",
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
@@ -283,7 +283,7 @@ export const ChatWidget = () => {
               <div className="flex items-center gap-2">
                 <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-0.5" />
                 <div>
-                  <h3 className="text-base font-semibold">SAM</h3>
+                  <h3 className="text-base font-semibold">Sam</h3>
                   <p className="text-xs opacity-90 font-medium">Digital Assistant</p>
                 </div>
               </div>
