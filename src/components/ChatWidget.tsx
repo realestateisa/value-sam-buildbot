@@ -417,7 +417,7 @@ export const ChatWidget = () => {
 
                         {/* Citations */}
                         {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                          <div className={`mt-2 w-full min-w-0 overflow-hidden ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'}`}>
+                          <div className={`mt-2 w-full min-w-0 ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'}`}>
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how we found this answer
                             </div>
@@ -431,8 +431,8 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className={`${showCalendar ? 'p-3' : 'p-2.5'} bg-background border overflow-hidden shadow-sm`}>
-                                  <div className="flex items-start gap-2 min-w-0 overflow-hidden">
+                                <Card className={`${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
+                                  <div className="flex items-start gap-2 overflow-hidden">
                                     <img 
                                       src={faviconUrl} 
                                       alt="Value Build Homes" 
@@ -443,19 +443,19 @@ export const ChatWidget = () => {
                                         href={url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-primary hover:underline flex items-center gap-1 min-w-0 group"
+                                        className="text-primary hover:underline flex items-center gap-1 group overflow-hidden"
                                       >
-                                        <h4 className={`${showCalendar ? 'text-base' : 'text-sm'} font-medium truncate flex-1 min-w-0`}>
+                                        <h4 className={`${showCalendar ? 'text-base' : 'text-sm'} font-medium truncate min-w-0 flex-1`}>
                                           {citation.title || 'Reference'}
                                         </h4>
                                         <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                                       </a>
                                       {citation.description && (
-                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2`}>
+                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2 break-words overflow-hidden`}>
                                           {citation.description}
                                         </p>
                                       )}
-                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
+                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate overflow-hidden">
                                         {url}
                                       </p>
                                     </div>
