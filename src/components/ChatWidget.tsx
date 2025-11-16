@@ -120,7 +120,7 @@ export const ChatWidget = () => {
     const appointmentMessage: Message = {
       id: Date.now().toString(),
       role: 'assistant',
-      content: "Great! To help you book an appointment, could you tell me where you're planning to build your home? Please enter a county or city (e.g., Greenville, SC).",
+      content: "Great! To help you book an appointment, please tell me your city or county in North Carolina or South Carolina.",
       timestamp: new Date(),
     };
     setMessages(prev => [...prev, appointmentMessage]);
@@ -149,22 +149,23 @@ export const ChatWidget = () => {
           setSelectedTerritory(territoryData.calNamespace);
           setShowCalendar(true);
           setShowLocationInput(false);
-          
-          const territoryMessage: Message = {
-            id: Date.now().toString(),
-            role: 'assistant',
-            content: `Great! I've found that ${territory.name} territory serves your area. This territory offers ${territoryData.appointmentType} appointments. Please select a time that works for you from the calendar below.`,
-            timestamp: new Date(),
-          };
-          setMessages(prev => [...prev, territoryMessage]);
           setLocationInput('');
         }
       } else {
         toast({
-          title: "Location not found",
-          description: data.message || "I couldn't find that location in our service areas. Please try entering a county name or city in NC, SC, or VA.",
+          title: "We don't build in your area yet",
+          description: "Value Build Homes currently serves areas in North Carolina and South Carolina. We're expanding! Please check back or contact us for updates.",
           variant: "destructive",
         });
+        
+        const errorMessage: Message = {
+          id: Date.now().toString(),
+          role: 'assistant',
+          content: "I'm sorry, but we don't currently build in that area. Value Build Homes serves counties in North Carolina and South Carolina. Is there a different location you'd like to check?",
+          timestamp: new Date(),
+        };
+        setMessages(prev => [...prev, errorMessage]);
+        setLocationInput('');
       }
     } catch (error) {
       console.error('Error detecting territory:', error);
@@ -199,6 +200,7 @@ export const ChatWidget = () => {
   useEffect(() => {
     if (!showCalendar || !selectedTerritory) return;
 
+    setCalendarLoading(true);
     const territory = Object.values(TERRITORIES).find(t => t.calNamespace === selectedTerritory);
     if (!territory) return;
 
@@ -269,7 +271,7 @@ export const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className={`fixed bottom-6 left-6 flex flex-col shadow-2xl z-50 transition-all overflow-hidden ${showCalendar ? 'w-[500px] h-[720px]' : 'w-[400px] h-[600px]'}`}>
+        <Card className={`fixed bottom-6 left-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[720px]' : 'w-[400px] h-[600px]'}`}>
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground">
             <div className="flex items-center gap-2">
@@ -292,7 +294,7 @@ export const ChatWidget = () => {
             </Button>
           </div>
 
-          {/* Appointment Type Banner */}
+          {/* Calendar Header */}
           {showCalendar && selectedTerritory && (
             <div className="border-b bg-muted p-4">
               {(() => {
@@ -307,16 +309,44 @@ export const ChatWidget = () => {
                 const address = territoryKey ? TERRITORY_ADDRESSES[territoryKey] : null;
                 
                 return (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      {isInPerson ? (
-                        <div className="h-2 w-2 rounded-full bg-primary" />
-                      ) : (
-                        <div className="h-2 w-2 rounded-full bg-blue-500" />
-                      )}
-                      <span className="font-semibold text-sm">
-                        {isInPerson ? 'In-Person Appointment' : 'Virtual Appointment'}
-                      </span>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {isInPerson ? (
+                          <div className="h-2 w-2 rounded-full bg-primary" />
+                        ) : (
+                          <div className="h-2 w-2 rounded-full bg-blue-500" />
+                        )}
+                        <span className="font-semibold text-sm">
+                          {isInPerson ? 'In-Person Appointment' : 'Virtual Appointment'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setShowCalendar(false);
+                            setSelectedTerritory(null);
+                            setShowLocationInput(true);
+                          }}
+                          className="h-7 px-2 text-xs"
+                        >
+                          ← Change Location
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setShowCalendar(false);
+                            setSelectedTerritory(null);
+                            setShowLocationInput(false);
+                          }}
+                          className="h-7 w-7"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
                     </div>
                     {isInPerson && address ? (
                       <p className="text-sm text-muted-foreground">
@@ -443,21 +473,29 @@ export const ChatWidget = () => {
               ))}
               {showLocationInput && !showCalendar && (
                 <div className="p-4 border-t bg-muted/30">
+                  <p className="text-sm mb-2 text-muted-foreground">
+                    Enter your location to find your nearest territory:
+                  </p>
                   <div className="flex gap-2">
-                    <Input
-                      value={locationInput}
-                      onChange={(e) => setLocationInput(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
-                      placeholder="Enter county or city..."
-                      className="flex-1"
-                      disabled={isLoading}
-                    />
+                    <div className="flex-1">
+                      <Input
+                        value={locationInput}
+                        onChange={(e) => setLocationInput(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
+                        placeholder="Enter your city or county (NC or SC)"
+                        className="w-full"
+                        disabled={isLoading}
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Examples: Charlotte, Greenville County, Columbia
+                      </p>
+                    </div>
                     <Button
                       onClick={handleLocationSubmit}
                       size="sm"
-                      disabled={isLoading}
+                      disabled={isLoading || !locationInput.trim()}
                     >
-                      {isLoading ? 'Detecting...' : 'Submit'}
+                      {isLoading ? 'Connecting you with the right people...' : 'Submit'}
                     </Button>
                   </div>
                 </div>
@@ -478,10 +516,18 @@ export const ChatWidget = () => {
 
           {/* Calendar Embed */}
           {showCalendar && selectedTerritory && (
-            <div className="border-t p-4 h-[600px] overflow-auto">
-              <div
+            <div className="border-t p-4 bg-background">
+              {calendarLoading && (
+                <div className="w-full min-h-[400px] flex items-center justify-center">
+                  <div className="text-center space-y-2">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
+                    <p className="text-sm text-muted-foreground">Loading available times...</p>
+                  </div>
+                </div>
+              )}
+              <div 
                 id={`cal-inline-${selectedTerritory}`}
-                style={{ width: '100%', height: '100%' }}
+                className={`w-full min-h-[400px] ${calendarLoading ? 'hidden' : ''}`}
               />
             </div>
           )}
