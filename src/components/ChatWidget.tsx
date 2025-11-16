@@ -39,7 +39,7 @@ export const ChatWidget = () => {
       const welcomeMessage: Message = {
         id: '1',
         role: 'assistant',
-        content: "Hi! I'm SAM, your digital assistant at Value Build Homes. I'm here to help you learn about our custom home building services and answer any questions you have. How can I help you today?",
+        content: "Hi! I'm SAM, your Value Build Homes assistant. I can help you learn about our custom home building services and schedule appointments. What can I help you with?",
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
@@ -242,23 +242,23 @@ export const ChatWidget = () => {
       {/* Chat Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 p-0"
+        className="fixed bottom-6 right-6 h-20 w-20 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 z-50 p-0"
         size="icon"
       >
-        {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-14 w-14 rounded-full" />}
+        {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-16 w-16 rounded-full" />}
       </Button>
 
       {/* Chat Window */}
       {isOpen && (
         <Card className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}>
           {/* Header */}
-          <div className={`flex items-center justify-between p-4 border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground`}>
+          <div className={`flex items-center justify-between p-3 border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
             {!showLocationInput && (
               <div className="flex items-center gap-2">
-                <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-1" />
+                <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-0.5" />
                 <div>
-                  <h3 className="font-semibold">SAM</h3>
-                  <p className="text-xs opacity-90">Digital Assistant</p>
+                  <h3 className="text-base font-semibold">SAM</h3>
+                  <p className="text-xs opacity-90 font-medium">Digital Assistant</p>
                 </div>
               </div>
             )}
@@ -270,7 +270,7 @@ export const ChatWidget = () => {
                 setShowCalendar(false);
                 setShowLocationInput(false);
               }}
-              className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
+              className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -278,7 +278,7 @@ export const ChatWidget = () => {
 
           {/* Calendar Header */}
           {showCalendar && selectedTerritory && (
-            <div className="border-b bg-muted p-4">
+            <div className="border-b bg-muted p-3">
               {(() => {
                 const territory = Object.values(TERRITORIES).find(t => t.calNamespace === selectedTerritory);
                 if (!territory) return null;
@@ -291,15 +291,15 @@ export const ChatWidget = () => {
                 const address = territoryKey ? TERRITORY_ADDRESSES[territoryKey] : null;
                 
                 return (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         {isInPerson ? (
-                          <div className="h-2 w-2 rounded-full bg-primary" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
                         ) : (
-                          <div className="h-2 w-2 rounded-full bg-blue-500" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
                         )}
-                        <span className="font-semibold text-sm">
+                        <span className="font-semibold text-xs">
                           {isInPerson ? 'In-Person Appointment' : 'Virtual Appointment'}
                         </span>
                       </div>
@@ -312,9 +312,9 @@ export const ChatWidget = () => {
                             setSelectedTerritory(null);
                             setShowLocationInput(true);
                           }}
-                          className="h-7 px-2 text-xs"
+                          className="h-6 px-2 text-[11px] transition-all duration-200"
                         >
-                          ← Change Location
+                          Change Location
                         </Button>
                         <Button
                           variant="ghost"
@@ -324,18 +324,18 @@ export const ChatWidget = () => {
                             setSelectedTerritory(null);
                             setShowLocationInput(false);
                           }}
-                          className="h-7 w-7"
+                          className="h-6 w-6 transition-all duration-200"
                         >
                           <X className="h-3 w-3" />
                         </Button>
                       </div>
                     </div>
                     {isInPerson && address ? (
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         Design Studio Location: {address}
                       </p>
                     ) : (
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         A virtual meeting link will be provided after booking.
                       </p>
                     )}
@@ -351,7 +351,7 @@ export const ChatWidget = () => {
               {/* Back Button */}
               <Button 
                 variant="ghost" 
-                className="absolute top-4 left-4 text-white hover:bg-white/10"
+                className="absolute top-3 left-3 text-white hover:bg-white/10 font-medium transition-all duration-200"
                 onClick={() => setShowLocationInput(false)}
               >
                 <ChevronLeft className="h-5 w-5 mr-1" />
@@ -359,30 +359,30 @@ export const ChatWidget = () => {
               </Button>
 
               {/* Centered Content */}
-              <div className="w-full max-w-md space-y-6">
+              <div className="w-full max-w-md space-y-4">
                 {/* Title */}
-                <h2 className="text-2xl font-semibold text-white text-center">
+                <h2 className="text-xl font-semibold text-white text-center">
                   Schedule an Appointment
                 </h2>
 
                 {/* Input Form */}
-                <div className="space-y-3">
-                  <Input
-                    value={locationInput}
-                    onChange={(e) => setLocationInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
-                    placeholder="Enter your city or county..."
-                    disabled={isLoading}
-                    className="bg-white text-black border-none placeholder:text-gray-500"
-                  />
-                  <Button
-                    onClick={handleLocationSubmit}
-                    disabled={isLoading || !locationInput.trim()}
-                    className="w-full bg-white text-[#E93424] hover:bg-gray-100"
-                  >
-                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Continue'}
-                  </Button>
-                </div>
+            <div className="space-y-3">
+              <Input
+                value={locationInput}
+                onChange={(e) => setLocationInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
+                placeholder="Enter your city or county..."
+                disabled={isLoading}
+                className="bg-white text-black border-none placeholder:text-gray-500 h-11"
+              />
+              <Button
+                onClick={handleLocationSubmit}
+                disabled={isLoading || !locationInput.trim()}
+                className="w-full bg-white text-[#E93424] hover:bg-gray-100 h-11 font-medium transition-colors duration-200"
+              >
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Continue'}
+              </Button>
+            </div>
               </div>
             </div>
           ) : (
@@ -390,28 +390,26 @@ export const ChatWidget = () => {
               {/* Messages */}
               {/* Chat Messages - hidden when calendar is shown */}
               {!showCalendar && (
-                <ScrollArea className="flex-1 p-4 pr-6 overflow-hidden" ref={scrollRef}>
-                  <div className="space-y-4">
+                <ScrollArea className="flex-1 p-3 pr-5 overflow-hidden" ref={scrollRef}>
+                  <div className="space-y-3">
                     {messages.map((message) => (
                       <div
                         key={message.id}
                         className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                       >
                         <div
-                          className={`rounded-lg p-3 overflow-hidden ${
-                            showCalendar ? 'max-w-[360px]' : 'max-w-[280px]'
-                          } ${
+                          className={`rounded-lg p-2.5 overflow-hidden max-w-[85%] ${
                             message.role === 'user'
-                              ? 'bg-primary text-primary-foreground'
+                              ? 'bg-primary text-primary-foreground shadow-sm'
                               : 'bg-muted'
                           }`}
                         >
-                          <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</p>
+                          <p className="text-sm whitespace-normal break-words">{message.content}</p>
                         </div>
 
                         {/* Citations */}
                         {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                          <div className={`mt-2 w-full overflow-hidden ${showCalendar ? 'max-w-[440px]' : 'max-w-[340px]'}`}>
+                          <div className="mt-2 w-full overflow-hidden max-w-[85%]">
                             <div className="text-xs font-medium text-muted-foreground mb-2">
                               Here's how we found this answer
                             </div>
@@ -425,12 +423,12 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className="p-3 bg-background border overflow-hidden">
-                                  <div className="flex items-start gap-3 overflow-hidden">
+                                <Card className="p-2.5 bg-background border overflow-hidden shadow-sm">
+                                  <div className="flex items-start gap-2 overflow-hidden">
                                     <img 
                                       src={faviconUrl} 
                                       alt="Value Build Homes" 
-                                      className="w-6 h-6 rounded-full flex-shrink-0 mt-0.5"
+                                      className="w-5 h-5 rounded-full flex-shrink-0 mt-0.5"
                                     />
                                     <div className="flex-1 min-w-0 overflow-hidden">
                                       <a
@@ -445,19 +443,19 @@ export const ChatWidget = () => {
                                         </span>
                                       </a>
                                       {citation.description && (
-                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
                                           {citation.description}
                                         </p>
                                       )}
-                                      <p className="text-xs text-muted-foreground mt-1 truncate break-all">
+                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate break-all">
                                         {url}
                                       </p>
                                     </div>
                                   </div>
                                   
                                   {totalCitations > 1 && (
-                                    <div className="flex items-center justify-between mt-3 pt-3 border-t">
-                                      <span className="text-xs text-muted-foreground">
+                                    <div className="flex items-center justify-between mt-2 pt-2 border-t">
+                                      <span className="text-[11px] text-muted-foreground font-medium">
                                         {currentIndex + 1} of {totalCitations}
                                       </span>
                                       <div className="flex items-center gap-1">
@@ -469,9 +467,9 @@ export const ChatWidget = () => {
                                             [message.id]: Math.max(0, currentIndex - 1)
                                           }))}
                                           disabled={currentIndex === 0}
-                                          className="h-6 w-6 p-0"
+                                          className="h-5 w-5 p-0 transition-all duration-200"
                                         >
-                                          <ChevronLeft className="h-3 w-3" />
+                                          <ChevronLeft className="h-2.5 w-2.5" />
                                         </Button>
                                         <Button
                                           variant="ghost"
@@ -481,9 +479,9 @@ export const ChatWidget = () => {
                                             [message.id]: Math.min(totalCitations - 1, currentIndex + 1)
                                           }))}
                                           disabled={currentIndex === totalCitations - 1}
-                                          className="h-6 w-6 p-0"
+                                          className="h-5 w-5 p-0 transition-all duration-200"
                                         >
-                                          <ChevronRight className="h-3 w-3" />
+                                          <ChevronRight className="h-2.5 w-2.5" />
                                         </Button>
                                       </div>
                                     </div>
@@ -518,10 +516,10 @@ export const ChatWidget = () => {
 
           {/* Action Buttons */}
           {!showLocationInput && !showCalendar && (
-            <div className="p-4 border-t space-y-2">
+            <div className="p-3 border-t">
               <Button
                 onClick={handleBookAppointment}
-                className="w-full"
+                className="w-full font-medium transition-all duration-200"
                 variant="default"
               >
                 <Calendar className="h-4 w-4 mr-2" />
@@ -532,20 +530,21 @@ export const ChatWidget = () => {
 
           {/* Message Input - hidden when calendar or location input is shown */}
           {!showCalendar && !showLocationInput && (
-            <div className="p-4 border-t">
-              <div className="flex gap-2">
+            <div className="p-3 border-t">
+              <div className="flex gap-1.5">
                 <Input
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Type your message..."
+                  placeholder="Ask me anything about Value Build Homes..."
                   disabled={isLoading}
-                  className="flex-1"
+                  className="flex-1 text-sm"
                 />
                 <Button
                   onClick={handleSendMessage}
                   disabled={isLoading || !inputValue.trim()}
                   size="icon"
+                  className="transition-colors duration-200"
                 >
                   <Send className="h-4 w-4" />
                 </Button>
