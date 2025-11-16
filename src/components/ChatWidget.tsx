@@ -397,7 +397,7 @@ export const ChatWidget = () => {
                 value={locationInput}
                 onChange={(e) => setLocationInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
-                placeholder="Enter your city or county..."
+                placeholder="What county will you build in?"
                 disabled={isLoading}
                 className="bg-white text-black border-none placeholder:text-gray-500 h-11"
               />
