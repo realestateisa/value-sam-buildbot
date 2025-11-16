@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Calendar, Phone, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -179,23 +179,6 @@ export const ChatWidget = () => {
     }
   };
 
-  const handleRequestCallback = () => {
-    const callbackMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: 'I want to request a callback',
-      timestamp: new Date(),
-    };
-    
-    const responseMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      role: 'assistant',
-      content: "I'd be glad to arrange a callback for you! To ensure you're connected with the right team member, could you let me know where you're planning to build your home?",
-      timestamp: new Date(),
-    };
-
-    setMessages(prev => [...prev, callbackMessage, responseMessage]);
-  };
 
   useEffect(() => {
     if (!showCalendar || !selectedTerritory) return;
@@ -473,21 +456,18 @@ export const ChatWidget = () => {
               ))}
               {showLocationInput && !showCalendar && (
                 <div className="p-4 border-t bg-muted/30">
-                  <p className="text-sm mb-2 text-muted-foreground">
-                    Enter your location to find your nearest territory:
-                  </p>
                   <div className="flex gap-2">
                     <div className="flex-1">
                       <Input
                         value={locationInput}
                         onChange={(e) => setLocationInput(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
-                        placeholder="Enter your city or county (NC or SC)"
+                        placeholder="Where do you plan to build?"
                         className="w-full"
                         disabled={isLoading}
                       />
                       <p className="text-xs text-muted-foreground mt-1">
-                        Examples: Charlotte, Greenville County, Columbia
+                        Examples: Wake County, Charlotte, 27332
                       </p>
                     </div>
                     <Button
@@ -533,7 +513,7 @@ export const ChatWidget = () => {
           )}
 
           {/* Action Buttons */}
-          {!showLocationInput && !showCalendar && messages.length === 1 && (
+          {!showLocationInput && !showCalendar && (
             <div className="p-4 border-t space-y-2">
               <Button
                 onClick={handleBookAppointment}
@@ -542,14 +522,6 @@ export const ChatWidget = () => {
               >
                 <Calendar className="h-4 w-4 mr-2" />
                 Book an Appointment
-              </Button>
-              <Button
-                onClick={handleRequestCallback}
-                className="w-full"
-                variant="outline"
-              >
-                <Phone className="h-4 w-4 mr-2" />
-                Request a Callback
               </Button>
             </div>
           )}
