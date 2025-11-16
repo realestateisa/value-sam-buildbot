@@ -406,13 +406,17 @@ export const ChatWidget = () => {
                         className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                       >
                         <div
-                          className={`rounded-lg p-2.5 min-w-0 ${showCalendar ? 'w-[80%]' : 'w-[85%]'} ${
+                          className={`rounded-lg p-2.5 min-w-0 ${
+                            message.role === 'user' 
+                              ? (showCalendar ? 'max-w-[80%]' : 'max-w-[85%]')
+                              : (showCalendar ? 'w-[80%]' : 'w-[85%]')
+                          } ${
                             message.role === 'user'
                               ? 'bg-primary text-primary-foreground shadow-sm'
                               : 'bg-muted'
                           }`}
                         >
-                          <p className="text-sm whitespace-pre-wrap break-words break-all">{message.content}</p>
+                          <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
                         </div>
 
                         {/* Citations */}
