@@ -104,7 +104,7 @@ export const ChatWidget = () => {
               }, 100);
             }
           }
-        }, 20); // Speed of typing (20ms per character)
+        }, 12); // Speed of typing (12ms per character)
         
         return () => clearInterval(typeInterval);
       }, 300); // Initial delay (300ms)
