@@ -529,7 +529,7 @@ export const ChatWidget = () => {
                         // User message or assistant without citations: natural width
                         <div className={`rounded-lg p-2.5 max-w-[calc(100%-32px)] sm:max-w-[85%] min-w-0 break-words ${
                           message.role === 'user'
-                            ? 'bg-primary text-primary-foreground shadow-sm'
+                            ? 'bg-primary text-primary-foreground shadow-sm mr-4'
                             : 'bg-muted'
                         }`}>
                           <p className="text-sm whitespace-normal break-words">{message.content}</p>
