@@ -484,20 +484,20 @@ export const ChatWidget = () => {
                       {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Next'}
                     </Button>
                   </div>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
+              </div>
+            )}
+          </div>
 
-          {/* Calendar Embed */}
+          {/* Calendar Embed - now inside ScrollArea for scrollability */}
           {showCalendar && selectedTerritory && (
-            <div className="border-t p-4 bg-background">
-              <div 
-                id={`cal-inline-${selectedTerritory}`}
-                className="w-full min-h-[400px]"
-              />
+            <div 
+              id="calendar-container" 
+              className="min-h-[400px] w-full"
+            >
             </div>
           )}
+        </ScrollArea>
+
 
           {/* Action Buttons */}
           {!showLocationInput && !showCalendar && (
