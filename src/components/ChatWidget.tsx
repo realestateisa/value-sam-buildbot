@@ -140,15 +140,20 @@ export const ChatWidget = () => {
         console.log('Stored CustomGPT session_id:', data.sessionId);
       }
 
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.message,
-        timestamp: new Date(),
-        citations: data.citations || [],
-      };
+      // Check if the response triggers appointment scheduling
+      if (data.message.toLowerCase().includes('schedule_appointment')) {
+        setShowLocationInput(true);
+      } else {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: data.message,
+          timestamp: new Date(),
+          citations: data.citations || [],
+        };
 
-      setMessages(prev => [...prev, assistantMessage]);
+        setMessages(prev => [...prev, assistantMessage]);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
