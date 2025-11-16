@@ -429,12 +429,12 @@ export const ChatWidget = () => {
 
             {/* Chat Messages - hidden when calendar or location input is shown */}
             {!showCalendar && !showLocationInput && (
-            <ScrollArea className="flex-1 overflow-x-hidden overflow-y-auto" ref={scrollRef}>
-                <div className="space-y-3 w-full min-w-0 overflow-x-hidden" style={{ padding: '12px 20px 12px 12px', paddingBottom: footerPad + 12 }}>
+            <ScrollArea className="flex-1 overflow-y-auto" ref={scrollRef}>
+                <div className="space-y-3 w-full min-w-0" style={{ padding: '12px 20px 12px 12px', paddingBottom: footerPad + 12 }}>
                   {messages.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex flex-col w-full min-w-0 overflow-x-hidden ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                      className={`flex flex-col w-full min-w-0 ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                     >
                       {message.role === 'assistant' && message.citations && message.citations.length > 0 ? (
                         // Assistant with citations: shared wrapper
@@ -443,7 +443,7 @@ export const ChatWidget = () => {
                             <p className="text-sm whitespace-normal break-words">{message.content}</p>
                           </div>
                           {/* Citations */}
-                          <div className="min-w-0 max-w-full overflow-x-hidden">
+                          <div className="min-w-0 max-w-full">
                             <div className="text-xs font-medium text-muted-foreground mb-2 break-words">
                               Here's how we found this answer
                             </div>
