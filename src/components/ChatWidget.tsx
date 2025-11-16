@@ -415,16 +415,16 @@ export const ChatWidget = () => {
                   {messages.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                      className={`flex flex-col w-full min-w-0 overflow-x-hidden ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                     >
                       {message.role === 'assistant' && message.citations && message.citations.length > 0 ? (
                         // Assistant with citations: shared wrapper
-                        <div className="flex flex-col min-w-0 max-w-[85%] w-full space-y-2">
+                        <div className="flex flex-col min-w-0 max-w-[85%] w-full space-y-2 overflow-x-hidden">
                           <div className="rounded-lg p-2.5 bg-muted">
                             <p className="text-sm whitespace-normal break-words">{message.content}</p>
                           </div>
                           {/* Citations */}
-                          <div className="min-w-0">
+                          <div className="min-w-0 max-w-full overflow-x-hidden">
                             <div className="text-xs font-medium text-muted-foreground mb-2 break-words">
                               Here's how we found this answer
                             </div>
