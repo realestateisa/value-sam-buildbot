@@ -410,12 +410,12 @@ export const ChatWidget = () => {
 
             {/* Chat Messages - hidden when calendar or location input is shown */}
             {!showCalendar && !showLocationInput && (
-              <ScrollArea className="flex-1 overflow-x-hidden" ref={scrollRef}>
-                <div className="space-y-3" style={{ padding: '12px 20px 12px 12px', paddingBottom: footerPad + 12 }}>
+            <ScrollArea className="flex-1 overflow-x-hidden overflow-y-auto" ref={scrollRef}>
+                <div className="space-y-3 max-w-full overflow-x-hidden" style={{ padding: '12px 20px 12px 12px', paddingBottom: footerPad + 12 }}>
                   {messages.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                      className={`flex flex-col max-w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                     >
                       {message.role === 'assistant' && message.citations && message.citations.length > 0 ? (
                         // Assistant with citations: shared wrapper
@@ -438,8 +438,8 @@ export const ChatWidget = () => {
                             const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                             
                             return (
-                              <Card className="p-2.5 bg-background border overflow-hidden shadow-sm">
-                                <div className="flex items-start gap-2 min-w-0 overflow-hidden">
+                              <Card className="p-2.5 bg-background border overflow-hidden shadow-sm w-full">
+                                <div className="flex items-start gap-2 min-w-0 w-full overflow-hidden">
                                   <img 
                                     src={faviconUrl} 
                                     alt="Value Build Homes" 
