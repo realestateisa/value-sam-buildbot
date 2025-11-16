@@ -488,7 +488,7 @@ export const ChatWidget = () => {
                           <div
                             className={`rounded-lg p-2.5 min-w-0 ${
                               message.role === 'user' 
-                                ? 'max-w-[88%] md:max-w-[85%]'
+                                ? 'w-[calc(var(--chat-width)_*_0.78)] flex-none'
                                 : 'w-[calc(var(--chat-width)_*_0.78)] flex-none'
                             } ${
                               message.role === 'user'
