@@ -47,9 +47,12 @@ export const ChatWidget = () => {
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+      if (scrollElement) {
+        scrollElement.scrollTop = scrollElement.scrollHeight;
+      }
     }
-  }, [messages]);
+  }, [messages, isLoading]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
