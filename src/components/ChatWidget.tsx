@@ -32,9 +32,6 @@ export const ChatWidget = () => {
   const [calendarError, setCalendarError] = useState<string | null>(null);
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
-  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
-  const [displayedText, setDisplayedText] = useState<string>('');
-  const [showCitationsForMessage, setShowCitationsForMessage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -48,8 +45,6 @@ export const ChatWidget = () => {
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
-      // Show citations for welcome message immediately
-      setShowCitationsForMessage('1');
     }
   }, [isOpen]);
 
@@ -74,44 +69,6 @@ export const ChatWidget = () => {
     ro.observe(chatRef.current);
     return () => ro.disconnect();
   }, []);
-
-  // Typewriter effect for assistant messages
-  useEffect(() => {
-    const lastMessage = messages[messages.length - 1];
-    
-    // Only trigger for new assistant messages that aren't already typed
-    if (lastMessage && lastMessage.role === 'assistant' && lastMessage.id !== typingMessageId && lastMessage.id !== '1') {
-      setTypingMessageId(lastMessage.id);
-      setDisplayedText('');
-      setShowCitationsForMessage(null);
-      
-      // Initial delay before typing starts
-      const initialDelay = setTimeout(() => {
-        let currentIndex = 0;
-        const fullText = lastMessage.content;
-        
-        const typeInterval = setInterval(() => {
-          if (currentIndex < fullText.length) {
-            setDisplayedText(fullText.slice(0, currentIndex + 1));
-            currentIndex++;
-          } else {
-            clearInterval(typeInterval);
-            setTypingMessageId(null);
-            // Show citations after typing completes
-            if (lastMessage.citations && lastMessage.citations.length > 0) {
-              setTimeout(() => {
-                setShowCitationsForMessage(lastMessage.id);
-              }, 100);
-            }
-          }
-        }, 12); // Speed of typing (12ms per character)
-        
-        return () => clearInterval(typeInterval);
-      }, 300); // Initial delay (300ms)
-      
-      return () => clearTimeout(initialDelay);
-    }
-  }, [messages]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -475,18 +432,14 @@ export const ChatWidget = () => {
                             message.role === 'user'
                               ? 'bg-primary text-primary-foreground shadow-sm'
                               : 'bg-muted'
-                          } ${message.role === 'assistant' && typingMessageId === message.id ? 'animate-fade-in' : ''}`}
+                          } ${message.role === 'assistant' ? 'animate-fade-in' : ''}`}
                         >
-                          <p className="text-sm whitespace-pre-wrap break-words">
-                            {message.role === 'assistant' && typingMessageId === message.id 
-                              ? displayedText 
-                              : message.content}
-                          </p>
+                          <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
                         </div>
 
                         {/* Citations */}
-                        {message.role === 'assistant' && message.citations && message.citations.length > 0 && (typingMessageId !== message.id || showCitationsForMessage === message.id) && (
-                          <div className={`mt-2 min-w-0 overflow-hidden w-[calc(var(--chat-width)_*_0.85)] flex-none ${showCitationsForMessage === message.id ? 'animate-fade-in' : ''}`}>
+                        {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
+                          <div className="mt-2 min-w-0 overflow-hidden w-[calc(var(--chat-width)_*_0.85)] flex-none animate-fade-in">
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how we found this answer
                             </div>
