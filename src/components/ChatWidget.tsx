@@ -430,7 +430,7 @@ export const ChatWidget = () => {
             {/* Chat Messages - hidden when calendar or location input is shown */}
             {!showCalendar && !showLocationInput && (
             <ScrollArea className="flex-1 overflow-y-auto" ref={scrollRef}>
-                <div className="space-y-3 w-full min-w-0" style={{ padding: '12px 20px 12px 12px', paddingBottom: footerPad + 12 }}>
+                <div className="space-y-3 w-full min-w-0 box-border" style={{ padding: '12px 20px 12px 12px', paddingBottom: footerPad + 12 }}>
                   {messages.map((message) => (
                     <div
                       key={message.id}
