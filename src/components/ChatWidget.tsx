@@ -491,7 +491,7 @@ export const ChatWidget = () => {
           {/* Calendar Embed - now inside ScrollArea for scrollability */}
           {showCalendar && selectedTerritory && (
             <div 
-              id="calendar-container" 
+              id={`cal-inline-${selectedTerritory}`}
               className="min-h-[400px] w-full"
             >
             </div>
