@@ -461,9 +461,6 @@ export const ChatWidget = () => {
                       <Calendar className="h-4 w-4" />
                       Book Your Appointment
                     </h4>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Step 1 of 2: Tell us where you're building
-                    </p>
                   </div>
                   <div className="flex gap-2">
                     <div className="flex-1">
@@ -484,7 +481,7 @@ export const ChatWidget = () => {
                       size="sm"
                       disabled={isLoading || !locationInput.trim()}
                     >
-                      {isLoading ? 'Connecting you with the right people...' : 'Book Appointment'}
+                      {isLoading ? 'Connecting you with the right people...' : 'Next'}
                     </Button>
                   </div>
                 </div>
