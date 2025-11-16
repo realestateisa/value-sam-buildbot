@@ -412,7 +412,7 @@ export const ChatWidget = () => {
                               : 'bg-muted'
                           }`}
                         >
-                          <p className="text-sm whitespace-normal break-words overflow-wrap-anywhere">{message.content}</p>
+                          <p className="text-sm whitespace-pre-wrap break-words break-all">{message.content}</p>
                         </div>
 
                         {/* Citations */}
@@ -450,9 +450,13 @@ export const ChatWidget = () => {
                                         </h4>
                                         <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                                       </a>
-                                      {citation.description && (
-                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2 break-words overflow-hidden`}>
+                                      {citation.description ? (
+                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2 break-words overflow-hidden min-h-[2.6em]`}>
                                           {citation.description}
+                                        </p>
+                                      ) : (
+                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 opacity-0 pointer-events-none min-h-[2.6em]`} aria-hidden="true">
+                                          placeholder
                                         </p>
                                       )}
                                       <p className="text-[11px] text-muted-foreground mt-0.5 truncate break-all overflow-hidden">
