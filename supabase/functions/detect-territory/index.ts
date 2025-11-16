@@ -88,7 +88,7 @@ Respond with just the territory key, nothing else.`;
         'Authorization': `Bearer ${openAIApiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-5-mini-2025-08-07',
+        model: 'gpt-4.1-2025-04-14',
         messages: [
           { role: 'system', content: 'You are a territory classification assistant. Respond only with the territory key.' },
           { role: 'user', content: prompt }
