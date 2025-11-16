@@ -451,7 +451,7 @@ export const ChatWidget = () => {
                 onKeyPress={(e) => e.key === 'Enter' && locationInput.length >= 3 && handleLocationSubmit()}
                 placeholder="What county will you build in?"
                 disabled={isLoading}
-                className="bg-white text-black border-none placeholder:text-gray-500 h-11 text-base"
+                className="bg-white text-black border-none placeholder:text-gray-500 h-11 text-[16px]"
               />
               {locationInput.length >= 3 && (
                 <Button
@@ -488,7 +488,7 @@ export const ChatWidget = () => {
                           <div
                             className={`rounded-lg p-2.5 min-w-0 ${
                               message.role === 'user' 
-                                ? 'max-w-[calc(var(--chat-width)_*_0.85)]'
+                                ? 'max-w-[calc(var(--chat-width)_*_0.85)] md:max-w-[calc(var(--chat-width)_*_0.85)] max-w-[85%]'
                                 : 'w-[calc(var(--chat-width)_*_0.78)] flex-none'
                             } ${
                               message.role === 'user'
@@ -642,7 +642,7 @@ export const ChatWidget = () => {
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder="Ask me anything.."
                   disabled={isLoading}
-                  className="flex-1 text-base"
+                  className="flex-1 text-[16px]"
                 />
                 <Button
                   onClick={handleSendMessage}
