@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight, Loader2, Trash2 } from 'lucide-react';
+import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight, Loader2, Trash2, MapPin, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -357,9 +357,9 @@ export const ChatWidget = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         {isInPerson ? (
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                          <MapPin className="h-4 w-4 text-primary" />
                         ) : (
-                          <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                          <Video className="h-4 w-4 text-blue-500" />
                         )}
                         <span className="font-semibold text-xs">
                           {isInPerson ? 'In-Person Appointment' : 'Virtual Appointment'}
