@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight, Loader2, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -10,6 +10,7 @@ import { detectTerritory } from '@/utils/territoryDetection';
 import { useToast } from '@/hooks/use-toast';
 import logo from '@/assets/logo.png';
 import TypingIndicator from '@/components/TypingIndicator';
+import { saveChatSession, loadChatSession, clearChatSession } from '@/utils/chatStorage';
 
 const TERRITORY_ADDRESSES: Record<string, string> = {
   oxford: '3015 S Jefferson Davis Hwy, Sanford, NC 27332',
@@ -36,6 +37,16 @@ export const ChatWidget = () => {
   const chatRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
+  // Load saved session on mount
+  useEffect(() => {
+    const savedSession = loadChatSession();
+    if (savedSession && savedSession.messages.length > 0) {
+      setMessages(savedSession.messages);
+      setCustomGptSessionId(savedSession.customGptSessionId);
+    }
+  }, []);
+
+  // Show welcome message when chat opens (if no saved messages)
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       const welcomeMessage: Message = {
@@ -46,7 +57,14 @@ export const ChatWidget = () => {
       };
       setMessages([welcomeMessage]);
     }
-  }, [isOpen]);
+  }, [isOpen, messages.length]);
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    if (messages.length > 0) {
+      saveChatSession(messages, customGptSessionId);
+    }
+  }, [messages, customGptSessionId]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -288,18 +306,36 @@ export const ChatWidget = () => {
                 </div>
               </div>
             )}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                setIsOpen(false);
-                setShowCalendar(false);
-                setShowLocationInput(false);
-              }}
-              className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  clearChatSession();
+                  setMessages([]);
+                  setCustomGptSessionId(null);
+                  toast({
+                    description: "Chat history cleared",
+                  });
+                }}
+                className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
+                title="Clear chat history"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setIsOpen(false);
+                  setShowCalendar(false);
+                  setShowLocationInput(false);
+                }}
+                className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Calendar Header */}
