@@ -526,7 +526,7 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className={`w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
+                                <Card className={`w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden max-h-[180px] md:max-h-none`}>
                                   <div className="flex items-start gap-2 overflow-hidden min-w-0">
                                     <div className="flex-1 min-w-0 overflow-hidden">
                                       <a
@@ -541,11 +541,11 @@ export const ChatWidget = () => {
                                         <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                                       </a>
                                       {citation.description ? (
-                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2 break-words overflow-hidden min-h-[2.6em]`}>
+                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2 break-words overflow-hidden`}>
                                           {citation.description}
                                         </p>
                                       ) : (
-                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 opacity-0 pointer-events-none min-h-[2.6em]`} aria-hidden="true">
+                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 opacity-0 pointer-events-none`} aria-hidden="true">
                                           placeholder
                                         </p>
                                       )}
