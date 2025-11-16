@@ -457,25 +457,33 @@ export const ChatWidget = () => {
                     {messages.map((message) => (
                       <div
                         key={message.id}
-                        className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                        className={`flex w-full ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}
                       >
-                        <div
-                          className={`rounded-lg p-2.5 min-w-0 ${
-                            message.role === 'user' 
-                              ? 'max-w-[calc(var(--chat-width)_*_0.85)]'
-                              : 'w-[calc(var(--chat-width)_*_0.85)] flex-none'
-                          } ${
-                            message.role === 'user'
-                              ? 'bg-primary text-primary-foreground shadow-sm'
-                              : 'bg-muted'
-                          } ${message.role === 'assistant' ? 'animate-fade-in' : ''}`}
-                        >
-                          <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
-                        </div>
+                        {message.role === 'assistant' && (
+                          <img 
+                            src={logo} 
+                            alt="Sam" 
+                            className="h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1" 
+                          />
+                        )}
+                        <div className="flex flex-col">
+                          <div
+                            className={`rounded-lg p-2.5 min-w-0 ${
+                              message.role === 'user' 
+                                ? 'max-w-[calc(var(--chat-width)_*_0.85)]'
+                                : 'w-[calc(var(--chat-width)_*_0.78)] flex-none'
+                            } ${
+                              message.role === 'user'
+                                ? 'bg-primary text-primary-foreground shadow-sm'
+                                : 'bg-muted'
+                            } ${message.role === 'assistant' ? 'animate-fade-in' : ''}`}
+                          >
+                            <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                          </div>
 
-                        {/* Citations */}
-                        {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                          <div className="mt-2 min-w-0 overflow-hidden w-[calc(var(--chat-width)_*_0.85)] flex-none animate-fade-in">
+                          {/* Citations */}
+                          {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
+                            <div className="mt-2 min-w-0 overflow-hidden w-[calc(var(--chat-width)_*_0.78)] flex-none animate-fade-in">
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how we found this answer
                             </div>
@@ -561,6 +569,7 @@ export const ChatWidget = () => {
                             })()}
                           </div>
                         )}
+                        </div>
                       </div>
                     ))}
                     
