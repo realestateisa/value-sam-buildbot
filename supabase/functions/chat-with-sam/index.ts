@@ -41,7 +41,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, sessionId } = await req.json();
     
     if (!messages || !Array.isArray(messages)) {
       throw new Error('Messages array is required');
@@ -67,34 +67,41 @@ serve(async (req) => {
       throw new Error('No user message found');
     }
 
-    // Step 1: Create a conversation to get a session_id
-    const createConversationUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations`;
-    console.log('Creating conversation:', createConversationUrl);
+    let conversationSessionId = sessionId;
 
-    const createConversationResponse = await fetch(createConversationUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${CUSTOMGPT_API_KEY}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        name: `Chat-${Date.now()}`,
-      }),
-    });
+    // Only create a new conversation if we don't have a session_id
+    if (!conversationSessionId) {
+      console.log('No existing session, creating new conversation');
+      const createConversationUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations`;
+      console.log('Creating conversation:', createConversationUrl);
 
-    if (!createConversationResponse.ok) {
-      const errorText = await createConversationResponse.text();
-      console.error('Failed to create conversation:', createConversationResponse.status, errorText);
-      throw new Error(`Failed to create conversation: ${createConversationResponse.status}`);
+      const createConversationResponse = await fetch(createConversationUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${CUSTOMGPT_API_KEY}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          name: `Chat-${Date.now()}`,
+        }),
+      });
+
+      if (!createConversationResponse.ok) {
+        const errorText = await createConversationResponse.text();
+        console.error('Failed to create conversation:', createConversationResponse.status, errorText);
+        throw new Error(`Failed to create conversation: ${createConversationResponse.status}`);
+      }
+
+      const conversationData = await createConversationResponse.json();
+      conversationSessionId = conversationData.data.session_id;
+      console.log('Created conversation with session_id:', conversationSessionId);
+    } else {
+      console.log('Using existing session_id:', conversationSessionId);
     }
 
-    const conversationData = await createConversationResponse.json();
-    const sessionId = conversationData.data.session_id;
-    console.log('Created conversation with session_id:', sessionId);
-
     // Step 2: Send message to the conversation
-    const apiUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations/${sessionId}/messages`;
+    const apiUrl = `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations/${conversationSessionId}/messages`;
     console.log('Sending message to conversation:', apiUrl);
 
     const response = await fetch(apiUrl, {
@@ -173,7 +180,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         message: aiMessage,
-        citations: citations
+        citations: citations,
+        sessionId: conversationSessionId
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

@@ -31,6 +31,7 @@ export const ChatWidget = () => {
   const [calendarLoading, setCalendarLoading] = useState(false);
   const [calendarError, setCalendarError] = useState<string | null>(null);
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
+  const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -94,11 +95,18 @@ export const ChatWidget = () => {
           messages: messages.concat(userMessage).map(m => ({
             role: m.role,
             content: m.content
-          }))
+          })),
+          sessionId: customGptSessionId
         }
       });
 
       if (error) throw error;
+
+      // Store the session ID if this is the first message
+      if (data.sessionId && !customGptSessionId) {
+        setCustomGptSessionId(data.sessionId);
+        console.log('Stored CustomGPT session_id:', data.sessionId);
+      }
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
