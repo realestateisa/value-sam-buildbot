@@ -117,13 +117,6 @@ export const ChatWidget = () => {
   };
 
   const handleBookAppointment = () => {
-    const appointmentMessage: Message = {
-      id: Date.now().toString(),
-      role: 'assistant',
-      content: "Great! To help you book an appointment, please tell me your city or county in North Carolina or South Carolina.",
-      timestamp: new Date(),
-    };
-    setMessages(prev => [...prev, appointmentMessage]);
     setShowLocationInput(true);
   };
 
