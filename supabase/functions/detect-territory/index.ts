@@ -53,10 +53,10 @@ serve(async (req) => {
 
   try {
     const { location } = await req.json();
-    const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
+    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
-    if (!anthropicApiKey) {
-      throw new Error('ANTHROPIC_API_KEY not configured');
+    if (!openAIApiKey) {
+      throw new Error('OPENAI_API_KEY not configured');
     }
 
     console.log('Detecting territory for location:', location);
@@ -81,35 +81,32 @@ If you cannot determine the territory with confidence, respond with "unknown".
 
 Respond with just the territory key, nothing else.`;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01'
+        'Authorization': `Bearer ${openAIApiKey}`
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 100,
+        model: 'gpt-5-mini-2025-08-07',
         messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ]
+          { role: 'system', content: 'You are a territory classification assistant. Respond only with the territory key.' },
+          { role: 'user', content: prompt }
+        ],
+        max_completion_tokens: 50
       })
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Anthropic API error:', response.status, errorText);
-      throw new Error(`Anthropic API error: ${response.status}`);
+      console.error('OpenAI API error:', response.status, errorText);
+      throw new Error(`OpenAI API error: ${response.status}`);
     }
 
     const data = await response.json();
-    const territoryKey = data.content[0].text.trim().toLowerCase();
+    const territoryKey = data.choices[0].message.content.trim().toLowerCase();
     
-    console.log('Claude detected territory:', territoryKey);
+    console.log('ChatGPT detected territory:', territoryKey);
 
     if (territoryKey === 'unknown' || !TERRITORIES[territoryKey as keyof typeof TERRITORIES]) {
       return new Response(
