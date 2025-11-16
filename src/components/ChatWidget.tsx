@@ -183,6 +183,7 @@ export const ChatWidget = () => {
         };
         setMessages(prev => [...prev, errorMessage]);
         setLocationInput('');
+        setShowLocationInput(false);
       }
     } catch (error) {
       console.error('Error detecting territory:', error);
@@ -288,6 +289,9 @@ export const ChatWidget = () => {
                 setIsOpen(false);
                 setShowCalendar(false);
                 setShowLocationInput(false);
+                setSelectedTerritory(null);
+                setMessages([]);
+                setLocationInput('');
               }}
               className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
             >
