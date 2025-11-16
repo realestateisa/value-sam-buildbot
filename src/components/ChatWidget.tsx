@@ -252,20 +252,23 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}>
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground">
-            <div className="flex items-center gap-2">
-              <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-1" />
-              <div>
-                <h3 className="font-semibold">SAM</h3>
-                <p className="text-xs opacity-90">Digital Assistant</p>
+          <div className={`flex items-center justify-between p-4 border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground`}>
+            {!showLocationInput && (
+              <div className="flex items-center gap-2">
+                <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-1" />
+                <div>
+                  <h3 className="font-semibold">SAM</h3>
+                  <p className="text-xs opacity-90">Digital Assistant</p>
+                </div>
               </div>
-            </div>
+            )}
             <Button
               variant="ghost"
               size="icon"
               onClick={() => {
                 setIsOpen(false);
                 setShowCalendar(false);
+                setShowLocationInput(false);
               }}
               className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
             >
@@ -342,146 +345,163 @@ export const ChatWidget = () => {
             </div>
           )}
 
-          {/* Messages */}
-          {/* Chat Messages - hidden when calendar is shown */}
-          {!showCalendar && (
-            <ScrollArea className="flex-1 p-4 pr-6 overflow-hidden" ref={scrollRef}>
-              <div className="space-y-4">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+          {/* Red Overlay Appointment Form */}
+          {showLocationInput && !showCalendar ? (
+            <div className="flex-1 flex flex-col items-center justify-center bg-[#E93424] p-8 animate-fade-in relative">
+              {/* Back Button */}
+              <Button 
+                variant="ghost" 
+                className="absolute top-4 left-4 text-white hover:bg-white/10"
+                onClick={() => setShowLocationInput(false)}
+              >
+                <ChevronLeft className="h-5 w-5 mr-1" />
+                Back
+              </Button>
+
+              {/* Centered Content */}
+              <div className="w-full max-w-md space-y-6">
+                {/* Title */}
+                <h2 className="text-2xl font-semibold text-white text-center">
+                  Schedule an Appointment
+                </h2>
+
+                {/* Input Form */}
+                <div className="space-y-3">
+                  <Input
+                    value={locationInput}
+                    onChange={(e) => setLocationInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
+                    placeholder="Enter your city or county..."
+                    disabled={isLoading}
+                    className="bg-white text-black border-none placeholder:text-gray-500"
+                  />
+                  <Button
+                    onClick={handleLocationSubmit}
+                    disabled={isLoading || !locationInput.trim()}
+                    className="w-full bg-white text-[#E93424] hover:bg-gray-100"
                   >
-                    <div
-                      className={`rounded-lg p-3 overflow-hidden ${
-                        showCalendar ? 'max-w-[360px]' : 'max-w-[280px]'
-                      } ${
-                        message.role === 'user'
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted'
-                      }`}
-                    >
-                      <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</p>
-                    </div>
-
-                    {/* Citations */}
-                    {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                      <div className={`mt-2 w-full overflow-hidden ${showCalendar ? 'max-w-[440px]' : 'max-w-[340px]'}`}>
-                        <div className="text-xs font-medium text-muted-foreground mb-2">
-                          Here's how we found this answer
-                        </div>
-                        {(() => {
-                          const currentIndex = expandedCitations[message.id] || 0;
-                          const citation = message.citations![currentIndex];
-                          const totalCitations = message.citations!.length;
-                          const url = citation.url;
-                          
-                          // Always use Value Build Homes favicon since citations are from their website
-                          const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
-                          
-                          return (
-                            <Card className="p-3 bg-background border overflow-hidden">
-                              <div className="flex items-start gap-3 overflow-hidden">
-                                <img 
-                                  src={faviconUrl} 
-                                  alt="Value Build Homes" 
-                                  className="w-6 h-6 rounded flex-shrink-0 mt-0.5"
-                                />
-                                <div className="flex-1 min-w-0 overflow-hidden">
-                                  <a
-                                    href={url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-sm font-medium text-primary hover:underline block truncate"
-                                  >
-                                    <span className="inline-flex items-center gap-1 max-w-full">
-                                      <span className="truncate">{citation.title || 'Reference'}</span>
-                                      <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                                    </span>
-                                  </a>
-                                  {citation.description && (
-                                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                      {citation.description}
-                                    </p>
-                                  )}
-                                  <p className="text-xs text-muted-foreground mt-1 truncate break-all">
-                                    {url}
-                                  </p>
-                                </div>
-                              </div>
-                              
-                              {totalCitations > 1 && (
-                                <div className="flex items-center justify-between mt-3 pt-3 border-t">
-                                  <span className="text-xs text-muted-foreground">
-                                    {currentIndex + 1} of {totalCitations}
-                                  </span>
-                                  <div className="flex gap-1">
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => {
-                                        setExpandedCitations(prev => ({
-                                          ...prev,
-                                          [message.id]: Math.max(0, currentIndex - 1)
-                                        }));
-                                      }}
-                                      disabled={currentIndex === 0}
-                                      className="h-6 w-6 p-0"
-                                    >
-                                      <ChevronLeft className="h-3 w-3" />
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => {
-                                        setExpandedCitations(prev => ({
-                                          ...prev,
-                                          [message.id]: Math.min(totalCitations - 1, currentIndex + 1)
-                                        }));
-                                      }}
-                                      disabled={currentIndex === totalCitations - 1}
-                                      className="h-6 w-6 p-0"
-                                    >
-                                      <ChevronRight className="h-3 w-3" />
-                                    </Button>
-                                  </div>
-                                </div>
-                              )}
-                            </Card>
-                          );
-                        })()}
-                      </div>
-                    )}
-                  </div>
-                ))}
-                
-                {/* Typing Indicator */}
-                {isLoading && <TypingIndicator />}
-              </div>
-            </ScrollArea>
-          )}
-
-          {/* Location Input Form */}
-          {showLocationInput && !showCalendar && (
-            <div className="p-4 border-t space-y-3">
-              <div className="flex gap-2">
-                <Input
-                  value={locationInput}
-                  onChange={(e) => setLocationInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
-                  placeholder="Enter your city or county..."
-                  disabled={isLoading}
-                  className="flex-1"
-                />
-                <Button
-                  onClick={handleLocationSubmit}
-                  disabled={isLoading || !locationInput.trim()}
-                  size="icon"
-                >
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                </Button>
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Continue'}
+                  </Button>
+                </div>
               </div>
             </div>
+          ) : (
+            <>
+              {/* Messages */}
+              {/* Chat Messages - hidden when calendar is shown */}
+              {!showCalendar && (
+                <ScrollArea className="flex-1 p-4 pr-6 overflow-hidden" ref={scrollRef}>
+                  <div className="space-y-4">
+                    {messages.map((message) => (
+                      <div
+                        key={message.id}
+                        className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                      >
+                        <div
+                          className={`rounded-lg p-3 overflow-hidden ${
+                            showCalendar ? 'max-w-[360px]' : 'max-w-[280px]'
+                          } ${
+                            message.role === 'user'
+                              ? 'bg-primary text-primary-foreground'
+                              : 'bg-muted'
+                          }`}
+                        >
+                          <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</p>
+                        </div>
+
+                        {/* Citations */}
+                        {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
+                          <div className={`mt-2 w-full overflow-hidden ${showCalendar ? 'max-w-[440px]' : 'max-w-[340px]'}`}>
+                            <div className="text-xs font-medium text-muted-foreground mb-2">
+                              Here's how we found this answer
+                            </div>
+                            {(() => {
+                              const currentIndex = expandedCitations[message.id] || 0;
+                              const citation = message.citations![currentIndex];
+                              const totalCitations = message.citations!.length;
+                              const url = citation.url;
+                              
+                              // Always use Value Build Homes favicon since citations are from their website
+                              const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
+                              
+                              return (
+                                <Card className="p-3 bg-background border overflow-hidden">
+                                  <div className="flex items-start gap-3 overflow-hidden">
+                                    <img 
+                                      src={faviconUrl} 
+                                      alt="Value Build Homes" 
+                                      className="w-6 h-6 rounded-full flex-shrink-0 mt-0.5"
+                                    />
+                                    <div className="flex-1 min-w-0 overflow-hidden">
+                                      <a
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm font-medium text-primary hover:underline block truncate"
+                                      >
+                                        <span className="inline-flex items-center gap-1 max-w-full">
+                                          <span className="truncate">{citation.title || 'Reference'}</span>
+                                          <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                                        </span>
+                                      </a>
+                                      {citation.description && (
+                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                          {citation.description}
+                                        </p>
+                                      )}
+                                      <p className="text-xs text-muted-foreground mt-1 truncate break-all">
+                                        {url}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  
+                                  {totalCitations > 1 && (
+                                    <div className="flex items-center justify-between mt-3 pt-3 border-t">
+                                      <span className="text-xs text-muted-foreground">
+                                        {currentIndex + 1} of {totalCitations}
+                                      </span>
+                                      <div className="flex items-center gap-1">
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={() => setExpandedCitations(prev => ({
+                                            ...prev,
+                                            [message.id]: Math.max(0, currentIndex - 1)
+                                          }))}
+                                          disabled={currentIndex === 0}
+                                          className="h-6 w-6 p-0"
+                                        >
+                                          <ChevronLeft className="h-3 w-3" />
+                                        </Button>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={() => setExpandedCitations(prev => ({
+                                            ...prev,
+                                            [message.id]: Math.min(totalCitations - 1, currentIndex + 1)
+                                          }))}
+                                          disabled={currentIndex === totalCitations - 1}
+                                          className="h-6 w-6 p-0"
+                                        >
+                                          <ChevronRight className="h-3 w-3" />
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  )}
+                                </Card>
+                              );
+                            })()}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    
+                    {/* Typing Indicator */}
+                    {isLoading && <TypingIndicator />}
+                  </div>
+                </ScrollArea>
+              )}
+            </>
           )}
 
           {/* Calendar View - standalone when active */}
@@ -510,8 +530,8 @@ export const ChatWidget = () => {
             </div>
           )}
 
-          {/* Message Input - hidden when calendar is shown */}
-          {!showCalendar && (
+          {/* Message Input - hidden when calendar or location input is shown */}
+          {!showCalendar && !showLocationInput && (
             <div className="p-4 border-t">
               <div className="flex gap-2">
                 <Input
