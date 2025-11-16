@@ -300,7 +300,6 @@ export const ChatWidget = () => {
         <Card 
           ref={chatRef}
           className={`fixed inset-0 md:inset-auto md:bottom-28 md:right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'md:w-[500px] md:h-[828px]' : 'md:w-[400px] md:h-[690px]'} w-full h-full`}
-          style={{ ['--chat-width' as any]: typeof window !== 'undefined' && window.innerWidth < 768 ? '100%' : (showCalendar ? '500px' : '400px') }}
         >
           {/* Header */}
           <div className={`flex items-center justify-between ${showCalendar ? 'p-4' : 'p-3'} border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
