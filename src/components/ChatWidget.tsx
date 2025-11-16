@@ -417,7 +417,7 @@ export const ChatWidget = () => {
 
                         {/* Citations */}
                         {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                          <div className={`mt-2 w-full min-w-0 ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'}`}>
+                          <div className={`mt-2 w-full min-w-0 overflow-hidden ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'}`}>
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how we found this answer
                             </div>
@@ -431,8 +431,8 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className={`${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
-                                  <div className="flex items-start gap-2 overflow-hidden">
+                                <Card className={`${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden w-full`}>
+                                  <div className="flex items-start gap-2 overflow-hidden min-w-0">
                                     <img 
                                       src={faviconUrl} 
                                       alt="Value Build Homes" 
