@@ -93,7 +93,7 @@ Respond with just the territory key, nothing else.`;
           { role: 'system', content: 'You are a territory classification assistant. Respond only with the territory key.' },
           { role: 'user', content: prompt }
         ],
-        max_completion_tokens: 50
+        max_completion_tokens: 120
       })
     });
 
@@ -105,15 +105,15 @@ Respond with just the territory key, nothing else.`;
 
     const data = await response.json();
     console.log('Full OpenAI response:', JSON.stringify(data, null, 2));
-    
-    const territoryKey = data.choices?.[0]?.message?.content?.trim().toLowerCase() || '';
-    
-    console.log('ChatGPT detected territory:', territoryKey);
-    
+
+    let territoryKey = data.choices?.[0]?.message?.content?.trim().toLowerCase() || '';
+
     if (!territoryKey) {
-      console.error('Empty response from OpenAI. Full data:', data);
-      throw new Error('OpenAI returned empty response');
+      console.warn('Empty content from OpenAI, treating as unknown.');
+      territoryKey = 'unknown';
     }
+
+    console.log('ChatGPT detected territory:', territoryKey);
 
     if (territoryKey === 'unknown' || !TERRITORIES[territoryKey as keyof typeof TERRITORIES]) {
       return new Response(
