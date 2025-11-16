@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Message, TERRITORIES } from '@/types/chat';
 import { detectTerritory } from '@/utils/territoryDetection';
 import { useToast } from '@/hooks/use-toast';
+import TypingIndicator from '@/components/TypingIndicator';
 
 const TERRITORY_ADDRESSES: Record<string, string> = {
   oxford: '3015 S Jefferson Davis Hwy, Sanford, NC 27332',
@@ -451,6 +452,9 @@ export const ChatWidget = () => {
                     )}
                   </div>
                 ))}
+                
+                {/* Typing Indicator */}
+                {isLoading && <TypingIndicator />}
               </div>
             </ScrollArea>
           )}
