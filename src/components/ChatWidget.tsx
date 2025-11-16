@@ -456,6 +456,15 @@ export const ChatWidget = () => {
               ))}
               {showLocationInput && !showCalendar && (
                 <div className="p-4 border-t bg-muted/30">
+                  <div className="mb-3">
+                    <h4 className="text-sm font-semibold flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      Book Your Appointment
+                    </h4>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Step 1 of 2: Tell us where you're building
+                    </p>
+                  </div>
                   <div className="flex gap-2">
                     <div className="flex-1">
                       <Input
@@ -475,19 +484,8 @@ export const ChatWidget = () => {
                       size="sm"
                       disabled={isLoading || !locationInput.trim()}
                     >
-                      {isLoading ? 'Connecting you with the right people...' : 'Submit'}
+                      {isLoading ? 'Connecting you with the right people...' : 'Book Appointment'}
                     </Button>
-                  </div>
-                </div>
-              )}
-              {isLoading && !showLocationInput && (
-                <div className="flex justify-start">
-                  <div className="bg-muted rounded-lg p-3">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
-                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.2s]" />
-                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.4s]" />
-                    </div>
                   </div>
                 </div>
               )}
