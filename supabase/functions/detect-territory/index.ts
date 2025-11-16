@@ -104,9 +104,16 @@ Respond with just the territory key, nothing else.`;
     }
 
     const data = await response.json();
-    const territoryKey = data.choices[0].message.content.trim().toLowerCase();
+    console.log('Full OpenAI response:', JSON.stringify(data, null, 2));
+    
+    const territoryKey = data.choices?.[0]?.message?.content?.trim().toLowerCase() || '';
     
     console.log('ChatGPT detected territory:', territoryKey);
+    
+    if (!territoryKey) {
+      console.error('Empty response from OpenAI. Full data:', data);
+      throw new Error('OpenAI returned empty response');
+    }
 
     if (territoryKey === 'unknown' || !TERRITORIES[territoryKey as keyof typeof TERRITORIES]) {
       return new Response(
