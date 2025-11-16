@@ -274,7 +274,7 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card 
           ref={chatRef}
-          className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}
+          className={`fixed bottom-28 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}
           style={{ ['--chat-width' as any]: showCalendar ? '500px' : '400px' }}
         >
           {/* Header */}
