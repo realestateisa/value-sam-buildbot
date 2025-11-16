@@ -250,7 +250,7 @@ export const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}>
+        <Card className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-40 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}>
           {/* Header */}
           <div className={`flex items-center justify-between ${showCalendar ? 'p-4' : 'p-3'} border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
             {!showLocationInput && (
@@ -390,27 +390,20 @@ export const ChatWidget = () => {
               {/* Messages */}
               {/* Chat Messages - hidden when calendar is shown */}
               {!showCalendar && (
-        <ScrollArea className={`flex-1 overflow-hidden ${showCalendar ? 'p-4 pr-6' : 'p-3 pr-5'}`} ref={scrollRef}>
-          <div className={`${showCalendar ? 'space-y-4' : 'space-y-3'}`}>
+        <ScrollArea className="flex-1 overflow-hidden p-3 pr-5" ref={scrollRef}>
+          <div className="space-y-3">
                     {messages.map((message) => (
                       <div
                         key={message.id}
                         className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                       >
-                        {/* Shared width wrapper for message bubble and citations */}
-                        <div className={`flex flex-col min-w-0 ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'} w-full space-y-2`}>
-                          <div
-                            className={`rounded-lg p-2.5 w-full ${
-                              message.role === 'user'
-                                ? 'bg-primary text-primary-foreground shadow-sm'
-                                : 'bg-muted'
-                            }`}
-                          >
-                            <p className="text-sm whitespace-normal break-words">{message.content}</p>
-                          </div>
-
-                          {/* Citations */}
-                          {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
+                        {message.role === 'assistant' && message.citations && message.citations.length > 0 ? (
+                          // Assistant with citations: shared wrapper
+                          <div className="flex flex-col min-w-0 max-w-[85%] w-full space-y-2">
+                            <div className="rounded-lg p-2.5 w-full bg-muted">
+                              <p className="text-sm whitespace-normal break-words">{message.content}</p>
+                            </div>
+                            {/* Citations */}
                             <div className="w-full min-w-0">
                               <div className="text-xs font-medium text-muted-foreground mb-2 break-words">
                                 Here's how we found this answer
@@ -425,7 +418,7 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className={`${showCalendar ? 'p-3' : 'p-2.5'} bg-background border overflow-hidden shadow-sm`}>
+                                <Card className="p-2.5 bg-background border overflow-hidden shadow-sm">
                                   <div className="flex items-start gap-2 min-w-0 overflow-hidden">
                                     <img 
                                       src={faviconUrl} 
@@ -439,13 +432,13 @@ export const ChatWidget = () => {
                                         rel="noopener noreferrer"
                                         className="text-primary hover:underline flex items-center gap-1 min-w-0 group"
                                       >
-                                        <h4 className={`${showCalendar ? 'text-base' : 'text-sm'} font-medium truncate flex-1 min-w-0`}>
+                                        <h4 className="text-sm font-medium truncate flex-1 min-w-0">
                                           {citation.title || 'Reference'}
                                         </h4>
                                         <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                                       </a>
                                       {citation.description && (
-                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2`}>
+                                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
                                           {citation.description}
                                         </p>
                                       )}
@@ -492,8 +485,17 @@ export const ChatWidget = () => {
                               );
                             })()}
                           </div>
-                        )}
                         </div>
+                        ) : (
+                          // User message or assistant without citations: natural width
+                          <div className={`rounded-lg p-2.5 max-w-[85%] ${
+                            message.role === 'user'
+                              ? 'bg-primary text-primary-foreground shadow-sm'
+                              : 'bg-muted'
+                          }`}>
+                            <p className="text-sm whitespace-normal break-words">{message.content}</p>
+                          </div>
+                        )}
                       </div>
                     ))}
                     
