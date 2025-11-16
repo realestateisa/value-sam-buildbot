@@ -398,7 +398,7 @@ export const ChatWidget = () => {
               {/* Messages */}
               {/* Chat Messages - hidden when calendar is shown */}
               {!showCalendar && (
-        <ScrollArea className={`flex-1 overflow-hidden ${showCalendar ? 'p-4 pr-6' : 'p-3 pr-5'}`} ref={scrollRef}>
+        <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? 'p-4 pr-6' : 'p-3 pr-5'}`} ref={scrollRef}>
           <div className={`${showCalendar ? 'space-y-4' : 'space-y-3'}`}>
                     {messages.map((message) => (
                       <div
@@ -443,9 +443,9 @@ export const ChatWidget = () => {
                                         href={url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-primary hover:underline flex items-center gap-1 group overflow-hidden"
+                                        className="text-primary hover:underline flex items-center gap-1 group overflow-hidden min-w-0 shrink"
                                       >
-                                        <h4 className={`${showCalendar ? 'text-base' : 'text-sm'} font-medium truncate min-w-0 flex-1`}>
+                                        <h4 className={`${showCalendar ? 'text-base' : 'text-sm'} font-medium line-clamp-1 min-w-0 flex-1`}>
                                           {citation.title || 'Reference'}
                                         </h4>
                                         <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -455,7 +455,7 @@ export const ChatWidget = () => {
                                           {citation.description}
                                         </p>
                                       )}
-                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate overflow-hidden">
+                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate break-all overflow-hidden">
                                         {url}
                                       </p>
                                     </div>
