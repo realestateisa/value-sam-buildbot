@@ -481,7 +481,7 @@ export const ChatWidget = () => {
                       size="sm"
                       disabled={isLoading || !locationInput.trim()}
                     >
-                      {isLoading ? 'Connecting you with the right people...' : 'Next'}
+                      Next
                     </Button>
                   </div>
                 </div>
