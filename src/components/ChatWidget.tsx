@@ -33,6 +33,7 @@ export const ChatWidget = () => {
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const chatRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -55,6 +56,19 @@ export const ChatWidget = () => {
       }
     }
   }, [messages, isLoading]);
+
+  // Lock chat window width into CSS variable for stable citation sizing
+  useEffect(() => {
+    if (!chatRef.current) return;
+    const setWidthVar = () => {
+      const w = chatRef.current!.clientWidth;
+      chatRef.current!.style.setProperty('--chat-width', `${w}px`);
+    };
+    setWidthVar();
+    const ro = new ResizeObserver(setWidthVar);
+    ro.observe(chatRef.current);
+    return () => ro.disconnect();
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -258,7 +272,11 @@ export const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}>
+        <Card 
+          ref={chatRef}
+          className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}
+          style={{ ['--chat-width' as any]: showCalendar ? '500px' : '400px' }}
+        >
           {/* Header */}
           <div className={`flex items-center justify-between ${showCalendar ? 'p-4' : 'p-3'} border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
             {!showLocationInput && (
@@ -408,8 +426,8 @@ export const ChatWidget = () => {
                         <div
                           className={`rounded-lg p-2.5 min-w-0 ${
                             message.role === 'user' 
-                              ? (showCalendar ? 'max-w-[80%]' : 'max-w-[85%]')
-                              : (showCalendar ? 'w-[80%]' : 'w-[85%]')
+                              ? 'max-w-[calc(var(--chat-width)_*_0.85)]'
+                              : 'w-[calc(var(--chat-width)_*_0.85)] flex-none'
                           } ${
                             message.role === 'user'
                               ? 'bg-primary text-primary-foreground shadow-sm'
@@ -421,7 +439,7 @@ export const ChatWidget = () => {
 
                         {/* Citations */}
                         {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                          <div className={`mt-2 min-w-0 overflow-hidden ${showCalendar ? 'w-[80%]' : 'w-[85%]'}`}>
+                          <div className="mt-2 min-w-0 overflow-hidden w-[calc(var(--chat-width)_*_0.85)] flex-none">
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how we found this answer
                             </div>
@@ -435,7 +453,7 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className={`${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
+                                <Card className={`w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
                                   <div className="flex items-start gap-2 overflow-hidden min-w-0">
                                     <img 
                                       src={faviconUrl} 
@@ -463,7 +481,7 @@ export const ChatWidget = () => {
                                           placeholder
                                         </p>
                                       )}
-                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate break-all overflow-hidden">
+                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate overflow-hidden">
                                         {url}
                                       </p>
                                     </div>
