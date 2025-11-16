@@ -419,7 +419,7 @@ export const ChatWidget = () => {
                     >
                       {message.role === 'assistant' && message.citations && message.citations.length > 0 ? (
                         // Assistant with citations: shared wrapper
-                        <div className="flex flex-col min-w-0 max-w-[85%] w-full space-y-2 overflow-x-hidden">
+                        <div className="flex flex-col min-w-0 max-w-[85%] space-y-2 overflow-x-hidden">
                           <div className="rounded-lg p-2.5 bg-muted">
                             <p className="text-sm whitespace-normal break-words">{message.content}</p>
                           </div>
@@ -445,7 +445,7 @@ export const ChatWidget = () => {
                                     alt="Value Build Homes" 
                                     className="w-5 h-5 rounded-full flex-shrink-0 mt-0.5"
                                   />
-                                  <div className="flex-1 min-w-0 overflow-hidden">
+                                  <div className="flex-1 min-w-0 max-w-full overflow-hidden break-words">
                                     <a
                                       href={url}
                                       target="_blank"
