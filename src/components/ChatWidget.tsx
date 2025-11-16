@@ -604,7 +604,7 @@ export const ChatWidget = () => {
                 variant="default"
               >
                 <Calendar className="h-4 w-4 mr-2" />
-                Book an Appointment
+                Schedule an Appointment
               </Button>
             </div>
           )}
