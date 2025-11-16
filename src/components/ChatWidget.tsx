@@ -419,7 +419,7 @@ export const ChatWidget = () => {
                     >
                       {message.role === 'assistant' && message.citations && message.citations.length > 0 ? (
                         // Assistant with citations: shared wrapper
-                        <div className="flex flex-col min-w-0 max-w-[85%] space-y-2">
+                        <div className="flex flex-col min-w-0 max-w-[85%] w-full space-y-2">
                           <div className="rounded-lg p-2.5 bg-muted">
                             <p className="text-sm whitespace-normal break-words">{message.content}</p>
                           </div>
@@ -438,8 +438,8 @@ export const ChatWidget = () => {
                             const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                             
                             return (
-                              <Card className="p-2.5 bg-background border overflow-hidden shadow-sm w-full">
-                                <div className="flex items-start gap-2 min-w-0 w-full overflow-hidden">
+                              <Card className="p-2.5 bg-background border overflow-hidden shadow-sm w-full max-w-full min-w-0">
+                                <div className="flex items-start gap-2 min-w-0 w-full max-w-full overflow-hidden">
                                   <img 
                                     src={faviconUrl} 
                                     alt="Value Build Homes" 
@@ -450,7 +450,7 @@ export const ChatWidget = () => {
                                       href={url}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="text-primary hover:underline flex items-center gap-1 min-w-0 group"
+                                      className="text-primary hover:underline flex items-center gap-1 min-w-0 max-w-full overflow-hidden group"
                                     >
                                       <h4 className="text-sm font-medium truncate flex-1 min-w-0">
                                         {citation.title || 'Reference'}
@@ -458,11 +458,11 @@ export const ChatWidget = () => {
                                       <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                                     </a>
                                     {citation.description && (
-                                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 break-words">
                                         {citation.description}
                                       </p>
                                     )}
-                                    <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
+                                    <p className="text-[11px] text-muted-foreground mt-0.5 break-all">
                                       {url}
                                     </p>
                                   </div>
