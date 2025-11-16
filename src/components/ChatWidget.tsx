@@ -190,20 +190,22 @@ export const ChatWidget = () => {
           setLocationInput('');
         }
       } else {
-        toast({
-          title: "We don't build in your area yet",
-          description: "Value Build Homes currently serves areas in North Carolina and South Carolina. We're expanding! Please check back or contact us for updates.",
-          variant: "destructive",
-        });
-        
         const errorMessage: Message = {
           id: Date.now().toString(),
           role: 'assistant',
-          content: "I'm sorry, but we don't currently build in that area. Value Build Homes serves counties in North Carolina and South Carolina. Is there a different location you'd like to check?",
+          content: "I'm sorry, but we don't currently build in that area. Value Build Homes currently serves counties in North Carolina and South Carolina. We're expanding! Please check back or contact us for updates.",
           timestamp: new Date(),
+          action: {
+            label: "Change Location",
+            onClick: () => {
+              setLocationInput('');
+              setShowLocationInput(true);
+            }
+          }
         };
         setMessages(prev => [...prev, errorMessage]);
         setLocationInput('');
+        setShowLocationInput(false);
       }
     } catch (error) {
       console.error('Error detecting territory:', error);
@@ -479,6 +481,18 @@ export const ChatWidget = () => {
                             } ${message.role === 'assistant' ? 'animate-fade-in' : ''}`}
                           >
                             <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                            
+                            {/* Action Button */}
+                            {message.action && (
+                              <Button
+                                onClick={message.action.onClick}
+                                variant="outline"
+                                size="sm"
+                                className="mt-3 w-full"
+                              >
+                                {message.action.label}
+                              </Button>
+                            )}
                           </div>
 
                           {/* Citations */}
