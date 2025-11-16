@@ -31,10 +31,7 @@ export const ChatWidget = () => {
   const [calendarLoading, setCalendarLoading] = useState(false);
   const [calendarError, setCalendarError] = useState<string | null>(null);
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
-  const [footerPad, setFooterPad] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const actionRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -49,30 +46,14 @@ export const ChatWidget = () => {
     }
   }, [isOpen]);
 
-  // Measure footer heights to ensure ScrollArea content isn't hidden
-  const measureFooterHeight = () => {
-    const actionHeight = actionRef.current?.offsetHeight || 0;
-    const inputHeight = inputRef.current?.offsetHeight || 0;
-    setFooterPad(actionHeight + inputHeight);
-  };
-
-  // Measure footers when visibility changes
   useEffect(() => {
-    measureFooterHeight();
-    window.addEventListener('resize', measureFooterHeight);
-    return () => window.removeEventListener('resize', measureFooterHeight);
-  }, [showCalendar, showLocationInput, isLoading, isOpen]);
-
-  // Auto-scroll with requestAnimationFrame after layout settles
-  useEffect(() => {
-    if (!scrollRef.current) return;
-    requestAnimationFrame(() => {
-      const scrollElement = scrollRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    if (scrollRef.current) {
+      const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
       if (scrollElement) {
         scrollElement.scrollTop = scrollElement.scrollHeight;
       }
-    });
-  }, [messages, isLoading, footerPad]);
+    }
+  }, [messages, isLoading]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -183,7 +164,6 @@ export const ChatWidget = () => {
         };
         setMessages(prev => [...prev, errorMessage]);
         setLocationInput('');
-        setShowLocationInput(false);
       }
     } catch (error) {
       console.error('Error detecting territory:', error);
@@ -233,43 +213,28 @@ export const ChatWidget = () => {
       document.head.appendChild(script);
     }
 
+    // Clear any previous inline render
     const containerId = `cal-inline-${selectedTerritory}`;
+    const container = document.getElementById(containerId);
+    if (container) container.innerHTML = '';
+
+    // Queue init with namespace and inline render (processed once script loads)
+    w.Cal('init', territory.calNamespace, { origin: 'https://app.cal.com' });
     
-    // Wait for container to exist in DOM before rendering calendar
-    const renderCalendar = () => {
-      const container = document.getElementById(containerId);
-      if (!container) {
-        // Container not in DOM yet, wait and retry
-        requestAnimationFrame(renderCalendar);
-        return;
-      }
-
-      // Clear any previous inline render
-      container.innerHTML = '';
-
-      // Queue init with namespace and inline render (processed once script loads)
-      w.Cal('init', territory.calNamespace, { origin: 'https://app.cal.com' });
-      
-      // Configure UI settings
-      w.Cal('ui', {
-        hideEventTypeDetails: true,
-        layout: 'month_view',
-        styles: { branding: { brandColor: '#000000' } }
-      });
-      
-      // Queue inline render using the namespace
-      w.Cal('inline', {
-        namespace: territory.calNamespace,
-        elementOrSelector: `#${containerId}`,
-        calLink: territory.calLink,
-        config: { theme: 'light' }
-      });
-      
-      setCalendarLoading(false);
-    };
-
-    // Start the rendering process
-    renderCalendar();
+    // Configure UI settings
+    w.Cal('ui', {
+      hideEventTypeDetails: true,
+      layout: 'month_view',
+      styles: { branding: { brandColor: '#000000' } }
+    });
+    
+    // Queue inline render using the namespace
+    w.Cal('inline', {
+      namespace: territory.calNamespace,
+      elementOrSelector: `#${containerId}`,
+      calLink: territory.calLink,
+      config: { theme: 'light' }
+    });
   }, [showCalendar, selectedTerritory]);
 
   return (
@@ -285,7 +250,7 @@ export const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-40 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}>
+        <Card className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}>
           {/* Header */}
           <div className={`flex items-center justify-between ${showCalendar ? 'p-4' : 'p-3'} border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
             {!showLocationInput && (
@@ -304,9 +269,6 @@ export const ChatWidget = () => {
                 setIsOpen(false);
                 setShowCalendar(false);
                 setShowLocationInput(false);
-                setSelectedTerritory(null);
-                setMessages([]);
-                setLocationInput('');
               }}
               className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
             >
@@ -383,183 +345,178 @@ export const ChatWidget = () => {
             </div>
           )}
 
-          {/* Content Wrapper - proper flex container for all content */}
-          <div className="flex-1 flex flex-col min-h-0">
-            {/* Red Overlay Appointment Form */}
-            {showLocationInput && !showCalendar && (
-              <div className="flex-1 flex flex-col items-center justify-center bg-[#E93424] p-8 animate-fade-in relative">
-                {/* Back Button */}
-                <Button 
-                  variant="ghost" 
-                  className="absolute top-3 left-3 text-white hover:bg-white/10 font-medium transition-all duration-200"
-                  onClick={() => setShowLocationInput(false)}
-                >
-                  <ChevronLeft className="h-5 w-5 mr-1" />
-                  Back
-                </Button>
+          {/* Red Overlay Appointment Form */}
+          {showLocationInput && !showCalendar ? (
+            <div className="flex-1 flex flex-col items-center justify-center bg-[#E93424] p-8 animate-fade-in relative">
+              {/* Back Button */}
+              <Button 
+                variant="ghost" 
+                className="absolute top-3 left-3 text-white hover:bg-white/10 font-medium transition-all duration-200"
+                onClick={() => setShowLocationInput(false)}
+              >
+                <ChevronLeft className="h-5 w-5 mr-1" />
+                Back
+              </Button>
 
-                {/* Centered Content */}
-                <div className="w-full max-w-md space-y-4">
-                  {/* Title */}
-                  <h2 className="text-xl font-semibold text-white text-center">
-                    Schedule an Appointment
-                  </h2>
+              {/* Centered Content */}
+              <div className="w-full max-w-md space-y-4">
+                {/* Title */}
+                <h2 className="text-xl font-semibold text-white text-center">
+                  Schedule an Appointment
+                </h2>
 
-                  {/* Input Form */}
-              <div className="space-y-3">
-                <Input
-                  value={locationInput}
-                  onChange={(e) => setLocationInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
-                  placeholder="Enter your city or county..."
-                  disabled={isLoading}
-                  className="bg-white text-black border-none placeholder:text-gray-500 h-11"
-                />
-                <Button
-                  onClick={handleLocationSubmit}
-                  disabled={isLoading || !locationInput.trim()}
-                  className="w-full bg-white text-[#E93424] hover:bg-gray-100 h-11 font-medium transition-colors duration-200"
-                >
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Continue'}
-                </Button>
+                {/* Input Form */}
+            <div className="space-y-3">
+              <Input
+                value={locationInput}
+                onChange={(e) => setLocationInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
+                placeholder="Enter your city or county..."
+                disabled={isLoading}
+                className="bg-white text-black border-none placeholder:text-gray-500 h-11"
+              />
+              <Button
+                onClick={handleLocationSubmit}
+                disabled={isLoading || !locationInput.trim()}
+                className="w-full bg-white text-[#E93424] hover:bg-gray-100 h-11 font-medium transition-colors duration-200"
+              >
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Continue'}
+              </Button>
+            </div>
               </div>
-                </div>
-              </div>
-            )}
+            </div>
+          ) : (
+            <>
+              {/* Messages */}
+              {/* Chat Messages - hidden when calendar is shown */}
+              {!showCalendar && (
+        <ScrollArea className={`flex-1 overflow-hidden ${showCalendar ? 'p-4 pr-6' : 'p-3 pr-5'}`} ref={scrollRef}>
+          <div className={`${showCalendar ? 'space-y-4' : 'space-y-3'}`}>
+                    {messages.map((message) => (
+                      <div
+                        key={message.id}
+                        className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                      >
+                        <div
+                          className={`rounded-lg p-2.5 min-w-0 ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'} ${
+                            message.role === 'user'
+                              ? 'bg-primary text-primary-foreground shadow-sm'
+                              : 'bg-muted'
+                          }`}
+                        >
+                          <p className="text-sm whitespace-normal break-words overflow-wrap-anywhere">{message.content}</p>
+                        </div>
 
-            {/* Chat Messages - hidden when calendar or location input is shown */}
-            {!showCalendar && !showLocationInput && (
-            <ScrollArea className="flex-1 overflow-y-auto" ref={scrollRef}>
-                <div className="space-y-3 w-full min-w-0 box-border pl-3 pr-0 py-3" style={{ paddingBottom: footerPad + 12 }}>
-                  {messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={`flex flex-col w-full min-w-0 ${message.role === 'user' ? 'items-end' : 'items-start'}`}
-                    >
-                      {message.role === 'assistant' && message.citations && message.citations.length > 0 ? (
-                        // Assistant with citations: shared wrapper
-                        <div className="flex flex-col min-w-0 max-w-[90%] md:max-w-[85%] space-y-2">
-                          <div className="rounded-lg p-2.5 bg-muted">
-                            <p className="text-sm whitespace-normal break-words">{message.content}</p>
-                          </div>
-                          {/* Citations */}
-                          <div className="min-w-0 max-w-full">
-                            <div className="text-xs font-medium text-muted-foreground mb-2 break-words">
+                        {/* Citations */}
+                        {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
+                          <div className={`mt-2 w-full min-w-0 overflow-hidden ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'}`}>
+                            <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how we found this answer
                             </div>
-                          {(() => {
-                            const currentIndex = expandedCitations[message.id] || 0;
-                            const citation = message.citations![currentIndex];
-                            const totalCitations = message.citations!.length;
-                            const url = citation.url;
-                            
-                            // Always use Value Build Homes favicon since citations are from their website
-                            const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
-                            
-                            return (
-                              <Card className="p-2.5 bg-background border overflow-hidden shadow-sm w-full max-w-full min-w-0">
-                                <div className="flex items-start gap-2 min-w-0 w-full max-w-full overflow-hidden">
-                                  <img 
-                                    src={faviconUrl} 
-                                    alt="Value Build Homes" 
-                                    className="w-5 h-5 rounded-full flex-shrink-0 mt-0.5"
-                                  />
-                                  <div className="flex-1 min-w-0 max-w-full overflow-hidden break-words">
-                                    <a
-                                      href={url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-primary hover:underline flex items-center gap-1 min-w-0 max-w-full overflow-hidden group"
-                                    >
-                                      <h4 className="text-sm font-medium truncate flex-1 min-w-0">
-                                        {citation.title || 'Reference'}
-                                      </h4>
-                                      <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    </a>
-                                    {citation.description && (
-                                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 break-words">
-                                        {citation.description}
+                            {(() => {
+                              const currentIndex = expandedCitations[message.id] || 0;
+                              const citation = message.citations![currentIndex];
+                              const totalCitations = message.citations!.length;
+                              const url = citation.url;
+                              
+                              // Always use Value Build Homes favicon since citations are from their website
+                              const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
+                              
+                              return (
+                                <Card className={`${showCalendar ? 'p-3' : 'p-2.5'} bg-background border overflow-hidden shadow-sm`}>
+                                  <div className="flex items-start gap-2 min-w-0 overflow-hidden">
+                                    <img 
+                                      src={faviconUrl} 
+                                      alt="Value Build Homes" 
+                                      className="w-5 h-5 rounded-full flex-shrink-0 mt-0.5"
+                                    />
+                                    <div className="flex-1 min-w-0 overflow-hidden">
+                                      <a
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary hover:underline flex items-center gap-1 min-w-0 group"
+                                      >
+                                        <h4 className={`${showCalendar ? 'text-base' : 'text-sm'} font-medium truncate flex-1 min-w-0`}>
+                                          {citation.title || 'Reference'}
+                                        </h4>
+                                        <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                      </a>
+                                      {citation.description && (
+                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2`}>
+                                          {citation.description}
+                                        </p>
+                                      )}
+                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
+                                        {url}
                                       </p>
-                                    )}
-                                    <p className="text-[11px] text-muted-foreground mt-0.5 break-all">
-                                      {url}
-                                    </p>
-                                  </div>
-                                </div>
-                                
-                                {totalCitations > 1 && (
-                                  <div className="flex items-center justify-between mt-2 pt-2 border-t">
-                                    <span className="text-[11px] text-muted-foreground font-medium">
-                                      {currentIndex + 1} of {totalCitations}
-                                    </span>
-                                    <div className="flex items-center gap-1">
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => setExpandedCitations(prev => ({
-                                          ...prev,
-                                          [message.id]: Math.max(0, currentIndex - 1)
-                                        }))}
-                                        disabled={currentIndex === 0}
-                                        className="h-5 w-5 p-0 transition-all duration-200"
-                                      >
-                                        <ChevronLeft className="h-2.5 w-2.5" />
-                                      </Button>
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => setExpandedCitations(prev => ({
-                                          ...prev,
-                                          [message.id]: Math.min(totalCitations - 1, currentIndex + 1)
-                                        }))}
-                                        disabled={currentIndex === totalCitations - 1}
-                                        className="h-5 w-5 p-0 transition-all duration-200"
-                                      >
-                                        <ChevronRight className="h-2.5 w-2.5" />
-                                      </Button>
                                     </div>
                                   </div>
-                                )}
-                              </Card>
-                            );
-                          })()}
-                        </div>
+                                  
+                                  {totalCitations > 1 && (
+                                    <div className="flex items-center justify-between mt-2 pt-2 border-t">
+                                      <span className="text-[11px] text-muted-foreground font-medium">
+                                        {currentIndex + 1} of {totalCitations}
+                                      </span>
+                                      <div className="flex items-center gap-1">
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={() => setExpandedCitations(prev => ({
+                                            ...prev,
+                                            [message.id]: Math.max(0, currentIndex - 1)
+                                          }))}
+                                          disabled={currentIndex === 0}
+                                          className="h-5 w-5 p-0 transition-all duration-200"
+                                        >
+                                          <ChevronLeft className="h-2.5 w-2.5" />
+                                        </Button>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={() => setExpandedCitations(prev => ({
+                                            ...prev,
+                                            [message.id]: Math.min(totalCitations - 1, currentIndex + 1)
+                                          }))}
+                                          disabled={currentIndex === totalCitations - 1}
+                                          className="h-5 w-5 p-0 transition-all duration-200"
+                                        >
+                                          <ChevronRight className="h-2.5 w-2.5" />
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  )}
+                                </Card>
+                              );
+                            })()}
+                          </div>
+                        )}
                       </div>
-                      ) : (
-                        // User message or assistant without citations: natural width
-                        <div className={`rounded-lg p-2.5 max-w-[90%] md:max-w-[85%] min-w-0 break-words ${
-                          message.role === 'user'
-                            ? 'bg-primary text-primary-foreground shadow-sm'
-                            : 'bg-muted'
-                        }`}>
-                          <p className="text-sm whitespace-normal break-words">{message.content}</p>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                  
-                  {/* Typing Indicator */}
-                  {isLoading && <TypingIndicator />}
-                </div>
-              </ScrollArea>
-            )}
+                    ))}
+                    
+                    {/* Typing Indicator */}
+                    {isLoading && <TypingIndicator />}
+                  </div>
+                </ScrollArea>
+              )}
+            </>
+          )}
 
-            {/* Calendar View - standalone when active */}
-            {showCalendar && selectedTerritory && (
-              <div className="flex-1 flex flex-col min-h-0">
-                <div 
-                  id={`cal-inline-${selectedTerritory}`}
-                  className="flex-1 w-full overflow-auto"
-                >
-                </div>
+          {/* Calendar View - standalone when active */}
+          {showCalendar && selectedTerritory && (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <div 
+                id={`cal-inline-${selectedTerritory}`}
+                className="flex-1 w-full overflow-auto"
+              >
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
 
           {/* Action Buttons */}
           {!showLocationInput && !showCalendar && (
-        <div className="p-3 border-t" ref={actionRef}>
+        <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t`}>
           <Button
                 onClick={handleBookAppointment}
                 className="w-full font-medium transition-all duration-200"
@@ -573,7 +530,7 @@ export const ChatWidget = () => {
 
           {/* Message Input - hidden when calendar or location input is shown */}
           {!showCalendar && !showLocationInput && (
-            <div className="p-3 border-t" ref={inputRef}>
+            <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t`}>
               <div className="flex gap-1.5">
                 <Input
                   value={inputValue}
