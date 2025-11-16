@@ -52,7 +52,7 @@ export const ChatWidget = () => {
       const welcomeMessage: Message = {
         id: '1',
         role: 'assistant',
-        content: "Hi! I'm Sam, your Value Build Homes assistant. I can help you learn about our custom home building services and schedule appointments. What can I help you with?",
+        content: "Hey there! I'm Sam, what can I answer for you?",
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
