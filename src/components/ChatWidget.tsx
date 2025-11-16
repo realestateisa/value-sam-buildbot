@@ -242,7 +242,7 @@ export const ChatWidget = () => {
       {/* Chat Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 left-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 p-0"
+        className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 p-0"
         size="icon"
       >
         {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-14 w-14 rounded-full" />}
@@ -250,7 +250,7 @@ export const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className={`fixed bottom-24 left-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}>
+        <Card className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}>
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground">
             <div className="flex items-center gap-2">
