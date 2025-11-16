@@ -430,15 +430,15 @@ export const ChatWidget = () => {
             {/* Chat Messages - hidden when calendar or location input is shown */}
             {!showCalendar && !showLocationInput && (
             <ScrollArea className="flex-1 overflow-y-auto" ref={scrollRef}>
-                <div className="space-y-3 w-full min-w-0 box-border" style={{ padding: '12px 20px 12px 12px', paddingBottom: footerPad + 12 }}>
+                <div className="space-y-3 w-full min-w-0 box-border px-3 py-3" style={{ paddingBottom: footerPad + 12 }}>
                   {messages.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex flex-col w-full min-w-0 ${message.role === 'user' ? 'items-end pr-3' : 'items-start'}`}
+                      className={`flex flex-col w-full min-w-0 ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                     >
                       {message.role === 'assistant' && message.citations && message.citations.length > 0 ? (
                         // Assistant with citations: shared wrapper
-                        <div className="flex flex-col min-w-0 max-w-[calc(100%-32px)] sm:max-w-[85%] space-y-2">
+                        <div className="flex flex-col min-w-0 max-w-[90%] md:max-w-[85%] space-y-2">
                           <div className="rounded-lg p-2.5 bg-muted">
                             <p className="text-sm whitespace-normal break-words">{message.content}</p>
                           </div>
@@ -527,9 +527,9 @@ export const ChatWidget = () => {
                       </div>
                       ) : (
                         // User message or assistant without citations: natural width
-                        <div className={`rounded-lg p-2.5 max-w-[calc(100%-32px)] sm:max-w-[85%] min-w-0 break-words ${
+                        <div className={`rounded-lg p-2.5 max-w-[90%] md:max-w-[85%] min-w-0 break-words ${
                           message.role === 'user'
-                            ? 'bg-primary text-primary-foreground shadow-sm mr-4'
+                            ? 'bg-primary text-primary-foreground shadow-sm'
                             : 'bg-muted'
                         }`}>
                           <p className="text-sm whitespace-normal break-words">{message.content}</p>
