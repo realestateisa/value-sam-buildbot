@@ -252,7 +252,7 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card className={`fixed bottom-24 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}>
           {/* Header */}
-          <div className={`flex items-center justify-between p-3 border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
+          <div className={`flex items-center justify-between ${showCalendar ? 'p-4' : 'p-3'} border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
             {!showLocationInput && (
               <div className="flex items-center gap-2">
                 <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-0.5" />
@@ -278,7 +278,7 @@ export const ChatWidget = () => {
 
           {/* Calendar Header */}
           {showCalendar && selectedTerritory && (
-            <div className="border-b bg-muted p-3">
+            <div className="border-b bg-muted p-4">
               {(() => {
                 const territory = Object.values(TERRITORIES).find(t => t.calNamespace === selectedTerritory);
                 if (!territory) return null;
@@ -390,15 +390,15 @@ export const ChatWidget = () => {
               {/* Messages */}
               {/* Chat Messages - hidden when calendar is shown */}
               {!showCalendar && (
-                <ScrollArea className="flex-1 p-3 pr-5 overflow-hidden" ref={scrollRef}>
-                  <div className="space-y-3">
+        <ScrollArea className={`flex-1 overflow-hidden ${showCalendar ? 'p-4 pr-6' : 'p-3 pr-5'}`} ref={scrollRef}>
+          <div className={`${showCalendar ? 'space-y-4' : 'space-y-3'}`}>
                     {messages.map((message) => (
                       <div
                         key={message.id}
                         className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                       >
                         <div
-                          className={`rounded-lg p-2.5 overflow-hidden max-w-[85%] ${
+                          className={`rounded-lg p-2.5 overflow-hidden ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'} ${
                             message.role === 'user'
                               ? 'bg-primary text-primary-foreground shadow-sm'
                               : 'bg-muted'
@@ -409,7 +409,7 @@ export const ChatWidget = () => {
 
                         {/* Citations */}
                         {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                          <div className="mt-2 w-full overflow-hidden max-w-[85%]">
+                          <div className={`mt-2 w-full overflow-hidden ${showCalendar ? 'max-w-[80%]' : 'max-w-[85%]'}`}>
                             <div className="text-xs font-medium text-muted-foreground mb-2">
                               Here's how we found this answer
                             </div>
@@ -423,7 +423,7 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className="p-2.5 bg-background border overflow-hidden shadow-sm">
+                                <Card className={`${showCalendar ? 'p-3' : 'p-2.5'} bg-background border overflow-hidden shadow-sm`}>
                                   <div className="flex items-start gap-2 overflow-hidden">
                                     <img 
                                       src={faviconUrl} 
@@ -438,12 +438,12 @@ export const ChatWidget = () => {
                                         className="text-sm font-medium text-primary hover:underline block truncate"
                                       >
                                         <span className="inline-flex items-center gap-1 max-w-full">
-                                          <span className="truncate">{citation.title || 'Reference'}</span>
+                                          <h4 className={`${showCalendar ? 'text-base' : 'text-sm'} font-medium truncate`}>{citation.title || 'Reference'}</h4>
                                           <ExternalLink className="h-3 w-3 flex-shrink-0" />
                                         </span>
                                       </a>
                                       {citation.description && (
-                                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2`}>
                                           {citation.description}
                                         </p>
                                       )}
@@ -516,8 +516,8 @@ export const ChatWidget = () => {
 
           {/* Action Buttons */}
           {!showLocationInput && !showCalendar && (
-            <div className="p-3 border-t">
-              <Button
+        <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t`}>
+          <Button
                 onClick={handleBookAppointment}
                 className="w-full font-medium transition-all duration-200"
                 variant="default"
@@ -530,7 +530,7 @@ export const ChatWidget = () => {
 
           {/* Message Input - hidden when calendar or location input is shown */}
           {!showCalendar && !showLocationInput && (
-            <div className="p-3 border-t">
+            <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t`}>
               <div className="flex gap-1.5">
                 <Input
                   value={inputValue}
