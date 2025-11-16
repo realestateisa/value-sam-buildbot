@@ -347,156 +347,131 @@ export const ChatWidget = () => {
           )}
 
           {/* Messages */}
-          <ScrollArea className="flex-1 p-4 pr-6 overflow-hidden" ref={scrollRef}>
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
-                >
+          {/* Chat Messages - hidden when calendar is shown */}
+          {!showCalendar && (
+            <ScrollArea className="flex-1 p-4 pr-6 overflow-hidden" ref={scrollRef}>
+              <div className="space-y-4">
+                {messages.map((message) => (
                   <div
-                    className={`rounded-lg p-3 overflow-hidden ${
-                      showCalendar ? 'max-w-[360px]' : 'max-w-[280px]'
-                    } ${
-                      message.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
-                    }`}
+                    key={message.id}
+                    className={`flex flex-col w-full ${message.role === 'user' ? 'items-end' : 'items-start'}`}
                   >
-                    <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</p>
-                  </div>
+                    <div
+                      className={`rounded-lg p-3 overflow-hidden ${
+                        showCalendar ? 'max-w-[360px]' : 'max-w-[280px]'
+                      } ${
+                        message.role === 'user'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted'
+                      }`}
+                    >
+                      <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</p>
+                    </div>
 
-                  {/* Citations */}
-                  {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                    <div className={`mt-2 w-full overflow-hidden ${showCalendar ? 'max-w-[440px]' : 'max-w-[340px]'}`}>
-                      <div className="text-xs font-medium text-muted-foreground mb-2">
-                        Here's how we found this answer
-                      </div>
-                      {(() => {
-                        const currentIndex = expandedCitations[message.id] || 0;
-                        const citation = message.citations![currentIndex];
-                        const totalCitations = message.citations!.length;
-                        const url = citation.url;
-                        
-                        // Always use Value Build Homes favicon since citations are from their website
-                        const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
-                        
-                        return (
-                          <Card className="p-3 bg-background border overflow-hidden">
-                            <div className="flex items-start gap-3 overflow-hidden">
-                              <img 
-                                src={faviconUrl} 
-                                alt="Value Build Homes" 
-                                className="w-6 h-6 rounded flex-shrink-0 mt-0.5"
-                              />
-                              <div className="flex-1 min-w-0 overflow-hidden">
-                                <a
-                                  href={url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-sm font-medium text-primary hover:underline block truncate"
-                                >
-                                  <span className="inline-flex items-center gap-1 max-w-full">
-                                    <span className="truncate">{citation.title || 'Reference'}</span>
-                                    <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                                  </span>
-                                </a>
-                                {citation.description && (
-                                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                    {citation.description}
+                    {/* Citations */}
+                    {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
+                      <div className={`mt-2 w-full overflow-hidden ${showCalendar ? 'max-w-[440px]' : 'max-w-[340px]'}`}>
+                        <div className="text-xs font-medium text-muted-foreground mb-2">
+                          Here's how we found this answer
+                        </div>
+                        {(() => {
+                          const currentIndex = expandedCitations[message.id] || 0;
+                          const citation = message.citations![currentIndex];
+                          const totalCitations = message.citations!.length;
+                          const url = citation.url;
+                          
+                          // Always use Value Build Homes favicon since citations are from their website
+                          const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
+                          
+                          return (
+                            <Card className="p-3 bg-background border overflow-hidden">
+                              <div className="flex items-start gap-3 overflow-hidden">
+                                <img 
+                                  src={faviconUrl} 
+                                  alt="Value Build Homes" 
+                                  className="w-6 h-6 rounded flex-shrink-0 mt-0.5"
+                                />
+                                <div className="flex-1 min-w-0 overflow-hidden">
+                                  <a
+                                    href={url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm font-medium text-primary hover:underline block truncate"
+                                  >
+                                    <span className="inline-flex items-center gap-1 max-w-full">
+                                      <span className="truncate">{citation.title || 'Reference'}</span>
+                                      <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                                    </span>
+                                  </a>
+                                  {citation.description && (
+                                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                      {citation.description}
+                                    </p>
+                                  )}
+                                  <p className="text-xs text-muted-foreground mt-1 truncate break-all">
+                                    {url}
                                   </p>
-                                )}
-                                <p className="text-xs text-muted-foreground mt-1 truncate break-all">
-                                  {url}
-                                </p>
-                              </div>
-                            </div>
-                            
-                            {totalCitations > 1 && (
-                              <div className="flex items-center justify-between mt-3 pt-3 border-t">
-                                <span className="text-xs text-muted-foreground">
-                                  {currentIndex + 1} of {totalCitations}
-                                </span>
-                                <div className="flex gap-1">
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-6 w-6"
-                                    onClick={() => {
-                                      setExpandedCitations(prev => ({
-                                        ...prev,
-                                        [message.id]: currentIndex > 0 ? currentIndex - 1 : totalCitations - 1
-                                      }));
-                                    }}
-                                  >
-                                    <ChevronLeft className="h-3 w-3" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-6 w-6"
-                                    onClick={() => {
-                                      setExpandedCitations(prev => ({
-                                        ...prev,
-                                        [message.id]: (currentIndex + 1) % totalCitations
-                                      }));
-                                    }}
-                                  >
-                                    <ChevronRight className="h-3 w-3" />
-                                  </Button>
                                 </div>
                               </div>
-                            )}
-                          </Card>
-                        );
-                      })()}
-                    </div>
-                  )}
-                </div>
-              ))}
-              {showLocationInput && !showCalendar && (
-                <div className="p-4 border-t bg-muted/30">
-                  <div className="mb-3">
-                    <h4 className="text-sm font-semibold flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
-                      Book Your Appointment
-                    </h4>
+                              
+                              {totalCitations > 1 && (
+                                <div className="flex items-center justify-between mt-3 pt-3 border-t">
+                                  <span className="text-xs text-muted-foreground">
+                                    {currentIndex + 1} of {totalCitations}
+                                  </span>
+                                  <div className="flex gap-1">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => {
+                                        setExpandedCitations(prev => ({
+                                          ...prev,
+                                          [message.id]: Math.max(0, currentIndex - 1)
+                                        }));
+                                      }}
+                                      disabled={currentIndex === 0}
+                                      className="h-6 w-6 p-0"
+                                    >
+                                      <ChevronLeft className="h-3 w-3" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => {
+                                        setExpandedCitations(prev => ({
+                                          ...prev,
+                                          [message.id]: Math.min(totalCitations - 1, currentIndex + 1)
+                                        }));
+                                      }}
+                                      disabled={currentIndex === totalCitations - 1}
+                                      className="h-6 w-6 p-0"
+                                    >
+                                      <ChevronRight className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              )}
+                            </Card>
+                          );
+                        })()}
+                      </div>
+                    )}
                   </div>
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <Input
-                        value={locationInput}
-                        onChange={(e) => setLocationInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
-                        placeholder="Where do you plan to build?"
-                        className="w-full"
-                        disabled={isLoading}
-                      />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Examples: Wake County, Charlotte, 27332
-                      </p>
-                    </div>
-                    <Button
-                      onClick={handleLocationSubmit}
-                      size="sm"
-                      disabled={isLoading || !locationInput.trim()}
-                    >
-                      {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Next'}
-                    </Button>
-                  </div>
+                ))}
               </div>
-            )}
-          </div>
+            </ScrollArea>
+          )}
 
-          {/* Calendar Embed - now inside ScrollArea for scrollability */}
+          {/* Calendar View - standalone when active */}
           {showCalendar && selectedTerritory && (
-            <div 
-              id={`cal-inline-${selectedTerritory}`}
-              className="min-h-[400px] w-full"
-            >
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <div 
+                id={`cal-inline-${selectedTerritory}`}
+                className="flex-1 w-full overflow-auto"
+              >
+              </div>
             </div>
           )}
-        </ScrollArea>
 
 
           {/* Action Buttons */}
@@ -513,25 +488,28 @@ export const ChatWidget = () => {
             </div>
           )}
 
-          {/* Input */}
-          <div className="p-4 border-t">
-            <div className="flex gap-2">
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Type your message..."
-                disabled={isLoading}
-              />
-              <Button
-                onClick={handleSendMessage}
-                disabled={isLoading || !inputValue.trim()}
-                size="icon"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
+          {/* Message Input - hidden when calendar is shown */}
+          {!showCalendar && (
+            <div className="p-4 border-t">
+              <div className="flex gap-2">
+                <Input
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="Type your message..."
+                  disabled={isLoading}
+                  className="flex-1"
+                />
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={isLoading || !inputValue.trim()}
+                  size="icon"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </Card>
       )}
     </>
