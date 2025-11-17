@@ -59,15 +59,19 @@ export const ChatWidget = () => {
   // Notify parent window with desired iframe size when embedded
   useEffect(() => {
     if (isEmbedded) {
-      // Calculate total container size: button (88px to accommodate hover scale) + gap (8px when open) + chat height
-      const buttonHeight = 88; // Increased to accommodate 1.05 scale on hover
-      const gap = isOpen ? 8 : 0;
+      // When closed: button (88px) + speech bubble height (~50px) + gap (8px) = ~146px
+      // When open: button (88px) + gap (8px) + chat height
+      const buttonHeight = 88;
+      const speechBubbleSpace = 58; // Space for speech bubble when closed
+      const gap = 8;
       const chatHeight = showCalendar ? 828 : 690;
       const chatWidth = showCalendar ? 500 : 400;
-      const buttonWidth = 88; // Increased to accommodate 1.05 scale on hover
+      const buttonWidth = 88;
       
       const totalWidth = isOpen ? Math.max(buttonWidth, chatWidth) : buttonWidth;
-      const totalHeight = isOpen ? (chatHeight + gap + buttonHeight) : buttonHeight;
+      const totalHeight = isOpen 
+        ? (chatHeight + gap + buttonHeight) 
+        : (buttonHeight + speechBubbleSpace);
 
       window.parent.postMessage(
         {
