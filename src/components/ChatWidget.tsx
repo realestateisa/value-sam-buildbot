@@ -502,7 +502,7 @@ export const ChatWidget = () => {
                                 : 'bg-muted shadow-sm hover:shadow-md'
                             } ${message.role === 'assistant' ? 'animate-fade-in' : ''} transition-all duration-200`}
                           >
-                            <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
+                            <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere leading-relaxed">{message.content}</p>
                             
                             {/* Action Button */}
                             {message.action && (
@@ -549,7 +549,7 @@ export const ChatWidget = () => {
                                         <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                                       </a>
                                       {citation.description ? (
-                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2 break-words overflow-hidden min-h-[2.6em]`}>
+                                       <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2 break-words overflow-wrap-anywhere overflow-hidden min-h-[2.6em]`}>
                                           {citation.description}
                                         </p>
                                       ) : (
@@ -557,7 +557,7 @@ export const ChatWidget = () => {
                                           placeholder
                                         </p>
                                       )}
-                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate overflow-hidden">
+                                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate overflow-hidden break-all">
                                         {url}
                                       </p>
                                     </div>
