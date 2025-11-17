@@ -696,7 +696,7 @@ export const ChatWidget = () => {
             <div className={`${showCalendar ? "p-4" : "p-3"} border-t flex gap-2`}>
               <Button
                 onClick={() => setShowCallbackForm(true)}
-                className="group flex-1 font-medium transition-all duration-300 ease-in-out hover:scale-103 bg-white text-[#E2362B] hover:text-[#E2362B] border-[#E2362B] border-2 hover:bg-[#E2362B]/10 shadow-sm hover:shadow-md hover:shadow-[#E2362B]/20 rounded-lg"
+                className="group flex-1 font-medium transition-all duration-300 ease-in-out hover:scale-103 bg-white text-[#E2362B] hover:text-[#E2362B] border-[#E2362B] border-[3px] hover:bg-[#E2362B]/10 shadow-sm hover:shadow-md hover:shadow-[#E2362B]/20 rounded-lg"
                 aria-label="Request callback"
               >
                 <Phone
