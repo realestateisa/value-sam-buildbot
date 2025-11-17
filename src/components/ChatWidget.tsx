@@ -630,7 +630,7 @@ export const ChatWidget = () => {
         <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t`}>
           <Button
                 onClick={handleBookAppointment}
-                className="w-full font-medium transition-all duration-200 hover:scale-105"
+                className="w-full font-medium transition-all duration-200 hover:scale-103"
                 variant="default"
                 aria-label="Schedule an appointment"
               >
