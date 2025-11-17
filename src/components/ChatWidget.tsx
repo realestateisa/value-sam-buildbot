@@ -666,7 +666,7 @@ export const ChatWidget = () => {
                 variant="outline"
                 aria-label="Request callback"
               >
-                <Phone className="h-4 w-4 mr-2 text-background fill-[#E2362B]" />
+                <Phone className="h-4 w-4 mr-1 text-background fill-[#E2362B]" />
                 Request Callback
               </Button>
               <Button
@@ -675,7 +675,7 @@ export const ChatWidget = () => {
                 variant="default"
                 aria-label="Book an appointment"
               >
-                <Calendar className="h-4 w-4 mr-2" />
+                <Calendar className="h-4 w-4 mr-1" />
                 Book Appointment
               </Button>
             </div>
