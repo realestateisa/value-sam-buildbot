@@ -324,7 +324,10 @@ export const ChatWidget = () => {
           <div className={`flex items-center justify-between ${showCalendar ? 'p-4' : 'p-3'} border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
             {!showLocationInput && (
               <div className="flex items-center gap-2">
-                <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-0.5" />
+                <div className="relative">
+                  <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-0.5" />
+                  <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-primary"></div>
+                </div>
                 <div>
                   <h3 className="text-base font-semibold">Sam</h3>
                   <p className="text-xs opacity-90 font-medium">Digital Assistant</p>
