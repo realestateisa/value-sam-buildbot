@@ -348,7 +348,7 @@ export const ChatWidget = () => {
         className="fixed bottom-6 right-6 h-20 w-20 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 z-50 p-0"
         size="icon"
       >
-        {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-16 w-16 rounded-full" />}
+        {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-full w-full rounded-full" />}
       </Button>
 
       {/* Chat Window */}
