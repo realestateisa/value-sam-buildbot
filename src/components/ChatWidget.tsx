@@ -534,7 +534,7 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className={`w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
+                                <Card className={`w-full max-w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
                                   <div className="flex items-start gap-2 overflow-hidden min-w-0">
                                     <div className="flex-1 min-w-0 overflow-hidden">
                                       <a
