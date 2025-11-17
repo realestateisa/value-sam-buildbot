@@ -49,14 +49,14 @@ export const ChatWidget = () => {
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
   const [showCallbackForm, setShowCallbackForm] = useState(false);
-  // Detect if we're embedded by checking the route (immediate, no handshake needed)
+  // Detect if we're embedded (hide speech bubble to avoid clipping)
   const isEmbedded = window.location.pathname === '/widget';
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
-  // Notify parent window with desired iframe size (container size for iframe positioning)
+  // Notify parent window with desired iframe size when embedded
   useEffect(() => {
     if (isEmbedded) {
       // Calculate total container size: button (80px) + gap (16px) + chat height
@@ -383,7 +383,7 @@ export const ChatWidget = () => {
   const content = (
     <>
       {/* Chat Button */}
-      <div className={`${isEmbedded ? 'absolute bottom-0 right-0' : 'fixed bottom-6 right-6'} z-50`}>
+      <div className="fixed bottom-6 right-6 z-50">
         {/* Speech Bubble (hide when embedded to avoid clipping) */}
         {!isOpen && !isEmbedded && (
           <div className="absolute bottom-full right-0 mb-2 animate-fade-in">
@@ -413,7 +413,8 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card
           ref={chatRef}
-          className={`${isEmbedded ? 'absolute bottom-[96px] right-0' : 'fixed bottom-[112px] right-6'} flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? "w-[500px] h-[828px]" : "w-[400px] h-[690px]"}`}
+          className="fixed bottom-[112px] right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden w-[400px] h-[690px]"
+          style={showCalendar ? { width: '500px', height: '828px' } : {}}
         >
           {/* Header */}
           <div
@@ -802,9 +803,5 @@ export const ChatWidget = () => {
     </>
   );
 
-  return isEmbedded ? (
-    <div className="relative w-full h-full">{content}</div>
-  ) : (
-    content
-  );
+  return content;
 };
