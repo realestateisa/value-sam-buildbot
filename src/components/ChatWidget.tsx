@@ -519,7 +519,7 @@ export const ChatWidget = () => {
                         )}
                         <div className="flex flex-col max-w-full min-w-0 overflow-hidden">
                           <div
-                            className={`rounded-lg p-2.5 min-w-0 max-w-[85vw] md:max-w-[312px] ${
+                            className={`rounded-lg p-2.5 min-w-0 max-w-[76.5vw] md:max-w-[281px] ${
                               message.role === 'user' 
                                 ? 'inline-block'
                                 : 'inline-block'
@@ -547,7 +547,7 @@ export const ChatWidget = () => {
 
                           {/* Citations */}
                           {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                            <div className="mt-2 min-w-0 overflow-hidden max-w-[85vw] md:max-w-[312px] inline-block">
+                            <div className="mt-2 min-w-0 overflow-hidden max-w-[76.5vw] md:max-w-[281px] inline-block">
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how I found this answer
                             </div>
