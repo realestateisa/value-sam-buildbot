@@ -490,7 +490,7 @@ export const ChatWidget = () => {
                             className={`h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1 transition-opacity ${isLoading ? 'animate-pulse' : ''}`}
                           />
                         )}
-                        <div className="flex flex-col max-w-full min-w-0 overflow-hidden">
+                        <div className={`flex flex-col max-w-full min-w-0 overflow-hidden ${message.role === 'assistant' ? 'md:max-w-none max-w-[85%]' : ''}`}>
                           <div
                             className={`rounded-lg p-2.5 min-w-0 max-w-[calc(var(--chat-width)_*_0.78)] ${
                               message.role === 'user' 
