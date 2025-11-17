@@ -750,7 +750,7 @@ export const ChatWidget = () => {
                   onClick={handleSendMessage}
                   disabled={isLoading || !inputValue.trim()}
                   size="icon"
-                  className="h-[42px] w-[40px] transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                  className="h-[44px] w-[40px] transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
                   aria-label="Send message"
                 >
                   {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
