@@ -16,6 +16,10 @@
   iframe.style.cssText = 'position: fixed; bottom: 20px; right: 20px; width: 280px; height: 150px; border: none; z-index: 9999; background: transparent; transition: all 0.3s ease-in-out;';
   iframe.title = 'Value Build Homes Chatbot';
   iframe.allow = 'clipboard-write';
+  // Notify child that it is embedded so it can switch to container-based positioning
+  iframe.addEventListener('load', function() {
+    iframe.contentWindow?.postMessage({ type: 'chatbot-embed-init' }, chatbotOrigin);
+  });
   
   // Listen for messages from the chatbot to resize the iframe
   window.addEventListener('message', function(event) {
