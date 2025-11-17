@@ -395,7 +395,7 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card
           ref={chatRef}
-          className={`fixed bottom-0 right-0 md:bottom-0 md:right-0 flex flex-col shadow-2xl z-40 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? "md:w-[500px] md:h-[580px]" : "md:w-[400px] md:h-[580px]"} w-full h-full`}
+          className={`fixed bottom-0 right-0 md:bottom-0 md:right-0 flex flex-col shadow-2xl z-[60] transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? "md:w-[500px] md:h-[580px]" : "md:w-[400px] md:h-[580px]"} w-full h-full`}
         >
           {/* Header */}
           <div
