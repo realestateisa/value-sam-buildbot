@@ -358,17 +358,30 @@ export const ChatWidget = () => {
   return (
     <>
       {/* Chat Button */}
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 h-20 w-20 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 z-50 p-2"
-        size="icon"
-      >
-        {isOpen ? (
-          <X className="h-8 w-8" />
-        ) : (
-          <img src={logo} alt="Value Build Homes" className="h-full w-full rounded-full" />
+      <div className="fixed bottom-6 right-6 z-50">
+        {/* Speech Bubble */}
+        {!isOpen && (
+          <div className="absolute bottom-full right-0 mb-2 animate-fade-in">
+            <div className="relative bg-primary text-primary-foreground px-4 py-2 rounded-lg shadow-lg text-sm font-medium whitespace-nowrap">
+              Any questions I can help with?
+              {/* Triangle pointer */}
+              <div className="absolute top-full right-6 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-primary"></div>
+            </div>
+          </div>
         )}
-      </Button>
+        
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          className="h-20 w-20 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 p-2"
+          size="icon"
+        >
+          {isOpen ? (
+            <X className="h-8 w-8" />
+          ) : (
+            <img src={logo} alt="Value Build Homes" className="h-full w-full rounded-full" />
+          )}
+        </Button>
+      </div>
 
       {/* Chat Window */}
       {isOpen && (
