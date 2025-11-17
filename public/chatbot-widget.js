@@ -15,7 +15,7 @@
   // Create iframe to load the chatbot app
   const iframe = document.createElement('iframe');
   iframe.src = chatbotOrigin + '/widget';
-  iframe.style.cssText = 'position: fixed; bottom: 24px; right: 24px; width: 80px; height: 80px; border: none; z-index: 2147483647; background: transparent; pointer-events: auto; display: block; transition: all 0.3s ease-in-out;';
+  iframe.style.cssText = 'position: fixed; bottom: 24px; right: 24px; width: 80px; height: 80px; border: none; z-index: 2147483647; background: transparent; pointer-events: auto; display: block; transition: all 0.3s ease-in-out; overflow: visible;';
   iframe.title = 'Value Build Homes Chatbot';
   iframe.allow = 'clipboard-write';
   
