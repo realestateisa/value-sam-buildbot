@@ -662,19 +662,18 @@ export const ChatWidget = () => {
         <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t flex gap-2`}>
           <Button
                 onClick={() => setShowCallbackForm(true)}
-                className="group flex-1 font-medium transition-all duration-300 ease-in-out hover:scale-103 bg-background text-[#E2362B] hover:text-[#E2362B] border-[#E2362B] border-2 hover:bg-[#E2362B]/10 shadow-sm hover:shadow-md hover:shadow-[#E2362B]/20 rounded-lg"
-                variant="outline"
+                className="group flex-1 font-medium transition-all duration-300 ease-in-out hover:scale-103 bg-white text-[#E2362B] hover:text-[#E2362B] border-[#E2362B] border-2 hover:bg-[#E2362B]/10 shadow-sm hover:shadow-md hover:shadow-[#E2362B]/20 rounded-lg"
                 aria-label="Request callback"
               >
-                <Phone className="h-4.5 w-4.5 mr-1.5 text-background fill-[#E2362B] transition-transform group-hover:-translate-y-[2px]" strokeWidth={2} />
+                <Phone className="h-4.5 w-4.5 mr-1.5 fill-[#E2362B] transition-transform group-hover:-translate-y-[2px]" strokeWidth={2} />
                 Request Callback
               </Button>
               <Button
                 onClick={handleBookAppointment}
-                className="group flex-1 font-medium transition-all duration-300 ease-in-out hover:scale-103 bg-gradient-to-r from-[#E2362B] to-[#C42920] text-white hover:opacity-90 shadow-sm hover:shadow-md rounded-lg"
+                className="group flex-1 font-medium transition-all duration-300 ease-in-out hover:scale-103 bg-gradient-to-r from-[#E2362B] to-[#C42920] text-white hover:opacity-90 shadow-sm hover:shadow-md rounded-lg border-0"
                 aria-label="Book an appointment"
               >
-                <Calendar className="h-4.5 w-4.5 mr-1.5 transition-transform group-hover:-translate-y-[2px]" strokeWidth={2} />
+                <Calendar className="h-4.5 w-4.5 mr-1.5 text-white transition-transform group-hover:-translate-y-[2px]" strokeWidth={2} />
                 Book Appointment
               </Button>
             </div>
