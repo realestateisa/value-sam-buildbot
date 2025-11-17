@@ -6,9 +6,13 @@
     return;
   }
 
+  // Extract chatbot origin from the script's own source URL
+  const scriptSrc = document.currentScript?.src || document.querySelector('script[src*="chatbot-widget.js"]')?.src;
+  const chatbotOrigin = scriptSrc ? new URL(scriptSrc).origin : 'https://4b482d74-c976-43c4-8d7d-de411c7ba68f.lovableproject.com';
+  
   // Create iframe to load the chatbot app
   const iframe = document.createElement('iframe');
-  iframe.src = window.location.origin;
+  iframe.src = chatbotOrigin;
   iframe.style.cssText = 'position: fixed; bottom: 20px; right: 20px; width: 400px; height: 600px; border: none; z-index: 9999; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);';
   iframe.title = 'Value Build Homes Chatbot';
   
