@@ -492,8 +492,8 @@ export const ChatWidget = () => {
                         )}
                         <div className="flex flex-col max-w-full min-w-0 overflow-hidden">
                           <div
-                            className={`rounded-lg p-2.5 min-w-0 max-w-[calc(var(--chat-width)_*_0.78)] ${
-                              message.role === 'user' 
+                            className={`rounded-lg p-2.5 min-w-0 max-w-[min(calc(var(--chat-width,_400px)_*_0.78),_90%)] ${
+                              message.role === 'user'
                                 ? 'inline-block'
                                 : 'inline-block'
                             } ${
@@ -513,14 +513,14 @@ export const ChatWidget = () => {
                                 className="mt-3 w-full transition-all hover:scale-105"
                                 aria-label={message.action.label}
                               >
-                                {message.action.label}
+                                <span className="truncate">{message.action.label}</span>
                               </Button>
                             )}
                           </div>
 
                           {/* Citations */}
                           {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                            <div className="mt-2 min-w-0 overflow-hidden max-w-[calc(var(--chat-width)_*_0.78)] inline-block animate-fade-in">
+                            <div className="mt-2 min-w-0 overflow-hidden max-w-[min(calc(var(--chat-width,_400px)_*_0.78),_90%)] inline-block animate-fade-in">
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how I found this answer
                             </div>
@@ -534,14 +534,14 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className={`w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
+                                <Card className={`w-full max-w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
                                   <div className="flex items-start gap-2 overflow-hidden min-w-0">
                                     <div className="flex-1 min-w-0 overflow-hidden">
                                       <a
                                         href={url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-primary hover:underline flex items-center gap-1 group overflow-hidden min-w-0 shrink"
+                                        className="text-primary hover:underline flex items-center gap-1 group overflow-hidden text-ellipsis min-w-0 shrink"
                                       >
                                         <h4 className={`${showCalendar ? 'text-base' : 'text-sm'} font-medium line-clamp-1 min-w-0 flex-1`}>
                                           {citation.title || 'Reference'}
