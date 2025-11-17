@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { X, Phone } from 'lucide-react';
+import { X, Phone, ChevronLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 
@@ -90,8 +90,18 @@ export const CallbackForm = ({ onClose }: CallbackFormProps) => {
       </div>
 
       {/* Callback Form Content */}
-      <div className="flex-1 overflow-auto p-6">
-        <div className="max-w-md mx-auto space-y-6">
+      <div className="flex-1 overflow-auto p-6 relative">
+        {/* Back Button */}
+        <Button 
+          variant="ghost" 
+          className="absolute top-3 left-3 hover:bg-accent font-medium transition-all duration-200"
+          onClick={onClose}
+        >
+          <ChevronLeft className="h-5 w-5 mr-1" />
+          Back
+        </Button>
+
+        <div className="max-w-md mx-auto space-y-6 mt-8">
           <p className="text-muted-foreground text-sm">
             Fill out the form below and our team will call you back shortly.
           </p>
