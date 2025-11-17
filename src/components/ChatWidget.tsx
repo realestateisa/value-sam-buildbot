@@ -344,10 +344,10 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card 
           ref={chatRef}
-          className={`fixed inset-0 md:inset-auto md:bottom-28 md:right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'md:w-[500px] md:h-[828px]' : 'md:w-[400px] md:h-[690px]'} w-full h-full`}
+          className={`fixed inset-0 md:inset-auto md:bottom-28 md:right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar || showCallbackForm ? 'md:w-[500px] md:h-[828px]' : 'md:w-[400px] md:h-[690px]'} w-full h-full`}
         >
           {/* Header */}
-          <div className={`flex items-center justify-between ${showCalendar ? 'p-4' : 'p-3'} border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
+          <div className={`${showCalendar || showCallbackForm ? 'hidden' : ''} flex items-center justify-between ${showCalendar ? 'p-4' : 'p-3'} border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
             {!showLocationInput && (
               <div className="flex items-center gap-2">
                 <div className="relative">
@@ -501,8 +501,8 @@ export const ChatWidget = () => {
           ) : (
             <>
               {/* Messages */}
-              {/* Chat Messages - hidden when calendar is shown */}
-              {!showCalendar && (
+              {/* Chat Messages - hidden when calendar or callback form is shown */}
+              {!showCalendar && !showCallbackForm && (
         <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? 'p-4 pr-6' : 'pl-2 pr-2 py-3 md:p-3 md:pr-5'}`} ref={scrollRef}>
           <div className={`max-w-full ${showCalendar ? 'space-y-4' : 'space-y-3'}`}>
                     {messages.map((message) => (
@@ -651,11 +651,11 @@ export const ChatWidget = () => {
             </div>
           )}
 
-
-          {/* Callback Form View */}
+          {/* Callback Form View - standalone when active */}
           {showCallbackForm && (
             <CallbackForm onClose={() => setShowCallbackForm(false)} />
           )}
+
 
           {/* Action Buttons */}
           {!showLocationInput && !showCalendar && !showCallbackForm && (
