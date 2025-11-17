@@ -95,15 +95,21 @@ export const ChatWidget = () => {
     let timeoutId: NodeJS.Timeout;
     
     if (isLoading) {
+      console.log('Starting typing indicator timeout');
       timeoutId = setTimeout(() => {
+        console.log('Showing typing indicator');
         setShowTypingIndicator(true);
       }, 1000);
     } else {
+      console.log('Hiding typing indicator, isLoading:', isLoading);
       setShowTypingIndicator(false);
     }
 
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
+      if (timeoutId) {
+        console.log('Clearing typing indicator timeout');
+        clearTimeout(timeoutId);
+      }
     };
   }, [isLoading]);
 
