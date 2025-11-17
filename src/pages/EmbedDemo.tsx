@@ -1,7 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Copy, Check, Play } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import { useState } from 'react';
 
 const EmbedDemo = () => {
@@ -86,56 +85,6 @@ const EmbedDemo = () => {
             <li>• Real-time territory detection via edge functions</li>
             <li>• CustomGPT integration for accurate, context-aware responses</li>
           </ul>
-        </Card>
-
-        <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-4">See It in Action</h2>
-          <p className="text-muted-foreground mb-6">
-            Watch how SAM guides users through the home building journey and seamlessly schedules appointments.
-          </p>
-          
-          <div className="space-y-6">
-            {/* Video Embed */}
-            <div className="bg-muted rounded-lg overflow-hidden">
-              <AspectRatio ratio={16 / 9}>
-                <div className="w-full h-full flex items-center justify-center bg-muted">
-                  <div className="text-center space-y-3">
-                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                      <Play className="h-8 w-8 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">Video Demo Coming Soon</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Replace this section with your demo video URL
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </AspectRatio>
-            </div>
-
-            {/* Key Screenshots */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-muted rounded-lg p-4 text-center">
-                <div className="aspect-square bg-background rounded-md mb-2 flex items-center justify-center">
-                  <span className="text-2xl">💬</span>
-                </div>
-                <p className="text-xs font-medium">Initial Greeting</p>
-              </div>
-              <div className="bg-muted rounded-lg p-4 text-center">
-                <div className="aspect-square bg-background rounded-md mb-2 flex items-center justify-center">
-                  <span className="text-2xl">📍</span>
-                </div>
-                <p className="text-xs font-medium">Territory Detection</p>
-              </div>
-              <div className="bg-muted rounded-lg p-4 text-center">
-                <div className="aspect-square bg-background rounded-md mb-2 flex items-center justify-center">
-                  <span className="text-2xl">📅</span>
-                </div>
-                <p className="text-xs font-medium">Inline Calendar</p>
-              </div>
-            </div>
-          </div>
         </Card>
 
         <Card className="p-6">
