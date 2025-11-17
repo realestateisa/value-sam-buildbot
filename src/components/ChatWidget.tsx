@@ -381,14 +381,10 @@ export const ChatWidget = () => {
     });
   }, [showCalendar, selectedTerritory]);
 
-  const containerClass = isInIframe ? "relative w-full h-full" : "";
-  const buttonPositionClass = isInIframe ? "absolute bottom-0 right-0" : "fixed bottom-6 right-6";
-  const chatPositionClass = isInIframe ? "absolute bottom-[96px] right-0" : "fixed bottom-[112px] right-6";
-
   const content = (
     <>
       {/* Chat Button */}
-      <div className={`${buttonPositionClass} z-50`}>
+      <div className={`${isInIframe ? 'absolute bottom-0 right-0' : 'fixed bottom-6 right-6'} z-50`}>
         {/* Speech Bubble */}
         {!isOpen && (
           <div className="absolute bottom-full right-0 mb-2 animate-fade-in">
@@ -418,7 +414,7 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card
           ref={chatRef}
-          className={`${chatPositionClass} flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? "w-[500px] h-[828px]" : "w-[400px] h-[690px]"}`}
+          className={`${isInIframe ? 'absolute bottom-[96px] right-0' : 'fixed bottom-[112px] right-6'} flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? "w-[500px] h-[828px]" : "w-[400px] h-[690px]"}`}
         >
           {/* Header */}
           <div
@@ -808,7 +804,7 @@ export const ChatWidget = () => {
   );
 
   return isInIframe ? (
-    <div className={containerClass}>{content}</div>
+    <div className="relative w-full h-full">{content}</div>
   ) : (
     content
   );
