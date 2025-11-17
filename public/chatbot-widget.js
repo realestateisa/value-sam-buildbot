@@ -23,8 +23,21 @@
     
     if (event.data.type === 'chatbot-resize') {
       const { width, height, isOpen } = event.data;
-      if (width) iframe.style.width = width + 'px';
-      if (height) iframe.style.height = height + 'px';
+
+      // Clamp to viewport to prevent cut-off while keeping compact footprint
+      if (width) {
+        const clampedW = Math.max(280, Math.min(width, window.innerWidth - 24));
+        iframe.style.width = clampedW + 'px';
+      }
+      if (height) {
+        const clampedH = Math.max(150, Math.min(height, window.innerHeight - 24));
+        iframe.style.height = clampedH + 'px';
+      }
+
+      // Ensure position stays anchored to the corner (never full-screen)
+      iframe.style.position = 'fixed';
+      iframe.style.bottom = '20px';
+      iframe.style.right = '20px';
 
       if (isOpen) {
         iframe.style.borderRadius = '0';
@@ -36,10 +49,7 @@
     }
   });
   
-  // Make iframe responsive on mobile
-  if (window.innerWidth <= 768) {
-    iframe.style.cssText = 'position: fixed; bottom: 0; right: 0; width: 100%; height: 100%; border: none; z-index: 9999;';
-  }
+  // Mobile sizing is handled via chatbot-resize messages to avoid full-screen transparent overlays
 
   root.appendChild(iframe);
 })();
