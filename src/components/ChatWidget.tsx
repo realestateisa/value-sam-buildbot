@@ -54,6 +54,13 @@ export const ChatWidget = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
+  // Notify parent window when chat opens/closes
+  useEffect(() => {
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'chatbot-resize', isOpen }, '*');
+    }
+  }, [isOpen]);
+
   // Load saved session on mount
   useEffect(() => {
     const savedSession = loadChatSession();
