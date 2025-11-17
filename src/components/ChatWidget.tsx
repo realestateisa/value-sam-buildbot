@@ -527,7 +527,7 @@ export const ChatWidget = () => {
                               message.role === 'user'
                                 ? 'bg-primary text-primary-foreground shadow-sm hover:shadow-md'
                                 : 'bg-muted shadow-sm hover:shadow-md'
-                            } ${message.role === 'assistant' ? 'animate-fade-in' : ''} transition-all duration-200`}
+                            } ${message.role === 'assistant' ? '' : ''} transition-all duration-200`}
                           >
                             <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere leading-relaxed">{message.content}</p>
                             
@@ -547,7 +547,7 @@ export const ChatWidget = () => {
 
                           {/* Citations */}
                           {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                            <div className="mt-2 min-w-0 overflow-hidden max-w-[85vw] md:max-w-[312px] inline-block animate-fade-in">
+                            <div className="mt-2 min-w-0 overflow-hidden max-w-[85vw] md:max-w-[312px] inline-block">
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how I found this answer
                             </div>
