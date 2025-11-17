@@ -454,7 +454,7 @@ export const ChatWidget = () => {
                 onKeyPress={(e) => e.key === 'Enter' && locationInput.length >= 3 && handleLocationSubmit()}
                 placeholder="What county will you build in?"
                 disabled={isLoading}
-                className="bg-white text-black border-none placeholder:text-gray-500 h-11 text-[16px]"
+                className="bg-white text-black border-none placeholder:text-gray-500 h-11 text-[16px] text-center placeholder:text-center"
               />
               {locationInput.length >= 3 && (
                 <Button
