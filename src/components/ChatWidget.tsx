@@ -671,7 +671,7 @@ export const ChatWidget = () => {
                   onClick={handleSendMessage}
                   disabled={isLoading || !inputValue.trim()}
                   size="icon"
-                  className="transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                  className="h-[40px] w-[40px] transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
                   aria-label="Send message"
                 >
                   {isLoading ? (
