@@ -490,13 +490,9 @@ export const ChatWidget = () => {
                             className={`h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1 transition-opacity ${isLoading ? 'animate-pulse' : ''}`}
                           />
                         )}
-                        <div className={`flex flex-col max-w-full min-w-0 overflow-hidden ${message.role === 'assistant' ? 'md:max-w-none max-w-[85%]' : 'md:max-w-none max-w-[80%]'}`}>
+                        <div className="flex flex-col max-w-full min-w-0 overflow-hidden">
                           <div
-                            className={`rounded-lg p-2.5 min-w-0 ${
-                              message.role === 'assistant'
-                                ? 'max-w-[85%] sm:max-w-[calc(var(--chat-width)_*_0.78)]'
-                                : 'max-w-[80%] sm:max-w-[calc(var(--chat-width)_*_0.78)]'
-                            } ${
+                            className={`rounded-lg p-2.5 min-w-0 max-w-[calc(var(--chat-width)_*_0.78)] ${
                               message.role === 'user' 
                                 ? 'inline-block'
                                 : 'inline-block'
@@ -524,7 +520,7 @@ export const ChatWidget = () => {
 
                           {/* Citations */}
                           {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                            <div className="mt-2 min-w-0 overflow-hidden max-w-[85%] sm:max-w-[calc(var(--chat-width)_*_0.78)] inline-block animate-fade-in">
+                            <div className="mt-2 min-w-0 overflow-hidden max-w-[calc(var(--chat-width)_*_0.78)] inline-block animate-fade-in">
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how I found this answer
                             </div>
@@ -538,7 +534,7 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className={`w-full max-w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
+                                <Card className={`w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
                                   <div className="flex items-start gap-2 overflow-hidden min-w-0">
                                     <div className="flex-1 min-w-0 overflow-hidden">
                                       <a
