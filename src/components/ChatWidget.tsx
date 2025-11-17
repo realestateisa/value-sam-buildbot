@@ -661,15 +661,6 @@ export const ChatWidget = () => {
           {!showLocationInput && !showCalendar && !showCallbackForm && (
         <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t flex gap-2`}>
           <Button
-                onClick={handleBookAppointment}
-                className="flex-1 font-medium transition-all duration-200 hover:scale-103"
-                variant="default"
-                aria-label="Book an appointment"
-              >
-                <Calendar className="h-4 w-4 mr-2" />
-                Book Appointment
-              </Button>
-              <Button
                 onClick={() => setShowCallbackForm(true)}
                 className="flex-1 font-medium transition-all duration-200 hover:scale-103 bg-background text-[#E2362B] border-[#E2362B] border hover:bg-[#E2362B]/5"
                 variant="outline"
@@ -677,6 +668,15 @@ export const ChatWidget = () => {
               >
                 <Phone className="h-4 w-4 mr-2 text-background fill-[#E2362B]" />
                 Request Callback
+              </Button>
+              <Button
+                onClick={handleBookAppointment}
+                className="flex-1 font-medium transition-all duration-200 hover:scale-103"
+                variant="default"
+                aria-label="Book an appointment"
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                Book Appointment
               </Button>
             </div>
           )}
