@@ -503,7 +503,7 @@ export const ChatWidget = () => {
               {/* Messages */}
               {/* Chat Messages - hidden when calendar or callback form is shown */}
               {!showCalendar && !showCallbackForm && (
-        <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? 'p-4 pr-6' : 'pl-2 pr-2 py-3 md:p-3 md:pr-5'}`} ref={scrollRef}>
+        <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden bg-[#F9F8F4] ${showCalendar ? 'p-4 pr-6' : 'pl-2 pr-2 py-3 md:p-3 md:pr-5'}`} ref={scrollRef}>
           <div className={`max-w-full ${showCalendar ? 'space-y-4' : 'space-y-3'}`}>
                     {messages.map((message) => (
                       <div

@@ -97,7 +97,7 @@ export const CallbackForm = ({
       </div>
 
       {/* Callback Form Content */}
-      <div className="flex-1 overflow-auto p-6 relative">
+      <div className="flex-1 overflow-auto p-6 relative bg-[#F9F8F4]">
         {/* Back Button */}
         <Button variant="ghost" className="absolute top-3 left-3 hover:bg-accent font-medium transition-all duration-200" onClick={onClose}>
           <ChevronLeft className="h-5 w-5 mr-1" />
