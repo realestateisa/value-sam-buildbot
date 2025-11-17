@@ -188,6 +188,9 @@ export const ChatWidget = () => {
       // Check if the response triggers appointment scheduling
       if (data.message.toLowerCase().includes('schedule_appointment')) {
         setShowLocationInput(true);
+      } else if (data.message === "I don't know the answer to that just yet. Please reach out to support for further help.") {
+        // Open callback form instead of showing this message
+        setShowCallbackForm(true);
       } else {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
