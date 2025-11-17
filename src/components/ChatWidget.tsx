@@ -59,9 +59,9 @@ export const ChatWidget = () => {
   // Notify parent window with desired iframe size when embedded
   useEffect(() => {
     if (isEmbedded) {
-      // Calculate total container size: button (80px) + gap (16px) + chat height
+      // Calculate total container size: button (80px) + gap (8px when open) + chat height
       const buttonHeight = 80;
-      const gap = 16;
+      const gap = isOpen ? 8 : 0;
       const chatHeight = showCalendar ? 828 : 690;
       const chatWidth = showCalendar ? 500 : 400;
       const buttonWidth = 80;
@@ -383,7 +383,7 @@ export const ChatWidget = () => {
   const content = (
     <>
       {/* Chat Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className={`fixed z-50 ${isEmbedded ? 'bottom-0 right-0' : 'bottom-6 right-6'}`}>
         {/* Speech Bubble (hide when embedded to avoid clipping) */}
         {!isOpen && !isEmbedded && (
           <div className="absolute bottom-full right-0 mb-2 animate-fade-in">
@@ -413,7 +413,9 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card
           ref={chatRef}
-          className="fixed bottom-[112px] right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden w-[400px] h-[690px]"
+          className={`fixed flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden w-[400px] h-[690px] ${
+            isEmbedded ? 'bottom-[88px] right-0' : 'bottom-[112px] right-6'
+          }`}
           style={showCalendar ? { width: '500px', height: '828px' } : {}}
         >
           {/* Header */}
