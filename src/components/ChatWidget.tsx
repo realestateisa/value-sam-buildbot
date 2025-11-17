@@ -54,12 +54,25 @@ export const ChatWidget = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
-  // Notify parent window when chat opens/closes
+  // Notify parent window with desired iframe size
   useEffect(() => {
     if (window.parent !== window) {
-      window.parent.postMessage({ type: 'chatbot-resize', isOpen }, '*');
+      const openWidth = showCalendar ? 500 : 400;
+      const openHeight = (showCalendar ? 828 : 690) + 112; // card height + bottom offset above button
+      const closedWidth = 320;
+      const closedHeight = 160;
+
+      window.parent.postMessage(
+        {
+          type: 'chatbot-resize',
+          isOpen,
+          width: isOpen ? openWidth : closedWidth,
+          height: isOpen ? openHeight : closedHeight,
+        },
+        '*'
+      );
     }
-  }, [isOpen]);
+  }, [isOpen, showCalendar]);
 
   // Load saved session on mount
   useEffect(() => {
@@ -395,7 +408,7 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card
           ref={chatRef}
-          className={`fixed bottom-0 right-0 md:bottom-0 md:right-0 flex flex-col shadow-2xl z-[60] transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? "md:w-[500px] md:h-[580px]" : "md:w-[400px] md:h-[580px]"} w-full h-full`}
+          className={`fixed inset-0 md:inset-auto md:bottom-28 md:right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? "md:w-[500px] md:h-[828px]" : "md:w-[400px] md:h-[690px]"} w-full h-full`}
         >
           {/* Header */}
           <div

@@ -22,14 +22,14 @@
     if (event.origin !== chatbotOrigin) return;
     
     if (event.data.type === 'chatbot-resize') {
-      if (event.data.isOpen) {
-        iframe.style.width = '400px';
-        iframe.style.height = '680px';
+      const { width, height, isOpen } = event.data;
+      if (width) iframe.style.width = width + 'px';
+      if (height) iframe.style.height = height + 'px';
+
+      if (isOpen) {
         iframe.style.borderRadius = '0';
         iframe.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
       } else {
-        iframe.style.width = '280px';
-        iframe.style.height = '150px';
         iframe.style.borderRadius = '0';
         iframe.style.boxShadow = 'none';
       }
