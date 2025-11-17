@@ -398,7 +398,7 @@ export const ChatWidget = () => {
         
         <Button
           onClick={() => setIsOpen(!isOpen)}
-          className="h-20 w-20 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 p-2"
+          className={`h-20 w-20 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 p-2 ${!isEmbedded ? 'hover:scale-105' : ''}`}
           size="icon"
         >
           {isOpen ? (
