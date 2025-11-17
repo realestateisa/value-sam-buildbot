@@ -67,13 +67,8 @@ export default defineConfig({
         },
       },
     },
-    // Optimize for production
-    minify: "terser",
-    terserOptions: {
-      compress: {
-        drop_console: true,
-      },
-    },
+    // Optimize for production with esbuild (built into Vite)
+    minify: true,
     // Increase chunk size warning limit
     chunkSizeWarningLimit: 1000,
   },
