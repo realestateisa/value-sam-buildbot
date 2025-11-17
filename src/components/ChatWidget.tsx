@@ -26,6 +26,7 @@ export const ChatWidget = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showTypingIndicator, setShowTypingIndicator] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedTerritory, setSelectedTerritory] = useState<string | null>(null);
   const [showLocationInput, setShowLocationInput] = useState(false);
@@ -88,6 +89,23 @@ export const ChatWidget = () => {
       textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + 'px';
     }
   }, [inputValue]);
+
+  // Delay showing typing indicator by 1 second
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    if (isLoading) {
+      timeoutId = setTimeout(() => {
+        setShowTypingIndicator(true);
+      }, 1000);
+    } else {
+      setShowTypingIndicator(false);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isLoading]);
 
   // Lock chat window width into CSS variable for stable citation sizing
   useEffect(() => {
@@ -606,7 +624,7 @@ export const ChatWidget = () => {
                     ))}
                     
                     {/* Typing Indicator */}
-                    {isLoading && <TypingIndicator />}
+                    {showTypingIndicator && <TypingIndicator />}
                   </div>
                 </ScrollArea>
               )}
