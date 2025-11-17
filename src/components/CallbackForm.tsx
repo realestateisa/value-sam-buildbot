@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card } from '@/components/ui/card';
-import { X } from 'lucide-react';
+import { X, Phone } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 
@@ -72,21 +71,32 @@ export const CallbackForm = ({ onClose }: CallbackFormProps) => {
   };
 
   return (
-    <div className="flex-1 overflow-auto p-4">
-      <Card className="p-6 max-w-md mx-auto">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Request Callback from the Team</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="h-8 w-8"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+    <>
+      {/* Callback Form Header */}
+      <div className="flex items-center justify-between p-3 text-primary-foreground bg-primary border-b">
+        <div className="flex items-center gap-2">
+          <Phone className="h-5 w-5" />
+          <h2 className="text-lg font-semibold">Request Callback</h2>
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
+          aria-label="Close callback form"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Callback Form Content */}
+      <div className="flex-1 overflow-auto p-6">
+        <div className="max-w-md mx-auto space-y-6">
+          <p className="text-muted-foreground text-sm">
+            Fill out the form below and our team will call you back shortly.
+          </p>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="firstName">First Name</Label>
             <Input
@@ -145,15 +155,16 @@ export const CallbackForm = ({ onClose }: CallbackFormProps) => {
             )}
           </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Request'}
-          </Button>
-        </form>
-      </Card>
-    </div>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Request'}
+            </Button>
+          </form>
+        </div>
+      </div>
+    </>
   );
 };
