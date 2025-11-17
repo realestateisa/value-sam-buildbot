@@ -80,7 +80,7 @@ export const ChatWidget = () => {
         });
       }
     }
-  }, [messages, isLoading]);
+  }, [messages, isLoading, showTypingIndicator]);
 
   // Auto-resize textarea
   useEffect(() => {
