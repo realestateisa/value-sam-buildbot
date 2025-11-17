@@ -59,12 +59,12 @@ export const ChatWidget = () => {
   // Notify parent window with desired iframe size when embedded
   useEffect(() => {
     if (isEmbedded) {
-      // Calculate total container size: button (80px) + gap (8px when open) + chat height
-      const buttonHeight = 80;
+      // Calculate total container size: button (88px to accommodate hover scale) + gap (8px when open) + chat height
+      const buttonHeight = 88; // Increased to accommodate 1.05 scale on hover
       const gap = isOpen ? 8 : 0;
       const chatHeight = showCalendar ? 828 : 690;
       const chatWidth = showCalendar ? 500 : 400;
-      const buttonWidth = 80;
+      const buttonWidth = 88; // Increased to accommodate 1.05 scale on hover
       
       const totalWidth = isOpen ? Math.max(buttonWidth, chatWidth) : buttonWidth;
       const totalHeight = isOpen ? (chatHeight + gap + buttonHeight) : buttonHeight;
@@ -383,7 +383,7 @@ export const ChatWidget = () => {
   const content = (
     <>
       {/* Chat Button */}
-      <div className={`fixed z-50 ${isEmbedded ? 'bottom-0 right-0' : 'bottom-6 right-6'}`}>
+      <div className={`fixed z-50 ${isEmbedded ? 'bottom-1 right-1' : 'bottom-6 right-6'}`}>
         {/* Speech Bubble */}
         {!isOpen && (
           <div className="absolute bottom-full right-0 mb-2 animate-fade-in z-[60]">
@@ -398,7 +398,7 @@ export const ChatWidget = () => {
         
         <Button
           onClick={() => setIsOpen(!isOpen)}
-          className={`h-20 w-20 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 p-2 ${!isEmbedded ? 'hover:scale-105' : ''}`}
+          className="h-20 w-20 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 p-2"
           size="icon"
         >
           {isOpen ? (
@@ -414,7 +414,7 @@ export const ChatWidget = () => {
         <Card
           ref={chatRef}
           className={`fixed flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-visible w-[400px] h-[690px] bg-background ${
-            isEmbedded ? 'bottom-[88px] right-0' : 'bottom-[112px] right-6'
+            isEmbedded ? 'bottom-[96px] right-1' : 'bottom-[112px] right-6'
           }`}
           style={showCalendar ? { width: '500px', height: '828px' } : {}}
         >
