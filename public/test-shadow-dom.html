@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shadow DOM Widget Test - VBH Chatbot</title>
+  
+  <!-- Google Fonts (to test if widget fonts are isolated) -->
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Sans+MS&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Aggressive conflicting styles to test Shadow DOM isolation */
+    :root {
+      --background: 255 0 0; /* Red background */
+      --foreground: 0 255 0; /* Green text */
+      --primary: 255 255 0; /* Yellow primary */
+      --radius: 50px;
+    }
+    
+    * {
+      font-family: 'Comic Sans MS', cursive !important;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Comic Sans MS', cursive;
+      color: white;
+      min-height: 100vh;
+    }
+    
+    /* Aggressive global styles */
+    div, p, span, button, input, textarea {
+      color: yellow !important;
+      background: rgba(0, 0, 0, 0.5) !important;
+      border: 3px dashed pink !important;
+      font-size: 24px !important;
+    }
+    
+    button {
+      padding: 20px !important;
+      border-radius: 0 !important;
+      cursor: pointer !important;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    h2 {
+      font-size: 2rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: #ffd700;
+    }
+    
+    .test-section {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+    }
+    
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .checklist li {
+      padding: 10px;
+      margin: 10px 0;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      font-size: 1.1rem;
+    }
+    
+    .checklist li::before {
+      content: "☐ ";
+      color: #ffd700;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    
+    .warning {
+      background: rgba(255, 165, 0, 0.2);
+      border-left: 4px solid orange;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    
+    .success {
+      background: rgba(0, 255, 0, 0.2);
+      border-left: 4px solid lime;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    
+    code {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      color: #00ff00;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .test-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    
+    .test-buttons button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      color: white !important;
+      border: none !important;
+      padding: 15px 30px !important;
+      border-radius: 8px !important;
+      cursor: pointer;
+      font-size: 16px !important;
+      transition: transform 0.2s;
+    }
+    
+    .test-buttons button:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Shadow DOM Widget Test Page</h1>
+    <p>This page has <strong>extremely aggressive global styles</strong> to test Shadow DOM isolation.</p>
+    
+    <div class="warning">
+      ⚠️ <strong>Important:</strong> If the chatbot widget looks normal (not affected by the yellow/pink styles on this page), then Shadow DOM isolation is working correctly!
+    </div>
+
+    <div class="test-section">
+      <h2>📋 Visual Verification Checklist</h2>
+      <ul class="checklist">
+        <li><strong>No Clipping</strong> - Speech bubble is fully visible above chat button (original issue!)</li>
+        <li><strong>Style Isolation</strong> - Chatbot has its own colors/fonts, not affected by page styles</li>
+        <li><strong>Fixed Positioning</strong> - Button stays in bottom-right corner when scrolling</li>
+        <li><strong>Speech Bubble</strong> - White background with proper shadow and positioning</li>
+        <li><strong>Chat Window</strong> - Opens smoothly without boundary restrictions</li>
+        <li><strong>Dropdowns Work</strong> - Territory selector and other dropdowns render properly</li>
+        <li><strong>Hover Effects</strong> - Button scales on hover with gradient effect</li>
+        <li><strong>Animations</strong> - Fade-in and slide-in effects are smooth</li>
+        <li><strong>Typography</strong> - Inter font loads correctly in widget</li>
+        <li><strong>Dark Mode Variables</strong> - Colors look correct (not red/yellow from host page)</li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <h2>⚙️ Functional Testing</h2>
+      <ul class="checklist">
+        <li>Click chat button to open widget</li>
+        <li>Send a test message</li>
+        <li>Verify AI response appears</li>
+        <li>Test territory detection dropdown</li>
+        <li>Test "Request a Callback" form</li>
+        <li>Test "Book an Appointment" flow</li>
+        <li>Verify Cal.com integration works</li>
+        <li>Test on mobile viewport (resize window)</li>
+        <li>Check browser console for errors</li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <h2>📱 Responsive Testing</h2>
+      <p>Resize your browser window to test different viewports:</p>
+      <ul class="checklist">
+        <li>Desktop (1920px+)</li>
+        <li>Laptop (1024px-1919px)</li>
+        <li>Tablet (768px-1023px)</li>
+        <li>Mobile (320px-767px)</li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <h2>🌐 Browser Compatibility</h2>
+      <p>Test the widget in these browsers:</p>
+      <ul class="checklist">
+        <li>Chrome/Edge (latest)</li>
+        <li>Firefox (latest)</li>
+        <li>Safari (latest)</li>
+        <li>Chrome Mobile</li>
+        <li>Safari iOS</li>
+      </ul>
+      <div class="warning">
+        ⚠️ <strong>Note:</strong> Shadow DOM is not supported in IE11. Coverage: ~96% of browsers globally.
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>🔍 Cal.com Integration Test</h2>
+      <p>Special attention needed for third-party scripts in Shadow DOM:</p>
+      <ul class="checklist">
+        <li>Open chat and navigate to appointment booking</li>
+        <li>Enter a location if required</li>
+        <li>Click "Book an Appointment"</li>
+        <li>Verify Cal.com calendar modal opens correctly</li>
+        <li>Check if calendar is positioned properly</li>
+        <li>Test date/time selection</li>
+        <li>Verify form submission works</li>
+      </ul>
+      <div class="warning">
+        ⚠️ If Cal.com has issues, it may need to render outside Shadow DOM using a portal or iframe.
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>🐛 Debugging Tips</h2>
+      <p>If something doesn't work:</p>
+      <ul class="checklist">
+        <li>Open browser DevTools (F12)</li>
+        <li>Check Console for errors</li>
+        <li>Inspect the <code>&lt;vbh-chatbot&gt;</code> element</li>
+        <li>Expand the #shadow-root to see widget contents</li>
+        <li>Verify CSS variables are defined in :host</li>
+        <li>Check Network tab for failed requests</li>
+        <li>Test with browser extensions disabled</li>
+      </ul>
+    </div>
+
+    <div class="success">
+      ✅ <strong>Success Criteria:</strong><br>
+      The chatbot widget should appear in the bottom-right corner with its own clean styling, completely unaffected by the aggressive yellow/pink styles on this page. The speech bubble should be fully visible without any clipping.
+    </div>
+
+    <div class="test-section">
+      <h2>🚀 Build Instructions</h2>
+      <p>To build the widget before testing:</p>
+      <pre style="background: rgba(0,0,0,0.7); padding: 15px; border-radius: 8px; overflow-x: auto;">
+<code>npm run build:widget</code></pre>
+      <p>This will generate: <code>public/widget-dist/chatbot-widget-v2.js</code></p>
+      <p style="margin-top: 20px;">Then serve this test page:</p>
+      <pre style="background: rgba(0,0,0,0.7); padding: 15px; border-radius: 8px; overflow-x: auto;">
+<code>npx serve public</code></pre>
+      <p>Navigate to: <code>http://localhost:3000/test-shadow-dom.html</code></p>
+    </div>
+
+    <!-- Test buttons for quick interactions -->
+    <div class="test-buttons">
+      <button onclick="alert('If you can read this alert properly, JS execution works!')">Test Alert</button>
+      <button onclick="document.body.style.zoom = '150%'">Zoom 150%</button>
+      <button onclick="document.body.style.zoom = '100%'">Reset Zoom</button>
+      <button onclick="window.scrollTo(0, document.body.scrollHeight)">Scroll Down</button>
+      <button onclick="window.scrollTo(0, 0)">Scroll Top</button>
+    </div>
+
+    <!-- Lots of content to test fixed positioning during scroll -->
+    <div class="test-section">
+      <h2>📜 Scroll Test Content</h2>
+      <p>Scroll down to verify the chatbot button stays fixed in the bottom-right corner.</p>
+      <div style="height: 100vh; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 20px 0;">
+        <p style="font-size: 2rem;">Scroll Down ⬇️</p>
+      </div>
+      <div style="height: 100vh; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 20px 0;">
+        <p style="font-size: 2rem;">Keep Scrolling ⬇️</p>
+      </div>
+      <div style="height: 100vh; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 20px 0;">
+        <p style="font-size: 2rem;">Almost There ⬇️</p>
+      </div>
+      <div class="success">
+        ✅ If the chatbot button stayed in the bottom-right corner while scrolling, fixed positioning works correctly!
+      </div>
+    </div>
+  </div>
+
+  <!-- Load the Shadow DOM widget -->
+  <!-- This should be completely unaffected by all the aggressive styles above -->
+  <script src="./widget-dist/chatbot-widget-v2.js"></script>
+  
+  <script>
+    // Log when widget loads
+    console.log('%c🧪 Shadow DOM Widget Test Page Loaded', 'background: #4CAF50; color: white; padding: 10px; border-radius: 5px; font-size: 16px;');
+    console.log('%c✅ Widget script loaded. Check if <vbh-chatbot> element exists in DOM.', 'color: #4CAF50; font-size: 14px;');
+    
+    // Wait for widget to mount
+    setTimeout(() => {
+      const widget = document.querySelector('vbh-chatbot');
+      if (widget) {
+        console.log('%c✅ Widget element found:', 'color: #4CAF50; font-weight: bold;', widget);
+        console.log('%c🔍 Shadow root:', 'color: #2196F3; font-weight: bold;', widget.shadowRoot);
+        
+        if (widget.shadowRoot) {
+          console.log('%c✅ Shadow DOM is working! Styles should be isolated.', 'background: #4CAF50; color: white; padding: 5px; border-radius: 3px;');
+        } else {
+          console.error('%c❌ Shadow root not found! Shadow DOM may not be working.', 'background: #f44336; color: white; padding: 5px; border-radius: 3px;');
+        }
+      } else {
+        console.error('%c❌ Widget element not found! Check console for errors.', 'background: #f44336; color: white; padding: 5px; border-radius: 3px;');
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
