@@ -662,7 +662,7 @@ export const ChatWidget = () => {
         <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t flex gap-2`}>
           <Button
                 onClick={() => setShowCallbackForm(true)}
-                className="flex-1 font-medium transition-all duration-200 hover:scale-103 bg-background text-[#E2362B] border-[#E2362B] border hover:bg-[#E2362B]/5"
+                className="flex-1 font-medium transition-all duration-200 hover:scale-103 bg-background text-[#E2362B] border-[#E2362B] border-2 hover:bg-[#E2362B]/5"
                 variant="outline"
                 aria-label="Request callback"
               >
