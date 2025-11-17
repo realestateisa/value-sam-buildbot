@@ -24,17 +24,11 @@
     if (event.data.type === 'chatbot-resize') {
       const { width, height, isOpen } = event.data;
 
-      // Clamp to viewport to prevent cut-off while keeping compact footprint
-      if (width) {
-        const clampedW = Math.max(280, Math.min(width, window.innerWidth - 24));
-        iframe.style.width = clampedW + 'px';
-      }
-      if (height) {
-        const clampedH = Math.max(150, Math.min(height, window.innerHeight - 24));
-        iframe.style.height = clampedH + 'px';
-      }
+      // Set iframe size to exact container size (no clamping needed for positioning)
+      if (width) iframe.style.width = width + 'px';
+      if (height) iframe.style.height = height + 'px';
 
-      // Ensure position stays anchored to the corner (never full-screen)
+      // Keep iframe anchored to bottom-right corner
       iframe.style.position = 'fixed';
       iframe.style.bottom = '20px';
       iframe.style.right = '20px';
