@@ -140,15 +140,20 @@ export const ChatWidget = () => {
         console.log('Stored CustomGPT session_id:', data.sessionId);
       }
 
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.message,
-        timestamp: new Date(),
-        citations: data.citations || [],
-      };
+      // Check if the response triggers appointment scheduling
+      if (data.message.toLowerCase().includes('schedule_appointment')) {
+        setShowLocationInput(true);
+      } else {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: data.message,
+          timestamp: new Date(),
+          citations: data.citations || [],
+        };
 
-      setMessages(prev => [...prev, assistantMessage]);
+        setMessages(prev => [...prev, assistantMessage]);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
@@ -423,7 +428,16 @@ export const ChatWidget = () => {
               </Button>
 
               {/* Centered Content */}
-              <div className="w-full max-w-md space-y-4">
+              <div className="w-full max-w-md space-y-6">
+                {/* Logo */}
+                <div className="flex justify-center">
+                  <img 
+                    src={logo} 
+                    alt="Value Build Homes" 
+                    className="h-20 w-20 rounded-full bg-white p-1" 
+                  />
+                </div>
+
                 {/* Title */}
                 <h2 className="text-xl font-semibold text-white text-center">
                   Schedule an Appointment
@@ -434,18 +448,20 @@ export const ChatWidget = () => {
               <Input
                 value={locationInput}
                 onChange={(e) => setLocationInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
+                onKeyPress={(e) => e.key === 'Enter' && locationInput.length >= 3 && handleLocationSubmit()}
                 placeholder="What county will you build in?"
                 disabled={isLoading}
                 className="bg-white text-black border-none placeholder:text-gray-500 h-11"
               />
-              <Button
-                onClick={handleLocationSubmit}
-                disabled={isLoading || !locationInput.trim()}
-                className="w-full bg-white text-[#E93424] hover:bg-gray-100 h-11 font-medium transition-colors duration-200"
-              >
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Continue'}
-              </Button>
+              {locationInput.length >= 3 && (
+                <Button
+                  onClick={handleLocationSubmit}
+                  disabled={isLoading}
+                  className="w-full bg-white text-[#E93424] hover:bg-gray-100 h-11 font-medium transition-colors duration-200 animate-fade-in"
+                >
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Continue'}
+                </Button>
+              )}
             </div>
               </div>
             </div>
