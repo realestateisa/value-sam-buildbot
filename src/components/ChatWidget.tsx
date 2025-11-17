@@ -514,11 +514,6 @@ export const ChatWidget = () => {
                           >
                             <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
                             
-                            {/* Timestamp on hover */}
-                            <div className="text-[10px] opacity-0 group-hover:opacity-60 transition-opacity mt-1 text-right">
-                              {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
-                            </div>
-                            
                             {/* Action Button */}
                             {message.action && (
                               <Button
