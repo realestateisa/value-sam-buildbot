@@ -49,24 +49,12 @@ export const ChatWidget = () => {
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
   const [showCallbackForm, setShowCallbackForm] = useState(false);
-  const [isIframe] = useState(() => window.parent !== window);
-  const [embedHandshake, setEmbedHandshake] = useState(false);
-  const isEmbedded = isIframe && embedHandshake;
+  // Detect if we're embedded by checking the route (immediate, no handshake needed)
+  const isEmbedded = window.location.pathname === '/widget';
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
-
-  // Handshake to detect embed script environment
-  useEffect(() => {
-    const handler = (event: MessageEvent) => {
-      if (event?.data?.type === 'chatbot-embed-init') {
-        setEmbedHandshake(true);
-      }
-    };
-    window.addEventListener('message', handler);
-    return () => window.removeEventListener('message', handler);
-  }, []);
 
   // Notify parent window with desired iframe size (container size for iframe positioning)
   useEffect(() => {
