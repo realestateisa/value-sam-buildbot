@@ -66,7 +66,7 @@ export const ChatWidget = () => {
       const chatWidth = showCalendar ? 500 : 400;
       const buttonWidth = 80;
       
-      const totalWidth = Math.max(buttonWidth, chatWidth);
+      const totalWidth = isOpen ? Math.max(buttonWidth, chatWidth) : buttonWidth;
       const totalHeight = isOpen ? (chatHeight + gap + buttonHeight) : buttonHeight;
 
       window.parent.postMessage(
@@ -384,8 +384,8 @@ export const ChatWidget = () => {
     <>
       {/* Chat Button */}
       <div className={`${isEmbedded ? 'absolute bottom-0 right-0' : 'fixed bottom-6 right-6'} z-50`}>
-        {/* Speech Bubble */}
-        {!isOpen && (
+        {/* Speech Bubble (hide when embedded to avoid clipping) */}
+        {!isOpen && !isEmbedded && (
           <div className="absolute bottom-full right-0 mb-2 animate-fade-in">
             <div className="relative bg-white text-[#E93424] px-4 py-2 rounded-lg shadow-lg text-sm font-medium whitespace-nowrap border-2 border-[#E93424]">
               Any questions I can help with?
@@ -398,7 +398,7 @@ export const ChatWidget = () => {
         
         <Button
           onClick={() => setIsOpen(!isOpen)}
-          className="h-20 w-20 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 p-2"
+          className="h-20 w-20 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 p-2"
           size="icon"
         >
           {isOpen ? (
