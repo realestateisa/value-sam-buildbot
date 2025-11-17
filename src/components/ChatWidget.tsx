@@ -188,20 +188,27 @@ export const ChatWidget = () => {
       // Check if the response triggers appointment scheduling
       if (data.message.toLowerCase().includes('schedule_appointment')) {
         setShowLocationInput(true);
-      } else if (data.message.trim() === "I don't know the answer to that just yet. Please reach out to support for further help.") {
-        // Open callback form instead of showing this message
-        console.log('Opening callback form due to unknown answer response');
-        setShowCallbackForm(true);
       } else {
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: data.message,
-          timestamp: new Date(),
-          citations: data.citations || [],
-        };
+        const rawMsg = data.message ?? '';
+        const normalizedMsg = rawMsg.replace(/\u2019/g, "'").trim(); // normalize curly apostrophes
+        const isUnknown =
+          normalizedMsg === "I don't know the answer to that just yet. Please reach out to support for further help." ||
+          rawMsg.toLowerCase().includes('reach out to support for further help');
 
-        setMessages(prev => [...prev, assistantMessage]);
+        if (isUnknown) {
+          console.log('Opening callback form due to unknown answer response', { rawMsg, normalizedMsg });
+          setShowCallbackForm(true);
+        } else {
+          const assistantMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: data.message,
+            timestamp: new Date(),
+            citations: data.citations || [],
+          };
+
+          setMessages(prev => [...prev, assistantMessage]);
+        }
       }
     } catch (error) {
       console.error('Error sending message:', error);
