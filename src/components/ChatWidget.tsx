@@ -49,30 +49,36 @@ export const ChatWidget = () => {
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
   const [showCallbackForm, setShowCallbackForm] = useState(false);
+  const [isInIframe] = useState(() => window.parent !== window);
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
-  // Notify parent window with desired iframe size
+  // Notify parent window with desired iframe size (container size for iframe positioning)
   useEffect(() => {
-    if (window.parent !== window) {
-      const openWidth = showCalendar ? 500 : 400;
-      const openHeight = (showCalendar ? 828 : 690) + 112; // card height + bottom offset above button
-      const closedWidth = 320;
-      const closedHeight = 160;
+    if (isInIframe) {
+      // Calculate total container size: button (80px) + gap (16px) + chat height
+      const buttonHeight = 80;
+      const gap = 16;
+      const chatHeight = showCalendar ? 828 : 690;
+      const chatWidth = showCalendar ? 500 : 400;
+      const buttonWidth = 80;
+      
+      const totalWidth = Math.max(buttonWidth, chatWidth);
+      const totalHeight = isOpen ? (chatHeight + gap + buttonHeight) : buttonHeight;
 
       window.parent.postMessage(
         {
           type: 'chatbot-resize',
           isOpen,
-          width: isOpen ? openWidth : closedWidth,
-          height: isOpen ? openHeight : closedHeight,
+          width: totalWidth,
+          height: totalHeight,
         },
         '*'
       );
     }
-  }, [isOpen, showCalendar]);
+  }, [isOpen, showCalendar, isInIframe]);
 
   // Load saved session on mount
   useEffect(() => {
@@ -375,10 +381,14 @@ export const ChatWidget = () => {
     });
   }, [showCalendar, selectedTerritory]);
 
-  return (
+  const containerClass = isInIframe ? "relative w-full h-full" : "";
+  const buttonPositionClass = isInIframe ? "absolute bottom-0 right-0" : "fixed bottom-6 right-6";
+  const chatPositionClass = isInIframe ? "absolute bottom-[96px] right-0" : "fixed bottom-[112px] right-6";
+
+  const content = (
     <>
       {/* Chat Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className={`${buttonPositionClass} z-50`}>
         {/* Speech Bubble */}
         {!isOpen && (
           <div className="absolute bottom-full right-0 mb-2 animate-fade-in">
@@ -408,7 +418,7 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card
           ref={chatRef}
-          className={`fixed bottom-[112px] right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? "w-[500px] h-[828px]" : "w-[400px] h-[690px]"} max-w-[calc(100vw-24px)] max-h-[calc(100vh-140px)]`}
+          className={`${chatPositionClass} flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? "w-[500px] h-[828px]" : "w-[400px] h-[690px]"}`}
         >
           {/* Header */}
           <div
@@ -795,5 +805,11 @@ export const ChatWidget = () => {
         </Card>
       )}
     </>
+  );
+
+  return isInIframe ? (
+    <div className={containerClass}>{content}</div>
+  ) : (
+    content
   );
 };
