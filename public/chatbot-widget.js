@@ -13,7 +13,7 @@
   // Create iframe to load the chatbot app
   const iframe = document.createElement('iframe');
   iframe.src = chatbotOrigin + '/widget';
-  iframe.style.cssText = 'position: fixed; bottom: 20px; right: 20px; width: 80px; height: 80px; border: none; z-index: 9999; background: transparent;';
+  iframe.style.cssText = 'position: fixed; bottom: 20px; right: 20px; width: 280px; height: 150px; border: none; z-index: 9999; background: transparent;';
   iframe.title = 'Value Build Homes Chatbot';
   
   // Listen for messages from the chatbot to resize the iframe
@@ -27,8 +27,8 @@
         iframe.style.borderRadius = '12px';
         iframe.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
       } else {
-        iframe.style.width = '80px';
-        iframe.style.height = '80px';
+        iframe.style.width = '280px';
+        iframe.style.height = '150px';
         iframe.style.borderRadius = '0';
         iframe.style.boxShadow = 'none';
       }
