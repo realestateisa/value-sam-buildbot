@@ -1,16 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight, Loader2, Trash2, MapPin, Video } from 'lucide-react';
+import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight, Loader2, MapPin, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { Message, TERRITORIES } from '@/types/chat';
 import { detectTerritory } from '@/utils/territoryDetection';
 import { useToast } from '@/hooks/use-toast';
-import { formatDistanceToNow } from 'date-fns';
 import logo from '@/assets/logo.png';
 import TypingIndicator from '@/components/TypingIndicator';
 import { saveChatSession, loadChatSession, clearChatSession } from '@/utils/chatStorage';
@@ -36,7 +34,6 @@ export const ChatWidget = () => {
   const [calendarError, setCalendarError] = useState<string | null>(null);
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -335,16 +332,6 @@ export const ChatWidget = () => {
               </div>
             )}
             <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowDeleteDialog(true)}
-                className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
-                title="Clear chat history"
-                aria-label="Clear chat history"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
               <Button
                 variant="ghost"
                 size="icon"
@@ -695,35 +682,6 @@ export const ChatWidget = () => {
           )}
         </Card>
       )}
-
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Clear chat history?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete {messages.length} message{messages.length !== 1 ? 's' : ''} from your chat history. This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                clearChatSession();
-                setMessages([]);
-                setCustomGptSessionId(null);
-                setShowDeleteDialog(false);
-                toast({
-                  description: "Chat history cleared",
-                });
-              }}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 };
