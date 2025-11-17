@@ -384,9 +384,9 @@ export const ChatWidget = () => {
     <>
       {/* Chat Button */}
       <div className={`fixed z-50 ${isEmbedded ? 'bottom-0 right-0' : 'bottom-6 right-6'}`}>
-        {/* Speech Bubble (hide when embedded to avoid clipping) */}
-        {!isOpen && !isEmbedded && (
-          <div className="absolute bottom-full right-0 mb-2 animate-fade-in">
+        {/* Speech Bubble */}
+        {!isOpen && (
+          <div className="absolute bottom-full right-0 mb-2 animate-fade-in z-[60]">
             <div className="relative bg-white text-[#E93424] px-4 py-2 rounded-lg shadow-lg text-sm font-medium whitespace-nowrap border-2 border-[#E93424]">
               Any questions I can help with?
               {/* Triangle pointer with border */}
@@ -413,7 +413,7 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card
           ref={chatRef}
-          className={`fixed flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden w-[400px] h-[690px] ${
+          className={`fixed flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-visible w-[400px] h-[690px] bg-background ${
             isEmbedded ? 'bottom-[88px] right-0' : 'bottom-[112px] right-6'
           }`}
           style={showCalendar ? { width: '500px', height: '828px' } : {}}
