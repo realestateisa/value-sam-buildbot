@@ -13,7 +13,8 @@ const WidgetOnly = () => {
     };
   }, []);
 
-  return null;
+  // Return a positioned container for the ChatWidget to anchor to
+  return <div className="fixed inset-0 pointer-events-none" />;
 };
 
 export default WidgetOnly;
