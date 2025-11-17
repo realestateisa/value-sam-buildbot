@@ -491,7 +491,7 @@ export const ChatWidget = () => {
                     {messages.map((message) => (
                       <div
                         key={message.id}
-                        className={`flex w-full ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'} group animate-fade-in`}
+                        className={`flex w-full min-w-0 overflow-hidden ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'} group animate-fade-in`}
                       >
                         {message.role === 'assistant' && (
                           <img 
