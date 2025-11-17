@@ -1,9 +1,11 @@
 (function() {
   // Create and inject the chatbot widget as an iframe
-  const root = document.getElementById('vbh-chatbot-root');
+  let root = document.getElementById('vbh-chatbot-root');
   if (!root) {
-    console.error('vbh-chatbot-root element not found');
-    return;
+    // Create a root automatically if not present
+    root = document.createElement('div');
+    root.id = 'vbh-chatbot-root';
+    document.body.appendChild(root);
   }
 
   // Extract chatbot origin from the script's own source URL
@@ -13,7 +15,7 @@
   // Create iframe to load the chatbot app
   const iframe = document.createElement('iframe');
   iframe.src = chatbotOrigin + '/widget';
-  iframe.style.cssText = 'position: fixed; bottom: 20px; right: 20px; width: 280px; height: 150px; border: none; z-index: 9999; background: transparent; transition: all 0.3s ease-in-out;';
+  iframe.style.cssText = 'position: fixed; bottom: 20px; right: 20px; width: 280px; height: 150px; border: none; z-index: 2147483647; background: transparent; pointer-events: auto; display: block; transition: all 0.3s ease-in-out;';
   iframe.title = 'Value Build Homes Chatbot';
   iframe.allow = 'clipboard-write';
   // Notify child that it is embedded so it can switch to container-based positioning
@@ -49,5 +51,6 @@
   
   // Mobile sizing is handled via chatbot-resize messages to avoid full-screen transparent overlays
 
-  root.appendChild(iframe);
+  // Append to body to avoid clipping/overflow issues from parent containers
+  document.body.appendChild(iframe);
 })();
