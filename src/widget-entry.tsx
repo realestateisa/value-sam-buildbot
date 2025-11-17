@@ -2,7 +2,10 @@ import React from "react";
 import { createRoot, Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChatWidget } from "./components/ChatWidget";
-import "./index.css"; // Import all Tailwind styles
+import "./widget.css"; // Import Shadow DOM specific styles
+
+// Placeholder for CSS injection - will be replaced during build
+const INJECTED_CSS = "__INJECT_CSS_HERE__";
 
 // Create QueryClient instance for the widget
 const queryClient = new QueryClient({
@@ -59,49 +62,10 @@ class ValueBuildChatbot extends HTMLElement {
     // Create style element
     this.styleElement = document.createElement("style");
     
-    // Get all styles from the bundled CSS
-    // In production build, this will be replaced with actual bundled CSS
-    // The build process will inline the CSS here
-    const styles = this.getBundledStyles();
-    
-    this.styleElement.textContent = styles;
+    // Use the CSS that was inlined during build
+    // The build process replaces INJECTED_CSS with actual compiled CSS
+    this.styleElement.textContent = INJECTED_CSS;
     this.shadow.appendChild(this.styleElement);
-  }
-
-  private getBundledStyles(): string {
-    // This will be replaced during build with actual CSS content
-    // For now, we'll try to extract from document stylesheets
-    // In production, Vite will inline this
-    
-    // Transform :root to :host for Shadow DOM compatibility
-    let allStyles = "";
-    
-    // Get all style elements from main document
-    const styleElements = document.querySelectorAll('style, link[rel="stylesheet"]');
-    styleElements.forEach((element) => {
-      if (element instanceof HTMLStyleElement) {
-        allStyles += element.textContent || "";
-      }
-    });
-
-    // Transform CSS for Shadow DOM
-    // Replace :root with :host
-    allStyles = allStyles.replace(/:root/g, ":host");
-    
-    // Add additional Shadow DOM specific styles
-    allStyles += `
-      :host {
-        all: initial;
-        display: contents;
-      }
-      
-      /* Ensure fixed positioning works relative to viewport */
-      :host * {
-        box-sizing: border-box;
-      }
-    `;
-
-    return allStyles;
   }
 
   private mountReactApp() {

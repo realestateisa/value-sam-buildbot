@@ -1,10 +1,40 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import fs from "fs";
+
+// Custom plugin to inline CSS into JS for Shadow DOM
+function inlineCssPlugin() {
+  return {
+    name: 'inline-css',
+    generateBundle(options: any, bundle: any) {
+      const cssFileName = Object.keys(bundle).find(name => name.endsWith('.css'));
+      if (cssFileName) {
+        const cssContent = bundle[cssFileName].source;
+        const jsFileName = Object.keys(bundle).find(name => name.endsWith('.js'));
+        
+        if (jsFileName) {
+          let jsContent = bundle[jsFileName].code;
+          
+          // Replace the CSS_STYLES_PLACEHOLDER with actual CSS
+          jsContent = jsContent.replace(
+            '"__INJECT_CSS_HERE__"',
+            '`' + cssContent.replace(/`/g, '\\`').replace(/\$/g, '\\$') + '`'
+          );
+          
+          bundle[jsFileName].code = jsContent;
+          
+          // Remove the separate CSS file since it's now inlined
+          delete bundle[cssFileName];
+        }
+      }
+    }
+  };
+}
 
 // Build configuration for the standalone widget bundle
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), inlineCssPlugin()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
