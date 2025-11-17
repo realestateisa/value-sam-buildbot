@@ -299,8 +299,7 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card 
           ref={chatRef}
-          className={`fixed bottom-28 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}
-          style={{ ['--chat-width' as any]: showCalendar ? '500px' : '400px' }}
+          className={`fixed inset-0 md:inset-auto md:bottom-28 md:right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'md:w-[500px] md:h-[828px]' : 'md:w-[400px] md:h-[690px]'} w-full h-full`}
         >
           {/* Header */}
           <div className={`flex items-center justify-between ${showCalendar ? 'p-4' : 'p-3'} border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
@@ -451,7 +450,7 @@ export const ChatWidget = () => {
                 onKeyPress={(e) => e.key === 'Enter' && locationInput.length >= 3 && handleLocationSubmit()}
                 placeholder="What county will you build in?"
                 disabled={isLoading}
-                className="bg-white text-black border-none placeholder:text-gray-500 h-11"
+                className="bg-white text-black border-none placeholder:text-gray-500 h-11 text-[16px]"
               />
               {locationInput.length >= 3 && (
                 <Button
@@ -470,7 +469,7 @@ export const ChatWidget = () => {
               {/* Messages */}
               {/* Chat Messages - hidden when calendar is shown */}
               {!showCalendar && (
-        <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? 'p-4 pr-6' : 'p-3 pr-5'}`} ref={scrollRef}>
+        <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? 'p-4 pr-6' : 'pl-2 pr-2 py-3 md:p-3 md:pr-5'}`} ref={scrollRef}>
           <div className={`${showCalendar ? 'space-y-4' : 'space-y-3'}`}>
                     {messages.map((message) => (
                       <div
@@ -488,7 +487,7 @@ export const ChatWidget = () => {
                           <div
                             className={`rounded-lg p-2.5 min-w-0 ${
                               message.role === 'user' 
-                                ? 'max-w-[calc(var(--chat-width)_*_0.85)]'
+                                ? 'max-w-[calc(var(--chat-width)_*_0.78)] inline-block'
                                 : 'w-[calc(var(--chat-width)_*_0.78)] flex-none'
                             } ${
                               message.role === 'user'
@@ -642,7 +641,7 @@ export const ChatWidget = () => {
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder="Ask me anything.."
                   disabled={isLoading}
-                  className="flex-1 text-sm"
+                  className="flex-1 text-[16px]"
                 />
                 <Button
                   onClick={handleSendMessage}
