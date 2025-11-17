@@ -447,7 +447,7 @@ export const ChatWidget = () => {
                 </h2>
 
                 {/* Input Form */}
-            <div className="space-y-3">
+            <div className="space-y-3 animate-slide-in-right">
               <Input
                 value={locationInput}
                 onChange={(e) => setLocationInput(e.target.value)}
