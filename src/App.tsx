@@ -7,7 +7,6 @@ import Index from "./pages/Index";
 import EmbedDemo from "./pages/EmbedDemo";
 import WidgetOnly from "./pages/WidgetOnly";
 import NotFound from "./pages/NotFound";
-import { ChatWidget } from "./components/ChatWidget";
 
 const queryClient = new QueryClient();
 
@@ -24,7 +23,6 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <ChatWidget />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

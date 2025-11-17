@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { ChatWidget } from '@/components/ChatWidget';
 
 const WidgetOnly = () => {
   useEffect(() => {
@@ -14,7 +15,12 @@ const WidgetOnly = () => {
   }, []);
 
   // Return a positioned container for the ChatWidget to anchor to
-  return <div className="fixed inset-0 pointer-events-none" />;
+  return (
+    <>
+      <div className="fixed inset-0 pointer-events-none" />
+      <ChatWidget />
+    </>
+  );
 };
 
 export default WidgetOnly;
