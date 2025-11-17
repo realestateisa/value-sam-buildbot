@@ -4,10 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { Message, TERRITORIES } from '@/types/chat';
 import { detectTerritory } from '@/utils/territoryDetection';
 import { useToast } from '@/hooks/use-toast';
+import { formatDistanceToNow } from 'date-fns';
 import logo from '@/assets/logo.png';
 import TypingIndicator from '@/components/TypingIndicator';
 import { saveChatSession, loadChatSession, clearChatSession } from '@/utils/chatStorage';
@@ -33,8 +36,10 @@ export const ChatWidget = () => {
   const [calendarError, setCalendarError] = useState<string | null>(null);
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
   // Load saved session on mount
@@ -66,14 +71,26 @@ export const ChatWidget = () => {
     }
   }, [messages, customGptSessionId]);
 
+  // Smooth scroll to bottom when messages change
   useEffect(() => {
     if (scrollRef.current) {
       const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
       if (scrollElement) {
-        scrollElement.scrollTop = scrollElement.scrollHeight;
+        scrollElement.scrollTo({
+          top: scrollElement.scrollHeight,
+          behavior: 'smooth'
+        });
       }
     }
   }, [messages, isLoading]);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + 'px';
+    }
+  }, [inputValue]);
 
   // Lock chat window width into CSS variable for stable citation sizing
   useEffect(() => {
@@ -99,6 +116,11 @@ export const ChatWidget = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    
+    // Reset textarea height
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
     setInputValue('');
     setIsLoading(true);
 
@@ -316,16 +338,10 @@ export const ChatWidget = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => {
-                  clearChatSession();
-                  setMessages([]);
-                  setCustomGptSessionId(null);
-                  toast({
-                    description: "Chat history cleared",
-                  });
-                }}
+                onClick={() => setShowDeleteDialog(true)}
                 className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
                 title="Clear chat history"
+                aria-label="Clear chat history"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -338,6 +354,7 @@ export const ChatWidget = () => {
                   setShowLocationInput(false);
                 }}
                 className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
+                aria-label="Close chat"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -474,13 +491,13 @@ export const ChatWidget = () => {
                     {messages.map((message) => (
                       <div
                         key={message.id}
-                        className={`flex w-full ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}
+                        className={`flex w-full ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'} group animate-fade-in`}
                       >
                         {message.role === 'assistant' && (
                           <img 
                             src={logo} 
                             alt="Sam" 
-                            className="h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1" 
+                            className={`h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1 transition-opacity ${isLoading ? 'animate-pulse' : ''}`}
                           />
                         )}
                         <div className="flex flex-col">
@@ -491,11 +508,16 @@ export const ChatWidget = () => {
                                 : 'inline-block'
                             } ${
                               message.role === 'user'
-                                ? 'bg-primary text-primary-foreground shadow-sm'
-                                : 'bg-muted'
-                            } ${message.role === 'assistant' ? 'animate-fade-in' : ''}`}
+                                ? 'bg-primary text-primary-foreground shadow-sm hover:shadow-md'
+                                : 'bg-muted shadow-sm hover:shadow-md'
+                            } ${message.role === 'assistant' ? 'animate-fade-in' : ''} transition-all duration-200`}
                           >
-                            <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                            <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
+                            
+                            {/* Timestamp on hover */}
+                            <div className="text-[10px] opacity-0 group-hover:opacity-60 transition-opacity mt-1 text-right">
+                              {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
+                            </div>
                             
                             {/* Action Button */}
                             {message.action && (
@@ -503,7 +525,8 @@ export const ChatWidget = () => {
                                 onClick={message.action.onClick}
                                 variant="outline"
                                 size="sm"
-                                className="mt-3 w-full"
+                                className="mt-3 w-full transition-all hover:scale-105"
+                                aria-label={message.action.label}
                               >
                                 {message.action.label}
                               </Button>
@@ -622,8 +645,9 @@ export const ChatWidget = () => {
         <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t`}>
           <Button
                 onClick={handleBookAppointment}
-                className="w-full font-medium transition-all duration-200"
+                className="w-full font-medium transition-all duration-200 hover:scale-105"
                 variant="default"
+                aria-label="Schedule an appointment"
               >
                 <Calendar className="h-4 w-4 mr-2" />
                 Schedule an Appointment
@@ -634,28 +658,77 @@ export const ChatWidget = () => {
           {/* Message Input - hidden when calendar or location input is shown */}
           {!showCalendar && !showLocationInput && (
             <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t`}>
-              <div className="flex gap-1.5">
-                <Input
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Ask me anything.."
-                  disabled={isLoading}
-                  className="flex-1 text-[16px]"
-                />
+              <div className="flex gap-1.5 items-end">
+                <div className="flex-1 relative">
+                  <Textarea
+                    ref={textareaRef}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                    placeholder="Ask me anything.."
+                    disabled={isLoading}
+                    className="min-h-[40px] max-h-[120px] resize-none py-2.5 text-[16px] focus-visible:ring-2 focus-visible:ring-ring transition-shadow"
+                    rows={1}
+                    aria-label="Type your message"
+                  />
+                  {inputValue.length > 500 && (
+                    <span className="absolute bottom-1 right-2 text-[10px] text-muted-foreground">
+                      {inputValue.length}
+                    </span>
+                  )}
+                </div>
                 <Button
                   onClick={handleSendMessage}
                   disabled={isLoading || !inputValue.trim()}
                   size="icon"
-                  className="transition-colors duration-200"
+                  className="transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                  aria-label="Send message"
                 >
-                  <Send className="h-4 w-4" />
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
             </div>
           )}
         </Card>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Clear chat history?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete {messages.length} message{messages.length !== 1 ? 's' : ''} from your chat history. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                clearChatSession();
+                setMessages([]);
+                setCustomGptSessionId(null);
+                setShowDeleteDialog(false);
+                toast({
+                  description: "Chat history cleared",
+                });
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
