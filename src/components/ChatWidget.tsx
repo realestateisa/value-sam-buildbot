@@ -526,7 +526,7 @@ export const ChatWidget = () => {
                             } ${
                               message.role === 'user'
                                 ? 'bg-primary text-primary-foreground shadow-sm hover:shadow-md'
-                                : 'bg-muted shadow-sm hover:shadow-md'
+                                : 'bg-white shadow-sm hover:shadow-md'
                             } ${message.role === 'assistant' ? '' : ''} transition-all duration-200`}
                           >
                             <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere leading-relaxed">{message.content}</p>
