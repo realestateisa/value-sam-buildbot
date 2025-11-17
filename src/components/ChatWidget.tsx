@@ -503,7 +503,7 @@ export const ChatWidget = () => {
               {/* Messages */}
               {/* Chat Messages - hidden when calendar or callback form is shown */}
               {!showCalendar && !showCallbackForm && (
-        <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden bg-[#F9F8F4] ${showCalendar ? 'p-4 pr-6' : 'pl-2 pr-2 py-3 md:p-3 md:pr-5'}`} ref={scrollRef}>
+        <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? 'p-4 pr-6' : 'pl-2 pr-2 py-3 md:p-3 md:pr-5'}`} ref={scrollRef}>
           <div className={`max-w-full ${showCalendar ? 'space-y-4' : 'space-y-3'}`}>
                     {messages.map((message) => (
                       <div
@@ -519,14 +519,14 @@ export const ChatWidget = () => {
                         )}
                         <div className="flex flex-col max-w-full min-w-0 overflow-hidden">
                           <div
-                            className={`rounded-lg p-2.5 min-w-0 max-w-[76.5vw] md:max-w-[281px] ${
+                            className={`rounded-lg p-2.5 min-w-0 max-w-[85vw] md:max-w-[312px] ${
                               message.role === 'user' 
                                 ? 'inline-block'
                                 : 'inline-block'
                             } ${
                               message.role === 'user'
                                 ? 'bg-primary text-primary-foreground shadow-sm hover:shadow-md'
-                                : 'bg-white shadow-sm hover:shadow-md'
+                                : 'bg-muted shadow-sm hover:shadow-md'
                             } ${message.role === 'assistant' ? '' : ''} transition-all duration-200`}
                           >
                             <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere leading-relaxed">{message.content}</p>
@@ -547,7 +547,7 @@ export const ChatWidget = () => {
 
                           {/* Citations */}
                           {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                            <div className="mt-2 min-w-0 overflow-hidden max-w-[76.5vw] md:max-w-[281px] inline-block">
+                            <div className="mt-2 min-w-0 overflow-hidden max-w-[85vw] md:max-w-[312px] inline-block">
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how I found this answer
                             </div>
