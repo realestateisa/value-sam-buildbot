@@ -140,20 +140,15 @@ export const ChatWidget = () => {
         console.log('Stored CustomGPT session_id:', data.sessionId);
       }
 
-      // Check if the response triggers appointment scheduling
-      if (data.message.toLowerCase().includes('schedule_appointment')) {
-        setShowLocationInput(true);
-      } else {
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: data.message,
-          timestamp: new Date(),
-          citations: data.citations || [],
-        };
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: data.message,
+        timestamp: new Date(),
+        citations: data.citations || [],
+      };
 
-        setMessages(prev => [...prev, assistantMessage]);
-      }
+      setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
@@ -299,7 +294,8 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card 
           ref={chatRef}
-          className={`fixed inset-0 md:inset-auto md:bottom-28 md:right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'md:w-[500px] md:h-[828px]' : 'md:w-[400px] md:h-[690px]'} w-full h-full`}
+          className={`fixed bottom-28 right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-hidden ${showCalendar ? 'w-[500px] h-[828px]' : 'w-[400px] h-[690px]'}`}
+          style={{ ['--chat-width' as any]: showCalendar ? '500px' : '400px' }}
         >
           {/* Header */}
           <div className={`flex items-center justify-between ${showCalendar ? 'p-4' : 'p-3'} border-b ${showLocationInput && !showCalendar ? 'bg-[#E93424]' : 'bg-primary'} text-primary-foreground transition-colors duration-300`}>
@@ -427,16 +423,7 @@ export const ChatWidget = () => {
               </Button>
 
               {/* Centered Content */}
-              <div className="w-full max-w-md space-y-6">
-                {/* Logo */}
-                <div className="flex justify-center">
-                  <img 
-                    src={logo} 
-                    alt="Value Build Homes" 
-                    className="h-20 w-20 rounded-full bg-white p-1" 
-                  />
-                </div>
-
+              <div className="w-full max-w-md space-y-4">
                 {/* Title */}
                 <h2 className="text-xl font-semibold text-white text-center">
                   Schedule an Appointment
@@ -447,20 +434,18 @@ export const ChatWidget = () => {
               <Input
                 value={locationInput}
                 onChange={(e) => setLocationInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && locationInput.length >= 3 && handleLocationSubmit()}
+                onKeyPress={(e) => e.key === 'Enter' && handleLocationSubmit()}
                 placeholder="What county will you build in?"
                 disabled={isLoading}
-                className="bg-white text-black border-none placeholder:text-gray-500 h-11 text-[16px]"
+                className="bg-white text-black border-none placeholder:text-gray-500 h-11"
               />
-              {locationInput.length >= 3 && (
-                <Button
-                  onClick={handleLocationSubmit}
-                  disabled={isLoading}
-                  className="w-full bg-white text-[#E93424] hover:bg-gray-100 h-11 font-medium transition-colors duration-200 animate-fade-in"
-                >
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Continue'}
-                </Button>
-              )}
+              <Button
+                onClick={handleLocationSubmit}
+                disabled={isLoading || !locationInput.trim()}
+                className="w-full bg-white text-[#E93424] hover:bg-gray-100 h-11 font-medium transition-colors duration-200"
+              >
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Continue'}
+              </Button>
             </div>
               </div>
             </div>
@@ -469,7 +454,7 @@ export const ChatWidget = () => {
               {/* Messages */}
               {/* Chat Messages - hidden when calendar is shown */}
               {!showCalendar && (
-        <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? 'p-4 pr-6' : 'pl-2 pr-2 py-3 md:p-3 md:pr-5'}`} ref={scrollRef}>
+        <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? 'p-4 pr-6' : 'p-3 pr-5'}`} ref={scrollRef}>
           <div className={`${showCalendar ? 'space-y-4' : 'space-y-3'}`}>
                     {messages.map((message) => (
                       <div
@@ -487,7 +472,7 @@ export const ChatWidget = () => {
                           <div
                             className={`rounded-lg p-2.5 min-w-0 ${
                               message.role === 'user' 
-                                ? 'max-w-[calc(var(--chat-width)_*_0.78)] inline-block'
+                                ? 'max-w-[calc(var(--chat-width)_*_0.85)]'
                                 : 'w-[calc(var(--chat-width)_*_0.78)] flex-none'
                             } ${
                               message.role === 'user'
@@ -512,7 +497,7 @@ export const ChatWidget = () => {
 
                           {/* Citations */}
                           {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
-                            <div className="mt-2 min-w-0 overflow-hidden max-w-full animate-fade-in" style={{ width: 'calc(var(--chat-width) * 0.78)' }}>
+                            <div className="mt-2 min-w-0 overflow-hidden w-[calc(var(--chat-width)_*_0.78)] flex-none animate-fade-in">
                             <div className="text-xs font-medium text-muted-foreground mb-2 truncate">
                               Here's how I found this answer
                             </div>
@@ -526,7 +511,7 @@ export const ChatWidget = () => {
                               const faviconUrl = 'https://www.google.com/s2/favicons?domain=valuebuildhomes.com&sz=32';
                               
                               return (
-                                <Card className={`w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden max-h-[180px] md:max-h-none`}>
+                                <Card className={`w-full ${showCalendar ? 'p-3' : 'p-2.5'} bg-background border shadow-sm overflow-hidden`}>
                                   <div className="flex items-start gap-2 overflow-hidden min-w-0">
                                     <div className="flex-1 min-w-0 overflow-hidden">
                                       <a
@@ -541,11 +526,11 @@ export const ChatWidget = () => {
                                         <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                                       </a>
                                       {citation.description ? (
-                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2 break-words overflow-hidden`}>
+                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 line-clamp-2 break-words overflow-hidden min-h-[2.6em]`}>
                                           {citation.description}
                                         </p>
                                       ) : (
-                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 opacity-0 pointer-events-none`} aria-hidden="true">
+                                        <p className={`${showCalendar ? 'text-sm' : 'text-xs'} text-muted-foreground mt-0.5 opacity-0 pointer-events-none min-h-[2.6em]`} aria-hidden="true">
                                           placeholder
                                         </p>
                                       )}
@@ -641,7 +626,7 @@ export const ChatWidget = () => {
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder="Ask me anything.."
                   disabled={isLoading}
-                  className="flex-1 text-[16px]"
+                  className="flex-1 text-sm"
                 />
                 <Button
                   onClick={handleSendMessage}
