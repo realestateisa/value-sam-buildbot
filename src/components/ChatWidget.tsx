@@ -364,8 +364,9 @@ export const ChatWidget = () => {
           <div className="absolute bottom-full right-0 mb-2 animate-fade-in">
             <div className="relative bg-white text-[#E93424] px-4 py-2 rounded-lg shadow-lg text-sm font-medium whitespace-nowrap border-2 border-[#E93424]">
               Any questions I can help with?
-              {/* Triangle pointer */}
-              <div className="absolute top-full right-6 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-white"></div>
+              {/* Triangle pointer with border */}
+              <div className="absolute top-full right-6 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-[#E93424]"></div>
+              <div className="absolute top-full right-6 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-white translate-y-[-2px]"></div>
             </div>
           </div>
         )}
