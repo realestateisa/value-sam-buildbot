@@ -1,5 +1,22 @@
 # Building the Widget Bundle
 
+## Automated Build (Recommended)
+
+If your project is connected to GitHub, the widget builds automatically on every push via GitHub Actions.
+
+**How it works:**
+1. Push code to GitHub (or make changes in Lovable)
+2. GitHub Actions workflow triggers automatically
+3. Widget builds and commits to `public/widget-dist/chatbot-widget-v2.js`
+4. Changes sync back to Lovable via bidirectional sync
+5. Click **Publish** in Lovable to deploy
+
+**Setup:**
+- Workflow file: `.github/workflows/build-widget.yml` ✅ Already created
+- No additional setup needed - works automatically
+
+See `.github/workflows/README.md` for details.
+
 ## Phase 1: Build System Setup (Complete)
 
 The following files have been created:
@@ -7,6 +24,9 @@ The following files have been created:
 - ✅ `src/widget-entry.tsx` - Web Component entry point with Shadow DOM
 
 ## Building the Widget
+
+### Automated Build (Recommended - If Using GitHub)
+The GitHub Actions workflow automatically builds the widget on every push. Just push your code and the widget is ready!
 
 ### Option 1: Manual Build Command
 Run this command to build the widget bundle:
