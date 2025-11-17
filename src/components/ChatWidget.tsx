@@ -485,10 +485,10 @@ export const ChatWidget = () => {
                         )}
                         <div className="flex flex-col">
                           <div
-                            className={`rounded-lg p-2.5 min-w-0 ${
+                            className={`rounded-lg p-2.5 min-w-0 max-w-[calc(var(--chat-width)_*_0.78)] ${
                               message.role === 'user' 
-                                ? 'max-w-[calc(var(--chat-width)_*_0.78)] inline-block'
-                                : 'w-[calc(var(--chat-width)_*_0.78)] flex-none'
+                                ? 'inline-block'
+                                : 'inline-block'
                             } ${
                               message.role === 'user'
                                 ? 'bg-primary text-primary-foreground shadow-sm'
