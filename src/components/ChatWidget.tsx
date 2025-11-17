@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight, Loader2, MapPin, Video } from 'lucide-react';
+import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight, Loader2, MapPin, Video, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import logo from '@/assets/logo.png';
 import TypingIndicator from '@/components/TypingIndicator';
 import { saveChatSession, loadChatSession, clearChatSession } from '@/utils/chatStorage';
+import { CallbackForm } from '@/components/CallbackForm';
 
 const TERRITORY_ADDRESSES: Record<string, string> = {
   oxford: '3015 S Jefferson Davis Hwy, Sanford, NC 27332',
@@ -35,6 +36,7 @@ export const ChatWidget = () => {
   const [calendarError, setCalendarError] = useState<string | null>(null);
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
+  const [showCallbackForm, setShowCallbackForm] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -366,6 +368,7 @@ export const ChatWidget = () => {
                   setIsOpen(false);
                   setShowCalendar(false);
                   setShowLocationInput(false);
+                  setShowCallbackForm(false);
                 }}
                 className="h-8 w-8 text-primary-foreground hover:bg-white/30 transition-colors duration-200"
                 aria-label="Close chat"
@@ -649,9 +652,14 @@ export const ChatWidget = () => {
           )}
 
 
+          {/* Callback Form View */}
+          {showCallbackForm && (
+            <CallbackForm onClose={() => setShowCallbackForm(false)} />
+          )}
+
           {/* Action Buttons */}
-          {!showLocationInput && !showCalendar && (
-        <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t`}>
+          {!showLocationInput && !showCalendar && !showCallbackForm && (
+        <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t space-y-2`}>
           <Button
                 onClick={handleBookAppointment}
                 className="w-full font-medium transition-all duration-200 hover:scale-103"
@@ -659,13 +667,22 @@ export const ChatWidget = () => {
                 aria-label="Schedule an appointment"
               >
                 <Calendar className="h-4 w-4 mr-2" />
-                Schedule an Appointment
+                Schedule Appointment
+              </Button>
+              <Button
+                onClick={() => setShowCallbackForm(true)}
+                className="w-full font-medium transition-all duration-200 hover:scale-103 bg-background text-[#E2362B] border-[#E2362B] border hover:bg-[#E2362B]/5"
+                variant="outline"
+                aria-label="Request callback"
+              >
+                <Phone className="h-4 w-4 mr-2 text-background fill-[#E2362B]" />
+                Request Callback
               </Button>
             </div>
           )}
 
-          {/* Message Input - hidden when calendar or location input is shown */}
-          {!showCalendar && !showLocationInput && (
+          {/* Message Input - hidden when calendar, location input, or callback form is shown */}
+          {!showCalendar && !showLocationInput && !showCallbackForm && (
             <div className={`${showCalendar ? 'p-4' : 'p-3'} border-t`}>
               <div className="flex gap-1.5 items-end">
                 <div className="flex-1 relative">
