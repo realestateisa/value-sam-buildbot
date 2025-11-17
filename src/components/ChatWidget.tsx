@@ -49,41 +49,12 @@ export const ChatWidget = () => {
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
   const [showCallbackForm, setShowCallbackForm] = useState(false);
-  // Detect if we're embedded (hide speech bubble to avoid clipping)
-  const isEmbedded = window.location.pathname === '/widget';
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
-  // Notify parent window with desired iframe size when embedded
-  useEffect(() => {
-    if (isEmbedded) {
-      // When closed: button (88px) + speech bubble height (~50px) + gap (8px) = ~146px
-      // When open: button (88px) + gap (8px) + chat height
-      const buttonHeight = 88;
-      const speechBubbleSpace = 58; // Space for speech bubble when closed
-      const gap = 8;
-      const chatHeight = showCalendar ? 828 : 690;
-      const chatWidth = showCalendar ? 500 : 400;
-      const buttonWidth = 88;
-      
-      const totalWidth = isOpen ? Math.max(buttonWidth, chatWidth) : buttonWidth;
-      const totalHeight = isOpen 
-        ? (chatHeight + gap + buttonHeight) 
-        : (buttonHeight + speechBubbleSpace);
-
-      window.parent.postMessage(
-        {
-          type: 'chatbot-resize',
-          isOpen,
-          width: totalWidth,
-          height: totalHeight,
-        },
-        '*'
-      );
-    }
-  }, [isOpen, showCalendar, isEmbedded]);
+  // Load saved chat session on mount
   useEffect(() => {
     const savedSession = loadChatSession();
     if (savedSession && savedSession.messages.length > 0) {
@@ -387,7 +358,7 @@ export const ChatWidget = () => {
   const content = (
     <>
       {/* Chat Button */}
-      <div className={`fixed z-50 ${isEmbedded ? 'bottom-1 right-1' : 'bottom-6 right-6'}`}>
+      <div className="fixed bottom-6 right-6 z-50">
         {/* Speech Bubble */}
         {!isOpen && (
           <div className="absolute bottom-full right-0 mb-2 animate-fade-in z-[60]">
@@ -417,9 +388,7 @@ export const ChatWidget = () => {
       {isOpen && (
         <Card
           ref={chatRef}
-          className={`fixed flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-visible w-[400px] h-[690px] bg-background ${
-            isEmbedded ? 'bottom-[96px] right-1' : 'bottom-[112px] right-6'
-          }`}
+          className="fixed bottom-[112px] right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-visible w-[400px] h-[690px] bg-background"
           style={showCalendar ? { width: '500px', height: '828px' } : {}}
         >
           {/* Header */}
