@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import EmbedDemo from "./pages/EmbedDemo";
-import WidgetOnly from "./pages/WidgetOnly";
 import NotFound from "./pages/NotFound";
 import { ChatWidget } from "./components/ChatWidget";
 
@@ -25,7 +24,6 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/embed-demo" element={<EmbedDemo />} />
-          <Route path="/widget" element={<WidgetOnly />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
