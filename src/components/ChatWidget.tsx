@@ -749,7 +749,7 @@ export const ChatWidget = () => {
 
           {/* Message Input - hidden when calendar, location input, or callback form is shown */}
           {!showCalendar && !showLocationInput && !showCallbackForm && <div className="px-5 pt-2 pb-5 border-t border-border/20 bg-gradient-to-b from-background via-muted/5 to-muted/10 rounded-b-2xl">
-              <div className="relative flex items-end gap-2 p-1 rounded-2xl bg-gradient-to-br from-background to-muted/30 border border-border/40 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-300">
+              <div className="relative flex items-center gap-2 p-1 rounded-2xl bg-gradient-to-br from-background to-muted/30 border border-border/40 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-300">
                 <div className="flex-1 relative group">
                   {!inputValue && (
                     <div className="absolute inset-0 pointer-events-none flex items-center px-4 py-3.5">
@@ -790,7 +790,7 @@ export const ChatWidget = () => {
                   }}
                   disabled={isLoading || !inputValue.trim()} 
                   size="icon" 
-                  className="h-[43px] w-[43px] rounded-xl bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-40 disabled:hover:scale-100 transition-all duration-200 flex-shrink-0 mb-0.5 mr-0.5"
+                  className="h-[43px] w-[43px] rounded-xl bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-40 disabled:hover:scale-100 transition-all duration-200 flex-shrink-0"
                   aria-label="Send message"
                 >
                   {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
