@@ -464,18 +464,27 @@ export const ChatWidget = () => {
             
           </div>}
         
-        <Button onClick={() => setIsOpen(!isOpen)} className="h-20 w-20 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 p-2" size="icon">
+        <Button 
+          onClick={() => setIsOpen(!isOpen)} 
+          className="h-20 w-20 rounded-full bg-primary text-primary-foreground button-lift hover:shadow-2xl hover:scale-110 transition-all duration-300 p-2" 
+          size="icon"
+        >
           {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-full w-full rounded-full" />}
         </Button>
       </div>
 
       {/* Chat Window */}
-      {isOpen && <Card ref={chatRef} className="fixed bottom-[112px] right-6 flex flex-col shadow-2xl z-50 transition-all duration-300 ease-in-out overflow-visible w-[400px] h-[690px] bg-background" style={showCalendar ? {
-      width: '500px',
-      height: '828px'
-    } : {}}>
+      {isOpen && <Card 
+          ref={chatRef} 
+          className="fixed bottom-[112px] right-6 flex flex-col glass-morphism z-50 overflow-visible w-[400px] h-[690px] rounded-2xl" 
+          style={{
+            boxShadow: 'var(--chat-shadow-lg)',
+            transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            ...(showCalendar ? { width: '500px', height: '828px' } : {})
+          }}
+        >
           {/* Header */}
-          <div className={`${showCalendar || showCallbackForm ? "hidden" : ""} flex items-center justify-between ${showCalendar ? "p-4" : "p-3"} border-b ${showLocationInput && !showCalendar ? "bg-[#E93424]" : "bg-primary"} text-primary-foreground transition-colors duration-300`}>
+          <div className={`${showCalendar || showCallbackForm ? "hidden" : ""} flex items-center justify-between p-4 border-b border-border/30 ${showLocationInput && !showCalendar ? "bg-[#E93424]" : "bg-gradient-to-r from-primary to-primary/90"} text-primary-foreground transition-all duration-300 rounded-t-2xl`}>
             {!showLocationInput && <div className="flex items-center gap-2">
                 <div className="relative">
                   <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-0.5" />
@@ -656,32 +665,56 @@ export const ChatWidget = () => {
           {showCallbackForm && <CallbackForm onClose={() => setShowCallbackForm(false)} />}
 
           {/* Action Buttons */}
-          {!showLocationInput && !showCalendar && !showCallbackForm && <div className={`${showCalendar ? "p-4" : "p-3"} border-t flex gap-2`}>
-              <Button onClick={() => setShowCallbackForm(true)} className="group flex-1 font-medium transition-all duration-300 ease-in-out hover:scale-103 bg-white text-[#E2362B] hover:text-[#E2362B] border-[#E2362B] border-2 hover:bg-[#E2362B]/10 shadow-sm hover:shadow-md hover:shadow-[#E2362B]/20 rounded-lg" aria-label="Request callback">
+          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="p-4 border-t border-border/30 flex gap-3 stagger-animation bg-gradient-to-b from-background to-muted/20">
+              <Button 
+                onClick={() => setShowCallbackForm(true)} 
+                className="group flex-1 font-medium button-lift bg-background text-primary hover:text-primary border-primary border-2 hover:bg-primary/5 rounded-xl" 
+                aria-label="Request callback"
+              >
                 <Phone className="h-4.5 w-4.5 mr-1.5 fill-[#E2362B] transition-transform group-hover:-translate-y-[2px]" strokeWidth={2} />
                 Request Callback
               </Button>
-              <Button onClick={handleBookAppointment} className="group flex-1 font-medium transition-all duration-300 ease-in-out hover:scale-103 bg-gradient-to-r from-[#E2362B] to-[#C42920] text-white hover:opacity-90 shadow-sm hover:shadow-md rounded-lg border-0" aria-label="Book an appointment">
+              <Button 
+                onClick={handleBookAppointment} 
+                className="group flex-1 font-medium button-lift bg-gradient-to-r from-primary to-primary/90 text-primary-foreground hover:opacity-95 rounded-xl border-0" 
+                aria-label="Book an appointment"
+              >
                 <Calendar className="h-4.5 w-4.5 mr-1.5 text-white transition-transform group-hover:-translate-y-[2px]" strokeWidth={2} />
                 Book Appointment
               </Button>
             </div>}
 
           {/* Message Input - hidden when calendar, location input, or callback form is shown */}
-          {!showCalendar && !showLocationInput && !showCallbackForm && <div className={`${showCalendar ? "p-4" : "p-3"} border-t`}>
+          {!showCalendar && !showLocationInput && !showCallbackForm && <div className="p-4 border-t border-border/30 bg-muted/30 rounded-b-2xl">
               <div className="flex gap-1.5 items-end">
                 <div className="flex-1 relative">
-                  <Textarea ref={textareaRef} value={inputValue} onChange={e => setInputValue(e.target.value)} onKeyDown={e => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-              }
-            }} placeholder="Ask me anything.." disabled={isLoading} className="min-h-[40px] max-h-[120px] resize-none py-2.5 text-[16px] focus-visible:ring-2 focus-visible:ring-ring transition-shadow" rows={1} aria-label="Type your message" />
+                  <Textarea 
+                    ref={textareaRef} 
+                    value={inputValue} 
+                    onChange={e => setInputValue(e.target.value)} 
+                    onKeyDown={e => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }} 
+                    placeholder="Ask me anything.." 
+                    disabled={isLoading} 
+                    className="min-h-[44px] max-h-[120px] resize-none py-3 px-4 text-sm bg-background border-border/50 focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/50 rounded-xl transition-all" 
+                    rows={1} 
+                    aria-label="Type your message" 
+                  />
                   {inputValue.length > 500 && <span className="absolute bottom-1 right-2 text-[10px] text-muted-foreground">
                       {inputValue.length}
                     </span>}
                 </div>
-                <Button onClick={handleSendMessage} disabled={isLoading || !inputValue.trim()} size="icon" className="h-[44px] w-[40px] transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100" aria-label="Send message">
+                <Button 
+                  onClick={handleSendMessage} 
+                  disabled={isLoading || !inputValue.trim()} 
+                  size="icon" 
+                  className="h-[44px] w-[44px] rounded-xl button-lift disabled:opacity-50 disabled:hover:scale-100 disabled:transform-none" 
+                  aria-label="Send message"
+                >
                   {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
                 </Button>
               </div>
