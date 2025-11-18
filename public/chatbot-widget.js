@@ -39,6 +39,8 @@
         iframe.style.borderRadius = '0';
         iframe.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
       } else {
+        iframe.style.width = '88px';
+        iframe.style.height = '146px';
         iframe.style.borderRadius = '0';
         iframe.style.boxShadow = 'none';
       }
