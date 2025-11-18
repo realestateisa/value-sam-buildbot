@@ -74,22 +74,53 @@ export const ChatWidget = () => {
 
   // Smooth scroll to bottom when messages change
   useEffect(() => {
+    console.log('[FOCUS-DEBUG] Auto-scroll effect triggered', {
+      messagesLength: messages.length,
+      isLoading,
+      showTypingIndicator
+    });
+    
     if (scrollRef.current) {
-      // Check if textarea currently has focus BEFORE scrolling
       const textareaHadFocus = document.activeElement === textareaRef.current;
+      console.log('[FOCUS-DEBUG] Before scroll - checking focus', {
+        textareaHadFocus,
+        activeElement: document.activeElement?.tagName,
+        activeElementClass: document.activeElement?.className
+      });
       
       const scrollElement = scrollRef.current.querySelector("[data-radix-scroll-area-viewport]") as HTMLElement;
       if (scrollElement) {
+        console.log('[FOCUS-DEBUG] Starting scroll operation');
+        
         scrollElement.scrollTo({
           top: scrollElement.scrollHeight,
           behavior: "smooth"
         });
         
-        // If textarea had focus before scroll, restore it after scroll animation
+        console.log('[FOCUS-DEBUG] After scroll - active element', {
+          activeElement: document.activeElement?.tagName,
+          textareaStillHasFocus: document.activeElement === textareaRef.current
+        });
+        
         if (textareaHadFocus && textareaRef.current) {
-          // Use requestAnimationFrame to wait for scroll animation to start
+          console.log('[FOCUS-DEBUG] Attempting to restore focus via requestAnimationFrame');
           requestAnimationFrame(() => {
+            console.log('[FOCUS-DEBUG] Inside requestAnimationFrame - before focus', {
+              activeElement: document.activeElement?.tagName,
+              textareaExists: !!textareaRef.current
+            });
+            
             textareaRef.current?.focus();
+            
+            console.log('[FOCUS-DEBUG] Inside requestAnimationFrame - after focus', {
+              activeElement: document.activeElement?.tagName,
+              textareaHasFocus: document.activeElement === textareaRef.current,
+              success: document.activeElement === textareaRef.current ? 'YES' : 'NO'
+            });
+          });
+        } else {
+          console.log('[FOCUS-DEBUG] Skipping focus restoration', {
+            reason: !textareaHadFocus ? 'textarea did not have focus' : 'textareaRef is null'
           });
         }
       }
@@ -98,6 +129,12 @@ export const ChatWidget = () => {
 
   // Auto-resize textarea
   useEffect(() => {
+    console.log('[FOCUS-DEBUG] Auto-resize effect triggered', {
+      inputValueLength: inputValue.length,
+      activeElement: document.activeElement?.tagName,
+      textareaHasFocus: document.activeElement === textareaRef.current
+    });
+    
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + "px";
@@ -108,18 +145,26 @@ export const ChatWidget = () => {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (isLoading) {
-      console.log("Starting typing indicator timeout");
+      console.log('[FOCUS-DEBUG] Typing indicator - starting', {
+        activeElement: document.activeElement?.tagName,
+        textareaHasFocus: document.activeElement === textareaRef.current
+      });
+      
       timeoutId = setTimeout(() => {
-        console.log("Showing typing indicator");
+        console.log('[FOCUS-DEBUG] Typing indicator - showing', {
+          activeElement: document.activeElement?.tagName
+        });
         setShowTypingIndicator(true);
       }, 1000);
     } else {
-      console.log("Hiding typing indicator, isLoading:", isLoading);
+      console.log('[FOCUS-DEBUG] Typing indicator - hiding', {
+        activeElement: document.activeElement?.tagName,
+        textareaHasFocus: document.activeElement === textareaRef.current
+      });
       setShowTypingIndicator(false);
     }
     return () => {
       if (timeoutId) {
-        console.log("Clearing typing indicator timeout");
         clearTimeout(timeoutId);
       }
     };
@@ -174,36 +219,112 @@ export const ChatWidget = () => {
     return () => ro.disconnect();
   }, [isOpen, showCalendar]);
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+    console.log('[FOCUS-DEBUG] handleSendMessage - ENTRY', {
+      inputValue: inputValue.substring(0, 50) + '...',
+      inputLength: inputValue.length,
+      isLoading,
+      activeElement: document.activeElement?.tagName
+    });
+    
+    if (!inputValue.trim() || isLoading) {
+      console.log('[FOCUS-DEBUG] handleSendMessage - EARLY RETURN', {
+        reason: !inputValue.trim() ? 'empty input' : 'already loading'
+      });
+      return;
+    }
+    
     const userMessage: Message = {
       id: Date.now().toString(),
       role: "user",
       content: inputValue,
       timestamp: new Date()
     };
+    
+    console.log('[FOCUS-DEBUG] Before setMessages', {
+      activeElement: document.activeElement?.tagName,
+      textareaHasFocus: document.activeElement === textareaRef.current
+    });
+    
     setMessages(prev => [...prev, userMessage]);
+    
+    console.log('[FOCUS-DEBUG] After setMessages', {
+      activeElement: document.activeElement?.tagName,
+      textareaHasFocus: document.activeElement === textareaRef.current
+    });
 
     // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }
+    
+    console.log('[FOCUS-DEBUG] Before setInputValue("")', {
+      activeElement: document.activeElement?.tagName,
+      textareaHasFocus: document.activeElement === textareaRef.current
+    });
+    
     setInputValue("");
     
+    console.log('[FOCUS-DEBUG] After setInputValue("") - before first focus attempt', {
+      activeElement: document.activeElement?.tagName,
+      textareaHasFocus: document.activeElement === textareaRef.current
+    });
+    
     // Refocus the textarea after clearing input
+    console.log('[FOCUS-DEBUG] Scheduling first requestAnimationFrame focus');
     requestAnimationFrame(() => {
+      console.log('[FOCUS-DEBUG] First requestAnimationFrame - INSIDE', {
+        activeElement: document.activeElement?.tagName,
+        textareaExists: !!textareaRef.current,
+        textareaHasFocusBefore: document.activeElement === textareaRef.current
+      });
+      
       if (textareaRef.current) {
         textareaRef.current.focus();
+        console.log('[FOCUS-DEBUG] After first focus() call', {
+          activeElement: document.activeElement?.tagName,
+          textareaHasFocus: document.activeElement === textareaRef.current
+        });
+        
         // Ensure focus is really set by also using preventScroll
         textareaRef.current.focus({ preventScroll: true });
+        console.log('[FOCUS-DEBUG] After second focus({ preventScroll: true }) call', {
+          activeElement: document.activeElement?.tagName,
+          textareaHasFocus: document.activeElement === textareaRef.current,
+          success: document.activeElement === textareaRef.current ? 'YES' : 'NO'
+        });
       }
     });
     
+    console.log('[FOCUS-DEBUG] Before setIsLoading(true)', {
+      activeElement: document.activeElement?.tagName
+    });
+    
     setIsLoading(true);
+    
+    console.log('[FOCUS-DEBUG] After setIsLoading(true), scheduling 50ms focus guard');
 
     // Guard focus: ensure it's set after all state updates and effects
     setTimeout(() => {
+      console.log('[FOCUS-DEBUG] 50ms setTimeout - INSIDE', {
+        activeElement: document.activeElement?.tagName,
+        textareaExists: !!textareaRef.current,
+        showCalendar,
+        showLocationInput,
+        showCallbackForm,
+        conditionsMet: textareaRef.current && !showCalendar && !showLocationInput && !showCallbackForm
+      });
+      
       if (textareaRef.current && !showCalendar && !showLocationInput && !showCallbackForm) {
+        console.log('[FOCUS-DEBUG] Conditions met, attempting focus in setTimeout');
         textareaRef.current.focus({ preventScroll: true });
+        
+        console.log('[FOCUS-DEBUG] After setTimeout focus', {
+          activeElement: document.activeElement?.tagName,
+          textareaHasFocus: document.activeElement === textareaRef.current,
+          success: document.activeElement === textareaRef.current ? 'YES' : 'NO'
+        });
+      } else {
+        console.log('[FOCUS-DEBUG] Conditions NOT met, skipping focus in setTimeout');
       }
     }, 50); // 50ms delay ensures all effects have run
 
@@ -721,12 +842,34 @@ export const ChatWidget = () => {
                     onChange={e => setInputValue(e.target.value)} 
                     onKeyDown={e => {
                       if (e.key === "Enter" && !e.shiftKey) {
+                        console.log('[FOCUS-DEBUG] Enter key pressed', {
+                          activeElement: document.activeElement?.tagName,
+                          textareaHasFocus: document.activeElement === textareaRef.current
+                        });
+                        
                         e.preventDefault();
+                        
+                        console.log('[FOCUS-DEBUG] Before handleSendMessage in Enter handler');
                         handleSendMessage();
+                        console.log('[FOCUS-DEBUG] After handleSendMessage in Enter handler', {
+                          activeElement: document.activeElement?.tagName
+                        });
+                        
                         // Maintain focus after message send (belt and suspenders approach)
+                        console.log('[FOCUS-DEBUG] Scheduling requestAnimationFrame in Enter handler');
                         requestAnimationFrame(() => {
+                          console.log('[FOCUS-DEBUG] Enter handler requestAnimationFrame - INSIDE', {
+                            activeElement: document.activeElement?.tagName,
+                            textareaExists: !!textareaRef.current
+                          });
+                          
                           if (textareaRef.current) {
                             textareaRef.current.focus({ preventScroll: true });
+                            console.log('[FOCUS-DEBUG] After Enter handler focus', {
+                              activeElement: document.activeElement?.tagName,
+                              textareaHasFocus: document.activeElement === textareaRef.current,
+                              success: document.activeElement === textareaRef.current ? 'YES' : 'NO'
+                            });
                           }
                         });
                       }
@@ -742,7 +885,16 @@ export const ChatWidget = () => {
                     </span>}
                 </div>
                 <Button 
-                  onClick={handleSendMessage} 
+                  onClick={() => {
+                    console.log('[FOCUS-DEBUG] Send button clicked', {
+                      activeElement: document.activeElement?.tagName,
+                      textareaHasFocus: document.activeElement === textareaRef.current
+                    });
+                    handleSendMessage();
+                    console.log('[FOCUS-DEBUG] After handleSendMessage from button click', {
+                      activeElement: document.activeElement?.tagName
+                    });
+                  }}
                   disabled={isLoading || !inputValue.trim()} 
                   size="icon" 
                   className="h-[43px] w-[43px] rounded-xl bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-40 disabled:hover:scale-100 transition-all duration-200 flex-shrink-0 mb-0.5 mr-0.5"
