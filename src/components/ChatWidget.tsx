@@ -241,63 +241,35 @@ export const ChatWidget = () => {
       timestamp: new Date()
     };
     
-    console.log('[FOCUS-DEBUG] Before setMessages', {
+    console.log('[FOCUS-DEBUG] Before flushSync - bundling all state updates', {
       activeElement: document.activeElement?.tagName,
       textareaHasFocus: document.activeElement === textareaRef.current
     });
     
-    setMessages(prev => [...prev, userMessage]);
-    
-    console.log('[FOCUS-DEBUG] After setMessages', {
-      activeElement: document.activeElement?.tagName,
-      textareaHasFocus: document.activeElement === textareaRef.current
+    // Bundle ALL state updates in single flushSync to prevent any focus loss
+    flushSync(() => {
+      setMessages(prev => [...prev, userMessage]);
+      setInputValue("");
     });
-
+    
     // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }
     
-    console.log('[FOCUS-DEBUG] Before setInputValue("")', {
+    console.log('[FOCUS-DEBUG] After flushSync - immediately forcing focus', {
       activeElement: document.activeElement?.tagName,
       textareaHasFocus: document.activeElement === textareaRef.current
     });
     
-    // Use flushSync to force synchronous state update and prevent focus loss
-    flushSync(() => {
-      setInputValue("");
-    });
-    
-    console.log('[FOCUS-DEBUG] After setInputValue("") - before first focus attempt', {
-      activeElement: document.activeElement?.tagName,
-      textareaHasFocus: document.activeElement === textareaRef.current
-    });
-    
-    // Refocus the textarea after clearing input
-    console.log('[FOCUS-DEBUG] Scheduling first requestAnimationFrame focus');
-    requestAnimationFrame(() => {
-      console.log('[FOCUS-DEBUG] First requestAnimationFrame - INSIDE', {
+    // Immediately force focus after synchronous state updates
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+      console.log('[FOCUS-DEBUG] After immediate focus() call', {
         activeElement: document.activeElement?.tagName,
-        textareaExists: !!textareaRef.current,
-        textareaHasFocusBefore: document.activeElement === textareaRef.current
+        textareaHasFocus: document.activeElement === textareaRef.current
       });
-      
-      if (textareaRef.current) {
-        textareaRef.current.focus();
-        console.log('[FOCUS-DEBUG] After first focus() call', {
-          activeElement: document.activeElement?.tagName,
-          textareaHasFocus: document.activeElement === textareaRef.current
-        });
-        
-        // Ensure focus is really set by also using preventScroll
-        textareaRef.current.focus({ preventScroll: true });
-        console.log('[FOCUS-DEBUG] After second focus({ preventScroll: true }) call', {
-          activeElement: document.activeElement?.tagName,
-          textareaHasFocus: document.activeElement === textareaRef.current,
-          success: document.activeElement === textareaRef.current ? 'YES' : 'NO'
-        });
-      }
-    });
+    }
     
     console.log('[FOCUS-DEBUG] Before setIsLoading(true)', {
       activeElement: document.activeElement?.tagName
