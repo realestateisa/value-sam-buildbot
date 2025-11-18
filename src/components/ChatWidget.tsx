@@ -672,7 +672,7 @@ export const ChatWidget = () => {
                 aria-label="Book an appointment"
               >
               <Calendar className="h-4 w-4 mr-2 transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
-                <span className="text-sm font-semibold truncate">Book Meeting</span>
+                <span className="text-sm font-semibold truncate">Schedule Appointment</span>
               </Button>
             </div>}
 
