@@ -137,7 +137,7 @@ export default {
         "scale-in": "scale-in 0.3s ease-out",
         "slide-up": "slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
         "shimmer": "shimmer 7s linear infinite",
-        "shadow-pulse": "shadow-pulse 8s ease-in-out infinite",
+        "shadow-pulse": "shadow-pulse 24s ease-in-out infinite",
       },
       scale: {
         '103': '1.03',
