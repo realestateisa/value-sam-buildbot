@@ -153,6 +153,19 @@
     @apply bg-popover;
     z-index: 9999;
   }
+
+  /* Mobile full-screen support for Shadow DOM */
+  @media (max-width: 767px) {
+    :host [data-mobile-fullscreen="true"] {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 0 !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+    }
+  }
 }
 
 /* Shadow DOM specific utility classes */

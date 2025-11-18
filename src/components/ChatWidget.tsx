@@ -36,6 +36,7 @@ export const ChatWidget = () => {
   const [expandedCitations, setExpandedCitations] = useState<Record<string, number>>({});
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
   const [showCallbackForm, setShowCallbackForm] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -43,6 +44,17 @@ export const ChatWidget = () => {
   const {
     toast
   } = useToast();
+
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Load saved chat session on mount
   useEffect(() => {
@@ -134,13 +146,14 @@ export const ChatWidget = () => {
 
   // Notify parent embed to resize iframe when widget opens/closes or size changes
   useEffect(() => {
-    const postResize = (w: number, h: number, open: boolean) => {
+    const postResize = (w: number, h: number, open: boolean, mobile: boolean) => {
       try {
         window.parent?.postMessage({
           type: "chatbot-resize",
           width: Math.ceil(w),
           height: Math.ceil(h),
-          isOpen: open
+          isOpen: open,
+          isMobile: mobile
         }, "*");
       } catch {}
     };
@@ -149,9 +162,16 @@ export const ChatWidget = () => {
       height: 146
     };
     if (!isOpen) {
-      postResize(compact.width, compact.height, false);
+      postResize(compact.width, compact.height, false, isMobile);
       return;
     }
+    
+    // On mobile full-screen, send viewport dimensions
+    if (isMobile) {
+      postResize(window.innerWidth, window.innerHeight, true, true);
+      return;
+    }
+    
     const baseWidth = showCalendar ? 500 : 400;
     const baseHeight = showCalendar ? 828 : 690;
     const paddingBottom = 140; // space for button/offset within iframe
@@ -160,13 +180,13 @@ export const ChatWidget = () => {
       const rect = chatRef.current?.getBoundingClientRect();
       const w = Math.max(baseWidth, rect?.width ?? baseWidth);
       const h = (rect?.height ?? baseHeight) + paddingBottom;
-      postResize(w, h, true);
+      postResize(w, h, true, false);
     };
     sendCurrentSize();
     const ro = new ResizeObserver(() => sendCurrentSize());
     if (chatRef.current) ro.observe(chatRef.current);
     return () => ro.disconnect();
-  }, [isOpen, showCalendar]);
+  }, [isOpen, showCalendar, isMobile]);
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
     
@@ -468,7 +488,11 @@ export const ChatWidget = () => {
   }, [calendarRef.current, showCalendar, selectedTerritory]);
   const content = <>
       {/* Chat Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className={`fixed z-50 transition-all duration-300 ${
+        isOpen && isMobile 
+          ? 'top-4 right-4' 
+          : 'bottom-6 right-6'
+      }`}>
         {/* Speech Bubble */}
         {!isOpen && <div className="absolute bottom-full right-0 mb-2 animate-fade-in z-[60]">
             
@@ -486,11 +510,14 @@ export const ChatWidget = () => {
       {/* Chat Window */}
       {isOpen && <Card 
           ref={chatRef} 
-          className="fixed bottom-[112px] right-6 flex flex-col glass-morphism z-50 overflow-visible w-[400px] h-[690px] rounded-2xl" 
+          className={`fixed flex flex-col glass-morphism z-50 overflow-visible transition-all duration-300 ${
+            isMobile 
+              ? 'inset-0 w-full h-full rounded-none' 
+              : `bottom-[112px] right-6 w-[400px] h-[690px] rounded-2xl ${showCalendar ? '!w-[500px] !h-[828px]' : ''}`
+          }`}
           style={{
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)',
-            transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            ...(showCalendar ? { width: '500px', height: '828px' } : {})
+            transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
           }}
         >
           {/* Header */}
