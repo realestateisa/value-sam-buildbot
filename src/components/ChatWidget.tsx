@@ -258,6 +258,10 @@ export const ChatWidget = () => {
       });
     } finally {
       setIsLoading(false);
+      // Refocus input on desktop after sending message
+      if (window.innerWidth >= 768 && textareaRef.current) {
+        setTimeout(() => textareaRef.current?.focus(), 100);
+      }
     }
   };
   const handleBookAppointment = () => {
