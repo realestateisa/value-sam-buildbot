@@ -678,7 +678,7 @@ export const ChatWidget = () => {
 
           {/* Message Input - hidden when calendar, location input, or callback form is shown */}
           {!showCalendar && !showLocationInput && !showCallbackForm && <div className="px-5 pt-2 pb-5 border-t border-border/20 bg-gradient-to-b from-background via-muted/5 to-muted/10 rounded-b-2xl">
-              <div className="relative flex items-end gap-2 p-1 rounded-2xl bg-gradient-to-br from-background to-muted/30 border border-border/40 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.14)] transition-all duration-300">
+              <div className="relative flex items-end gap-2 p-1 rounded-2xl bg-gradient-to-br from-background to-muted/30 border border-border/40 shadow-[0_8px_32px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_48px_rgba(0,0,0,0.22)] transition-all duration-300">
                 <div className="flex-1 relative">
                   <Textarea 
                     ref={textareaRef} 
