@@ -381,6 +381,13 @@ export const ChatWidget = () => {
     const containerId = `cal-inline-${selectedTerritory}`;
     const container = queryRoot.querySelector(`#${containerId}`) as HTMLElement;
     if (container) container.innerHTML = "";
+    
+    if (!container) {
+      console.error("Calendar container not found:", containerId);
+      setCalendarError("Calendar container not found");
+      setCalendarLoading(false);
+      return;
+    }
 
     // Queue init with namespace and inline render (processed once script loads)
     w.Cal("init", territory.calNamespace, { origin: "https://app.cal.com" });
@@ -392,10 +399,10 @@ export const ChatWidget = () => {
       styles: { branding: { brandColor: "#000000" } },
     });
 
-    // Queue inline render using the namespace
+    // Pass the actual DOM element instead of selector (works in Shadow DOM)
     w.Cal("inline", {
       namespace: territory.calNamespace,
-      elementOrSelector: `#${containerId}`,
+      elementOrSelector: container,
       calLink: territory.calLink,
       config: { theme: "light" },
     });
