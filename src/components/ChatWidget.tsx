@@ -665,7 +665,7 @@ export const ChatWidget = () => {
           {showCallbackForm && <CallbackForm onClose={() => setShowCallbackForm(false)} />}
 
           {/* Action Buttons */}
-          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="p-4 border-t border-border/10 bg-gradient-to-b from-background to-muted/20 w-full">
+          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="px-4 pt-3 pb-2 border-t border-border/10 bg-gradient-to-b from-background to-muted/20 w-full">
               <Button 
                 onClick={handleBookAppointment} 
                 className="group w-full h-12 font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border-0" 
@@ -677,7 +677,7 @@ export const ChatWidget = () => {
             </div>}
 
           {/* Message Input - hidden when calendar, location input, or callback form is shown */}
-          {!showCalendar && !showLocationInput && !showCallbackForm && <div className="p-5 border-t border-border/20 bg-gradient-to-b from-background via-muted/5 to-muted/10 rounded-b-2xl">
+          {!showCalendar && !showLocationInput && !showCallbackForm && <div className="px-5 pt-2 pb-5 border-t border-border/20 bg-gradient-to-b from-background via-muted/5 to-muted/10 rounded-b-2xl">
               <div className="relative flex items-end gap-2 p-1 rounded-2xl bg-gradient-to-br from-background to-muted/30 border border-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300">
                 <div className="flex-1 relative">
                   <Textarea 
