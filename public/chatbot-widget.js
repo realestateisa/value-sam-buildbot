@@ -24,21 +24,33 @@
     if (event.origin !== chatbotOrigin) return;
     
     if (event.data.type === 'chatbot-resize') {
-      const { width, height, isOpen } = event.data;
+      const { width, height, isOpen, isMobile } = event.data;
 
-      // Set iframe size to exact container size (no clamping needed for positioning)
-      if (width) iframe.style.width = width + 'px';
-      if (height) iframe.style.height = height + 'px';
-
-      // Keep iframe anchored to bottom-right corner
-      iframe.style.position = 'fixed';
-      iframe.style.bottom = '24px';
-      iframe.style.right = '24px';
-
-      if (isOpen) {
+      if (isOpen && isMobile) {
+        // Mobile full-screen
+        iframe.style.position = 'fixed';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.borderRadius = '0';
+        iframe.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+      } else if (isOpen) {
+        // Desktop positioned
+        iframe.style.position = 'fixed';
+        iframe.style.bottom = '24px';
+        iframe.style.right = '24px';
+        iframe.style.width = width + 'px';
+        iframe.style.height = height + 'px';
         iframe.style.borderRadius = '0';
         iframe.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
       } else {
+        // Closed button
+        iframe.style.position = 'fixed';
+        iframe.style.bottom = '24px';
+        iframe.style.right = '24px';
         iframe.style.width = '88px';
         iframe.style.height = '146px';
         iframe.style.borderRadius = '0';
