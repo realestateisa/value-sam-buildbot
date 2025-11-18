@@ -753,9 +753,9 @@ export const ChatWidget = () => {
                 <div className="flex-1 relative group">
                   {!inputValue && (
                     <div className="absolute inset-0 pointer-events-none flex items-center px-4 py-3.5">
-                      <span className="text-base bg-[linear-gradient(90deg,hsl(var(--muted-foreground)/0.6)_0%,hsl(var(--muted-foreground)/0.6)_40%,hsl(var(--foreground)/0.95)_50%,hsl(var(--muted-foreground)/0.6)_60%,hsl(var(--muted-foreground)/0.6)_100%)] bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer">
-                        Ask me anything..
-                      </span>
+                    <span className="text-base bg-[linear-gradient(90deg,hsl(var(--muted-foreground)/0.75)_0%,hsl(var(--muted-foreground)/0.75)_40%,hsl(var(--foreground)/0.95)_50%,hsl(var(--muted-foreground)/0.75)_60%,hsl(var(--muted-foreground)/0.75)_100%)] bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer">
+                      Ask me anything..
+                    </span>
                     </div>
                   )}
                   <Textarea 
