@@ -12,20 +12,58 @@ function inlineCssPlugin() {
       if (cssFileName) {
         const cssContent = bundle[cssFileName].source;
         const jsFiles = Object.keys(bundle).filter(name => name.endsWith('.js'));
+        
         if (jsFiles.length) {
-          const escapedCss = cssContent.replace(/`/g, '\\`').replace(/\$/g, '\\$');
-          const placeholderRegex = /(['"])__INJECT_CSS_HERE__\1/g;
-
+          // Properly escape CSS for JavaScript template literal
+          const escapedCss = String(cssContent)
+            .replace(/\\/g, '\\\\')    // Escape backslashes first
+            .replace(/`/g, '\\`')       // Escape backticks
+            .replace(/\$/g, '\\$')      // Escape dollar signs
+            .replace(/\r?\n/g, '\\n');  // Convert newlines to \n
+          
+          let replacedCount = 0;
+          
           for (const jsFileName of jsFiles) {
             const chunk: any = bundle[jsFileName];
-            if (chunk && typeof chunk.code === 'string' && chunk.code.includes('__INJECT_CSS_HERE__')) {
-              chunk.code = chunk.code.replace(placeholderRegex, '`' + escapedCss + '`');
+            if (chunk && typeof chunk.code === 'string') {
+              const originalCode = chunk.code;
+              
+              // Try multiple replacement strategies for minified code
+              // Strategy 1: Match with quotes (both single and double)
+              chunk.code = chunk.code.replace(
+                /["']__INJECT_CSS_HERE__["']/g,
+                '`' + escapedCss + '`'
+              );
+              
+              // Strategy 2: Match as a variable assignment
+              chunk.code = chunk.code.replace(
+                /=["']__INJECT_CSS_HERE__["']/g,
+                '=`' + escapedCss + '`'
+              );
+              
+              // Strategy 3: Match in const/let/var declarations
+              chunk.code = chunk.code.replace(
+                /(const|let|var)\s+\w+\s*=\s*["']__INJECT_CSS_HERE__["']/g,
+                (match) => match.replace(/["']__INJECT_CSS_HERE__["']/, '`' + escapedCss + '`')
+              );
+              
+              if (chunk.code !== originalCode) {
+                replacedCount++;
+                console.log(`✅ CSS injected into ${jsFileName} (${escapedCss.length} chars)`);
+              }
             }
           }
-
-          // Remove the separate CSS file since it's now inlined
-          delete bundle[cssFileName];
+          
+          if (replacedCount > 0) {
+            // Remove the separate CSS file since it's now inlined
+            delete bundle[cssFileName];
+            console.log(`✅ Inlined CSS and removed ${cssFileName}`);
+          } else {
+            console.warn(`⚠️ WARNING: __INJECT_CSS_HERE__ placeholder not found in any JS files!`);
+          }
         }
+      } else {
+        console.warn('⚠️ No CSS file found in bundle');
       }
     }
   };
