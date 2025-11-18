@@ -677,7 +677,7 @@ export const ChatWidget = () => {
             </div>}
 
           {/* Message Input - hidden when calendar, location input, or callback form is shown */}
-          {!showCalendar && !showLocationInput && !showCallbackForm && <div className="p-4 border-t border-border/30 bg-muted/30 rounded-b-2xl">
+          {!showCalendar && !showLocationInput && !showCallbackForm && <div className="p-4 border-t border-border/30 bg-muted/10 rounded-b-2xl">
               <div className="flex gap-1.5 items-end">
                 <div className="flex-1 relative">
                   <Textarea 
