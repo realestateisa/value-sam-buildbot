@@ -8,7 +8,7 @@ const Index = () => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   
-  const embedCode = `<script src="https://4b482d74-c976-43c4-8d7d-de411c7ba68f.lovableproject.com/widget-dist/chatbot-widget-v2.js"></script>`;
+  const embedCode = `<script src="https://vbh-chat-bot.com/widget-dist/chatbot-widget-v2.js" async></script>`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(embedCode);
