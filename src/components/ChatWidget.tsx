@@ -692,7 +692,7 @@ export const ChatWidget = () => {
                     }} 
                     placeholder="Ask me anything.." 
                     disabled={isLoading} 
-                    className="min-h-[48px] max-h-[120px] resize-none py-3.5 px-4 text-sm bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all placeholder:text-muted-foreground/60" 
+                    className="min-h-[48px] max-h-[120px] resize-none py-3.5 px-4 text-base bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all placeholder:text-muted-foreground/75" 
                     rows={1} 
                     aria-label="Type your message" 
                   />
