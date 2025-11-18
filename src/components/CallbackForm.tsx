@@ -105,15 +105,9 @@ export const CallbackForm = ({
         </Button>
 
         <div className="max-w-md mx-auto space-y-6 mt-8">
-          <p className="text-muted-foreground text-sm text-center font-bold">
-            Have a specific question?
-Request a call back from our team!                                              
-
-
-
-
-
-         
+          <p className="text-foreground/80 text-base text-center font-medium leading-relaxed">
+            Have a specific question?<br />
+            Request a call back from our team!
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
