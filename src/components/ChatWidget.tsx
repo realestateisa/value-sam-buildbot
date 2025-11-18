@@ -338,6 +338,15 @@ export const ChatWidget = () => {
 
     const w = window as any;
 
+    // Detect if we're in Shadow DOM or regular DOM
+    const rootElement = document.querySelector('#cal-inline-' + selectedTerritory);
+    const rootNode = rootElement?.getRootNode() as ShadowRoot | Document;
+    const isShadowDOM = rootNode && 'host' in rootNode;
+    
+    // Get the appropriate document head (Shadow DOM or regular document)
+    const targetHead = isShadowDOM ? (rootNode as ShadowRoot) : document.head;
+    const queryRoot = isShadowDOM ? (rootNode as ShadowRoot) : document;
+
     // Ensure Cal stub exists BEFORE loading script (prevents 'Cal is not defined')
     if (!w.Cal) {
       const Cal = function (...args: any[]) {
@@ -349,14 +358,18 @@ export const ChatWidget = () => {
     }
 
     // Ensure Cal embed CSS
-    if (!document.querySelector('link[href="https://app.cal.com/embed/embed.css"]')) {
+    if (!queryRoot.querySelector('link[href="https://app.cal.com/embed/embed.css"]')) {
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = "https://app.cal.com/embed/embed.css";
-      document.head.appendChild(link);
+      if (isShadowDOM) {
+        (targetHead as ShadowRoot).appendChild(link);
+      } else {
+        document.head.appendChild(link);
+      }
     }
 
-    // Ensure Cal embed JS
+    // Ensure Cal embed JS - always in main document head as it needs window access
     if (!document.querySelector('script[src="https://app.cal.com/embed/embed.js"]')) {
       const script = document.createElement("script");
       script.src = "https://app.cal.com/embed/embed.js";
@@ -366,7 +379,7 @@ export const ChatWidget = () => {
 
     // Clear any previous inline render
     const containerId = `cal-inline-${selectedTerritory}`;
-    const container = document.getElementById(containerId);
+    const container = queryRoot.querySelector(`#${containerId}`) as HTMLElement;
     if (container) container.innerHTML = "";
 
     // Queue init with namespace and inline render (processed once script loads)
