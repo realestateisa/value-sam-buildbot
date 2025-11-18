@@ -147,30 +147,20 @@ export const ChatWidget = () => {
       postResize(compact.width, compact.height, false);
       return;
     }
-    
-    // Check if mobile
-    const isMobile = window.innerWidth < 768;
-    
-    if (isMobile) {
-      // Full screen on mobile
-      postResize(window.innerWidth, window.innerHeight, true);
-    } else {
-      // Desktop sizing
-      const baseWidth = showCalendar ? 500 : 400;
-      const baseHeight = showCalendar ? 828 : 690;
-      const paddingBottom = 140; // space for button/offset within iframe
+    const baseWidth = showCalendar ? 500 : 400;
+    const baseHeight = showCalendar ? 828 : 690;
+    const paddingBottom = 140; // space for button/offset within iframe
 
-      const sendCurrentSize = () => {
-        const rect = chatRef.current?.getBoundingClientRect();
-        const w = Math.max(baseWidth, rect?.width ?? baseWidth);
-        const h = (rect?.height ?? baseHeight) + paddingBottom;
-        postResize(w, h, true);
-      };
-      sendCurrentSize();
-      const ro = new ResizeObserver(() => sendCurrentSize());
-      if (chatRef.current) ro.observe(chatRef.current);
-      return () => ro.disconnect();
-    }
+    const sendCurrentSize = () => {
+      const rect = chatRef.current?.getBoundingClientRect();
+      const w = Math.max(baseWidth, rect?.width ?? baseWidth);
+      const h = (rect?.height ?? baseHeight) + paddingBottom;
+      postResize(w, h, true);
+    };
+    sendCurrentSize();
+    const ro = new ResizeObserver(() => sendCurrentSize());
+    if (chatRef.current) ro.observe(chatRef.current);
+    return () => ro.disconnect();
   }, [isOpen, showCalendar]);
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -486,11 +476,11 @@ export const ChatWidget = () => {
       {/* Chat Window */}
       {isOpen && <Card 
           ref={chatRef} 
-          className="fixed md:bottom-[112px] md:right-6 flex flex-col glass-morphism z-50 overflow-visible md:w-[400px] md:h-[690px] md:rounded-2xl inset-0 md:inset-auto w-full h-full rounded-none" 
+          className="fixed bottom-[112px] right-6 flex flex-col glass-morphism z-50 overflow-visible w-[400px] h-[690px] rounded-2xl" 
           style={{
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)',
             transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            ...(showCalendar && window.innerWidth >= 768 ? { width: '500px', height: '828px' } : {})
+            ...(showCalendar ? { width: '500px', height: '828px' } : {})
           }}
         >
           {/* Header */}
