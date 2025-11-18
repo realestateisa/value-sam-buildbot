@@ -692,8 +692,8 @@ export const ChatWidget = () => {
                     }} 
                     placeholder="Ask me anything.." 
                     disabled={isLoading} 
-                    className="min-h-[48px] max-h-[120px] resize-none py-3.5 px-4 text-base bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all placeholder:text-muted-foreground/75" 
-                    rows={1} 
+                    className="min-h-[48px] max-h-[120px] resize-none py-3.5 px-4 text-base bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all placeholder:bg-[linear-gradient(90deg,hsl(var(--muted-foreground)/0.75)_0%,hsl(var(--muted-foreground)/0.75)_40%,hsl(var(--foreground)/0.9)_50%,hsl(var(--muted-foreground)/0.75)_60%,hsl(var(--muted-foreground)/0.75)_100%)] placeholder:bg-[length:200%_100%] placeholder:bg-clip-text placeholder:text-transparent placeholder:animate-shimmer" 
+                    rows={1}
                     aria-label="Type your message" 
                   />
                   {inputValue.length > 500 && <span className="absolute bottom-3 right-4 text-[10px] text-muted-foreground font-medium">
