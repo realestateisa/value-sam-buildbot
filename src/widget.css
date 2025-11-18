@@ -155,18 +155,18 @@
   }
 }
 
+/* Keyframes for shadow pulse - defined outside layer for Shadow DOM */
+@keyframes shadow-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  }
+}
+
 /* Shadow DOM specific utility classes */
 @layer utilities {
-  /* Keyframes for shadow pulse animation */
-  @keyframes shadow-pulse {
-    0%, 100% {
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-    50% {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-    }
-  }
-
   /* Ensure animations work in Shadow DOM */
   :host .animate-fade-in {
     animation: fade-in 0.5s ease-out;
