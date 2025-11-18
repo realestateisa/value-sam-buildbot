@@ -75,53 +75,19 @@ export const ChatWidget = () => {
 
   // Smooth scroll to bottom when messages change
   useEffect(() => {
-    console.log('[FOCUS-DEBUG] Auto-scroll effect triggered', {
-      messagesLength: messages.length,
-      isLoading,
-      showTypingIndicator
-    });
-    
     if (scrollRef.current) {
       const textareaHadFocus = document.activeElement === textareaRef.current;
-      console.log('[FOCUS-DEBUG] Before scroll - checking focus', {
-        textareaHadFocus,
-        activeElement: document.activeElement?.tagName,
-        activeElementClass: document.activeElement?.className
-      });
       
       const scrollElement = scrollRef.current.querySelector("[data-radix-scroll-area-viewport]") as HTMLElement;
       if (scrollElement) {
-        console.log('[FOCUS-DEBUG] Starting scroll operation');
-        
         scrollElement.scrollTo({
           top: scrollElement.scrollHeight,
           behavior: "smooth"
         });
         
-        console.log('[FOCUS-DEBUG] After scroll - active element', {
-          activeElement: document.activeElement?.tagName,
-          textareaStillHasFocus: document.activeElement === textareaRef.current
-        });
-        
         if (textareaHadFocus && textareaRef.current) {
-          console.log('[FOCUS-DEBUG] Attempting to restore focus via requestAnimationFrame');
           requestAnimationFrame(() => {
-            console.log('[FOCUS-DEBUG] Inside requestAnimationFrame - before focus', {
-              activeElement: document.activeElement?.tagName,
-              textareaExists: !!textareaRef.current
-            });
-            
             textareaRef.current?.focus();
-            
-            console.log('[FOCUS-DEBUG] Inside requestAnimationFrame - after focus', {
-              activeElement: document.activeElement?.tagName,
-              textareaHasFocus: document.activeElement === textareaRef.current,
-              success: document.activeElement === textareaRef.current ? 'YES' : 'NO'
-            });
-          });
-        } else {
-          console.log('[FOCUS-DEBUG] Skipping focus restoration', {
-            reason: !textareaHadFocus ? 'textarea did not have focus' : 'textareaRef is null'
           });
         }
       }
@@ -130,12 +96,6 @@ export const ChatWidget = () => {
 
   // Auto-resize textarea
   useEffect(() => {
-    console.log('[FOCUS-DEBUG] Auto-resize effect triggered', {
-      inputValueLength: inputValue.length,
-      activeElement: document.activeElement?.tagName,
-      textareaHasFocus: document.activeElement === textareaRef.current
-    });
-    
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + "px";
@@ -146,22 +106,10 @@ export const ChatWidget = () => {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (isLoading) {
-      console.log('[FOCUS-DEBUG] Typing indicator - starting', {
-        activeElement: document.activeElement?.tagName,
-        textareaHasFocus: document.activeElement === textareaRef.current
-      });
-      
       timeoutId = setTimeout(() => {
-        console.log('[FOCUS-DEBUG] Typing indicator - showing', {
-          activeElement: document.activeElement?.tagName
-        });
         setShowTypingIndicator(true);
       }, 1000);
     } else {
-      console.log('[FOCUS-DEBUG] Typing indicator - hiding', {
-        activeElement: document.activeElement?.tagName,
-        textareaHasFocus: document.activeElement === textareaRef.current
-      });
       setShowTypingIndicator(false);
     }
     return () => {
@@ -279,7 +227,6 @@ export const ChatWidget = () => {
       // Store the session ID if this is the first message
       if (data.sessionId && !customGptSessionId) {
         setCustomGptSessionId(data.sessionId);
-        console.log("Stored CustomGPT session_id:", data.sessionId);
       }
 
       // Check if the response triggers appointment scheduling
@@ -290,10 +237,6 @@ export const ChatWidget = () => {
         const normalizedMsg = rawMsg.replace(/\u2019/g, "'").trim(); // normalize curly apostrophes
         const isUnknown = normalizedMsg === "I don't know the answer to that just yet. Please reach out to support for further help." || rawMsg.toLowerCase().includes("reach out to support for further help");
         if (isUnknown) {
-          console.log("Opening callback form due to unknown answer response", {
-            rawMsg,
-            normalizedMsg
-          });
           setShowCallbackForm(true);
         } else {
           const assistantMessage: Message = {
@@ -307,7 +250,6 @@ export const ChatWidget = () => {
         }
       }
     } catch (error) {
-      console.error("Error sending message:", error);
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
@@ -370,7 +312,6 @@ export const ChatWidget = () => {
         setShowLocationInput(false);
       }
     } catch (error) {
-      console.error("Error detecting territory:", error);
       toast({
         title: "Error",
         description: "There was an error processing your location. Please try again.",
@@ -422,7 +363,6 @@ export const ChatWidget = () => {
     const initCal = () => {
       const container = calendarRef.current;
       if (!container) {
-        console.error("Calendar container ref not found");
         return;
       }
 
@@ -470,7 +410,6 @@ export const ChatWidget = () => {
         }
       };
       script.onerror = () => {
-        console.error("Failed to load Cal.com script");
         setCalendarError("Failed to load calendar");
         setCalendarLoading(false);
       };
@@ -778,16 +717,7 @@ export const ChatWidget = () => {
                     </span>}
                 </div>
                 <Button 
-                  onClick={() => {
-                    console.log('[FOCUS-DEBUG] Send button clicked', {
-                      activeElement: document.activeElement?.tagName,
-                      textareaHasFocus: document.activeElement === textareaRef.current
-                    });
-                    handleSendMessage();
-                    console.log('[FOCUS-DEBUG] After handleSendMessage from button click', {
-                      activeElement: document.activeElement?.tagName
-                    });
-                  }}
+                  onClick={handleSendMessage}
                   disabled={isLoading || !inputValue.trim()} 
                   size="icon" 
                   className="h-[43px] w-[43px] rounded-xl bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-40 disabled:hover:scale-100 transition-all duration-200 flex-shrink-0"

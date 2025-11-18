@@ -87,7 +87,6 @@ class ValueBuildChatbot extends HTMLElement {
     
     // Handle attribute changes
     // Can be used for: <vbh-chatbot territory="sydney" theme="dark"></vbh-chatbot>
-    console.log(`Attribute ${name} changed from ${oldValue} to ${newValue}`);
     
     // Could trigger re-render with new props if needed
   }

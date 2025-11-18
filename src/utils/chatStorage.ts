@@ -22,7 +22,7 @@ export const saveChatSession = (messages: Message[], customGptSessionId: string 
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
   } catch (error) {
-    console.error('Failed to save chat session:', error);
+    // Failed to save chat session
   }
 };
 
@@ -49,7 +49,6 @@ export const loadChatSession = (): { messages: Message[]; customGptSessionId: st
       customGptSessionId: session.customGptSessionId,
     };
   } catch (error) {
-    console.error('Failed to load chat session:', error);
     return null;
   }
 };
@@ -58,7 +57,7 @@ export const clearChatSession = () => {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.error('Failed to clear chat session:', error);
+    // Failed to clear chat session
   }
 };
 
