@@ -140,6 +140,39 @@ export const ChatWidget = () => {
     return () => ro.disconnect();
   }, []);
 
+  // Notify parent embed to resize iframe when widget opens/closes or size changes
+  useEffect(() => {
+    const postResize = (w: number, h: number, open: boolean) => {
+      try {
+        window.parent?.postMessage({ type: "chatbot-resize", width: Math.ceil(w), height: Math.ceil(h), isOpen: open }, "*");
+      } catch {}
+    };
+
+    const compact = { width: 88, height: 146 };
+
+    if (!isOpen) {
+      postResize(compact.width, compact.height, false);
+      return;
+    }
+
+    const baseWidth = showCalendar ? 500 : 400;
+    const baseHeight = showCalendar ? 828 : 690;
+    const paddingBottom = 140; // space for button/offset within iframe
+
+    const sendCurrentSize = () => {
+      const rect = chatRef.current?.getBoundingClientRect();
+      const w = Math.max(baseWidth, rect?.width ?? baseWidth);
+      const h = (rect?.height ?? baseHeight) + paddingBottom;
+      postResize(w, h, true);
+    };
+
+    sendCurrentSize();
+
+    const ro = new ResizeObserver(() => sendCurrentSize());
+    if (chatRef.current) ro.observe(chatRef.current);
+    return () => ro.disconnect();
+  }, [isOpen, showCalendar]);
+
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
 

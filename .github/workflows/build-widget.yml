@@ -1,4 +1,6 @@
 name: Build Widget
+permissions:
+  contents: write
 
 on:
   push:
@@ -15,7 +17,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
+          fetch-depth: 0
       
       - name: Setup Node.js
         uses: actions/setup-node@v4

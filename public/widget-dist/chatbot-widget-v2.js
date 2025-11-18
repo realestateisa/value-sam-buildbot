@@ -11,7 +11,7 @@
     connectedCallback() {
       // Create iframe inside Shadow DOM for complete isolation
       const iframe = document.createElement('iframe');
-      const origin = 'https://4b482d74-c976-43c4-8d7d-de411c7ba68f.lovableproject.com';
+      const origin = (document.currentScript && new URL(document.currentScript.src).origin) || window.location.origin;
       
       iframe.src = origin + '/widget';
       iframe.style.cssText = `
