@@ -128,7 +128,7 @@ export default {
         "fade-in": "fade-in 0.4s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
         "slide-up": "slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
-        "shimmer": "shimmer 3s linear infinite",
+        "shimmer": "shimmer 5s linear infinite",
       },
       scale: {
         '103': '1.03',
