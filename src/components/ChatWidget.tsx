@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { flushSync } from "react-dom";
 import { MessageCircle, X, Send, Calendar, ExternalLink, ChevronLeft, ChevronRight, Loader2, MapPin, Video, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -262,7 +263,10 @@ export const ChatWidget = () => {
       textareaHasFocus: document.activeElement === textareaRef.current
     });
     
-    setInputValue("");
+    // Use flushSync to force synchronous state update and prevent focus loss
+    flushSync(() => {
+      setInputValue("");
+    });
     
     console.log('[FOCUS-DEBUG] After setInputValue("") - before first focus attempt', {
       activeElement: document.activeElement?.tagName,
