@@ -5,8 +5,7 @@ import { ChatWidget } from "./components/ChatWidget";
 import "./widget.css"; // Import Shadow DOM specific styles
 
 // Placeholder for CSS injection - will be replaced during build
-const INJECTED_CSS = "__INJECT_CSS_HERE__";
-const HAS_CSS = INJECTED_CSS.length > 50; // Check if CSS was actually injected
+const INJECTED_CSS = "__INJECT_CSS_HERE__"; // Will be replaced at build time
 
 // Create QueryClient instance for the widget
 const queryClient = new QueryClient({
@@ -60,15 +59,11 @@ class ValueBuildChatbot extends HTMLElement {
   private injectStyles() {
     if (!this.shadow) return;
 
-    // Use the inlined CSS that was injected during build
-    if (HAS_CSS) {
-      const style = document.createElement("style");
-      style.textContent = INJECTED_CSS;
-      this.shadow.appendChild(style);
-      console.log('[VBH Widget] ✅ Styles injected from bundle');
-    } else {
-      console.error('[VBH Widget] ❌ No styles found in bundle');
-    }
+    // Always set the style content; build step replaces the placeholder
+    const style = document.createElement("style");
+    style.textContent = INJECTED_CSS;
+    this.shadow.appendChild(style);
+    console.log('[VBH Widget] ✅ Styles injected into Shadow DOM');
   }
 
   private mountReactApp() {
