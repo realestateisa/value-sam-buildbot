@@ -258,10 +258,6 @@ export const ChatWidget = () => {
       });
     } finally {
       setIsLoading(false);
-      // Refocus input on desktop after sending message
-      if (window.innerWidth >= 768 && textareaRef.current) {
-        setTimeout(() => textareaRef.current?.focus(), 100);
-      }
     }
   };
   const handleBookAppointment = () => {
@@ -472,21 +468,16 @@ export const ChatWidget = () => {
   }, [calendarRef.current, showCalendar, selectedTerritory]);
   const content = <>
       {/* Chat Button */}
-      <div className="fixed bottom-6 right-6 z-50" style={{ pointerEvents: 'auto' }}>
+      <div className="fixed bottom-6 right-6 z-50">
         {/* Speech Bubble */}
         {!isOpen && <div className="absolute bottom-full right-0 mb-2 animate-fade-in z-[60]">
             
           </div>}
         
         <Button 
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setIsOpen(!isOpen);
-          }} 
+          onClick={() => setIsOpen(!isOpen)} 
           className="h-20 w-20 rounded-full bg-primary text-primary-foreground button-lift hover:shadow-2xl hover:scale-110 transition-all duration-300 p-2" 
           size="icon"
-          type="button"
         >
           {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-full w-full rounded-full" />}
         </Button>
@@ -497,7 +488,6 @@ export const ChatWidget = () => {
           ref={chatRef} 
           className="fixed md:bottom-[112px] md:right-6 flex flex-col glass-morphism z-50 overflow-visible md:w-[400px] md:h-[690px] md:rounded-2xl inset-0 md:inset-auto w-full h-full rounded-none" 
           style={{
-            pointerEvents: 'auto',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)',
             transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
             ...(showCalendar && window.innerWidth >= 768 ? { width: '500px', height: '828px' } : {})

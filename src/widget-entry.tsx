@@ -32,21 +32,11 @@ class ValueBuildChatbot extends HTMLElement {
     // Attach Shadow DOM with open mode
     this.shadow = this.attachShadow({ mode: "open" });
 
-    // Style the host element to cover the viewport for proper fixed positioning
-    this.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 9999;
-    `;
-
     // Create container for React app
     this.container = document.createElement("div");
     this.container.id = "chatbot-root";
-    this.container.style.cssText = "pointer-events: auto; width: 100%; height: 100%;";
+    // Avoid resetting or using display: contents here so fonts inherit correctly; CSS handles scoping
+    this.container.style.cssText = "";
     this.shadow.appendChild(this.container);
 
     // Inject styles into Shadow DOM (synchronous, from inlined bundle)
