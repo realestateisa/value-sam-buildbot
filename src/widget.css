@@ -157,6 +157,16 @@
 
 /* Shadow DOM specific utility classes */
 @layer utilities {
+  /* Keyframes for shadow pulse animation */
+  @keyframes shadow-pulse {
+    0%, 100% {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+    50% {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    }
+  }
+
   /* Ensure animations work in Shadow DOM */
   :host .animate-fade-in {
     animation: fade-in 0.5s ease-out;
@@ -168,6 +178,11 @@
   
   :host .animate-accordion-up {
     animation: accordion-up 0.2s ease-out;
+  }
+  
+  /* Shadow pulse animation - ultra slow at 40s */
+  :host .animate-shadow-pulse {
+    animation: shadow-pulse 40s ease-in-out infinite;
   }
   
   /* Hover scale with proper transform origin */
