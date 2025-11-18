@@ -665,24 +665,26 @@ export const ChatWidget = () => {
           {showCallbackForm && <CallbackForm onClose={() => setShowCallbackForm(false)} />}
 
           {/* Action Buttons */}
-          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="p-4 flex gap-2 bg-background">
-              <Button 
-                onClick={() => setShowCallbackForm(true)} 
-                variant="outline"
-                className="group flex-1 h-12 font-medium bg-background hover:bg-muted border-border/40 hover:border-border rounded-xl transition-all duration-300" 
-                aria-label="Request callback"
-              >
-                <Phone className="h-4 w-4 mr-2 text-muted-foreground group-hover:text-foreground transition-colors" strokeWidth={2} />
-                <span className="text-sm">Request Callback</span>
-              </Button>
-              <Button 
-                onClick={handleBookAppointment} 
-                className="group flex-1 h-12 font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl shadow-sm hover:shadow transition-all duration-300" 
-                aria-label="Book an appointment"
-              >
-                <Calendar className="h-4 w-4 mr-2 transition-transform group-hover:scale-105 duration-300" strokeWidth={2} />
-                <span className="text-sm">Book Appointment</span>
-              </Button>
+          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="p-4 border-t border-border/10 bg-gradient-to-b from-background to-muted/20">
+              <div className="flex gap-3">
+                <Button 
+                  onClick={() => setShowCallbackForm(true)} 
+                  variant="outline"
+                  className="group flex-1 h-12 font-medium bg-card hover:bg-accent border-2 border-border hover:border-primary/30 rounded-xl transition-all duration-300 shadow-sm hover:shadow" 
+                  aria-label="Request callback"
+                >
+                  <Phone className="h-4 w-4 mr-2 text-primary transition-all duration-300 group-hover:scale-110" strokeWidth={2.5} />
+                  <span className="text-sm font-semibold text-foreground">Request Callback</span>
+                </Button>
+                <Button 
+                  onClick={handleBookAppointment} 
+                  className="group flex-1 h-12 font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border-0" 
+                  aria-label="Book an appointment"
+                >
+                  <Calendar className="h-4 w-4 mr-2 transition-all duration-300 group-hover:scale-110" strokeWidth={2.5} />
+                  <span className="text-sm font-semibold">Book Appointment</span>
+                </Button>
+              </div>
             </div>}
 
           {/* Message Input - hidden when calendar, location input, or callback form is shown */}
