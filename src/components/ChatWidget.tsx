@@ -672,16 +672,16 @@ export const ChatWidget = () => {
                 className="group flex-1 h-12 font-medium bg-card hover:bg-card/80 border-2 border-border hover:border-border/50 rounded-xl transition-all duration-300 shadow-sm hover:shadow min-w-0" 
                 aria-label="Request callback"
               >
-                <Phone className="h-4 w-4 mr-2 text-primary transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
-                <span className="text-xs font-semibold text-foreground truncate">Call Me</span>
+              <Phone className="h-4 w-4 mr-2 text-primary transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
+                <span className="text-sm font-semibold text-foreground truncate">Call Me</span>
               </Button>
               <Button 
                 onClick={handleBookAppointment} 
                 className="group flex-1 h-12 font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border-0 min-w-0" 
                 aria-label="Book an appointment"
               >
-                <Calendar className="h-4 w-4 mr-2 transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
-                <span className="text-xs font-semibold truncate">Book Meeting</span>
+              <Calendar className="h-4 w-4 mr-2 transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
+                <span className="text-sm font-semibold truncate">Book Meeting</span>
               </Button>
             </div>}
 
