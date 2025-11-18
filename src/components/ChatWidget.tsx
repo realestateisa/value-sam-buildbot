@@ -369,14 +369,6 @@ export const ChatWidget = () => {
       }
     }
 
-    // Ensure Cal embed JS - always in main document head as it needs window access
-    if (!document.querySelector('script[src="https://app.cal.com/embed/embed.js"]')) {
-      const script = document.createElement("script");
-      script.src = "https://app.cal.com/embed/embed.js";
-      script.async = true;
-      document.head.appendChild(script);
-    }
-
     // Clear any previous inline render
     const containerId = `cal-inline-${selectedTerritory}`;
     const container = queryRoot.querySelector(`#${containerId}`) as HTMLElement;
@@ -389,23 +381,51 @@ export const ChatWidget = () => {
       return;
     }
 
-    // Queue init with namespace and inline render (processed once script loads)
-    w.Cal("init", territory.calNamespace, { origin: "https://app.cal.com" });
+    // Function to initialize Cal.com after script loads
+    const initCal = () => {
+      // Queue init with namespace
+      w.Cal("init", territory.calNamespace, { origin: "https://app.cal.com" });
 
-    // Configure UI settings
-    w.Cal("ui", {
-      hideEventTypeDetails: true,
-      layout: "month_view",
-      styles: { branding: { brandColor: "#000000" } },
-    });
+      // Configure UI settings
+      w.Cal("ui", {
+        hideEventTypeDetails: true,
+        layout: "month_view",
+        styles: { branding: { brandColor: "#000000" } },
+      });
 
-    // Pass the actual DOM element instead of selector (works in Shadow DOM)
-    w.Cal("inline", {
-      namespace: territory.calNamespace,
-      elementOrSelector: container,
-      calLink: territory.calLink,
-      config: { theme: "light" },
-    });
+      // Pass the actual DOM element instead of selector
+      w.Cal("inline", {
+        namespace: territory.calNamespace,
+        elementOrSelector: container,
+        calLink: territory.calLink,
+        config: { theme: "light" },
+      });
+      
+      setCalendarLoading(false);
+    };
+
+    // Ensure Cal embed JS - always in main document head as it needs window access
+    const existingScript = document.querySelector('script[src="https://app.cal.com/embed/embed.js"]');
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = "https://app.cal.com/embed/embed.js";
+      script.async = true;
+      script.onload = initCal;
+      script.onerror = () => {
+        console.error("Failed to load Cal.com script");
+        setCalendarError("Failed to load calendar");
+        setCalendarLoading(false);
+      };
+      document.head.appendChild(script);
+    } else {
+      // Script already exists, check if it's loaded
+      if (w.Cal && typeof w.Cal === 'function' && w.Cal.ns) {
+        initCal();
+      } else {
+        // Script exists but not loaded yet, wait for it
+        existingScript.addEventListener('load', initCal);
+      }
+    }
   }, [showCalendar, selectedTerritory]);
 
   const content = (
