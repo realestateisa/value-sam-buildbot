@@ -2,10 +2,7 @@ import React from "react";
 import { createRoot, Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChatWidget } from "./components/ChatWidget";
-import "./widget.css"; // Import Shadow DOM specific styles
-
-// Placeholder for CSS injection - will be replaced during build
-const INJECTED_CSS = "__INJECT_CSS_HERE__"; // Will be replaced at build time
+import widgetStyles from "./widget.css?inline";
 
 // Create QueryClient instance for the widget
 const queryClient = new QueryClient({
@@ -60,43 +57,8 @@ class ValueBuildChatbot extends HTMLElement {
     if (!this.shadow) return;
 
     const style = document.createElement("style");
-
-    const inlineCss = (typeof INJECTED_CSS === "string" ? INJECTED_CSS : "") || "";
-    const hasRealCss = inlineCss.trim().length > 0 && !inlineCss.includes("__INJECT_CSS_HERE__");
-
-    if (hasRealCss) {
-      style.textContent = inlineCss;
-      this.shadow.appendChild(style);
-      console.log('[VBH Widget] ✅ Styles injected (inlined) into Shadow DOM');
-      return;
-    }
-
-    // Fallback: fetch external styles.css next to the script
-    const findScriptSrc = () => {
-      const scripts = Array.from(document.querySelectorAll('script[src]')) as HTMLScriptElement[];
-      for (const s of scripts) {
-        if (s.src.includes('chatbot-widget-v2.js')) return s.src;
-      }
-      if ((document.currentScript as HTMLScriptElement)?.src) {
-        return (document.currentScript as HTMLScriptElement).src;
-      }
-      return '';
-    };
-
-    const scriptSrc = findScriptSrc();
-    const baseUrl = scriptSrc ? scriptSrc.slice(0, scriptSrc.lastIndexOf('/')) : `${location.origin}/widget-dist`;
-    const cssUrl = `${baseUrl}/styles.css`;
-
-    fetch(cssUrl)
-      .then(r => r.ok ? r.text() : Promise.reject(new Error(`HTTP ${r.status}`)))
-      .then(cssText => {
-        style.textContent = cssText;
-        this.shadow!.appendChild(style);
-        console.log('[VBH Widget] ✅ Styles injected (fetched) into Shadow DOM');
-      })
-      .catch(err => {
-        console.error('[VBH Widget] ❌ Failed to load widget CSS fallback', err);
-      });
+    style.textContent = widgetStyles;
+    this.shadow.appendChild(style);
   }
 
   private mountReactApp() {

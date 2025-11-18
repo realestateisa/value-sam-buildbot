@@ -3,67 +3,15 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import fs from "fs";
 
-// Custom plugin to inline CSS into JS for Shadow DOM
+// Custom plugin to remove separate CSS file since we import it inline
 function inlineCssPlugin() {
   return {
     name: 'inline-css',
     generateBundle(options: any, bundle: any) {
+      // CSS is now imported directly via ?inline, so just remove the separate CSS file
       const cssFileName = Object.keys(bundle).find(name => name.endsWith('.css'));
       if (cssFileName) {
-        const cssContent = bundle[cssFileName].source;
-        const jsFiles = Object.keys(bundle).filter(name => name.endsWith('.js'));
-        
-        if (jsFiles.length) {
-          // Properly escape CSS for JavaScript template literal
-          const escapedCss = String(cssContent)
-            .replace(/\\/g, '\\\\')    // Escape backslashes first
-            .replace(/`/g, '\\`')       // Escape backticks
-            .replace(/\$/g, '\\$')      // Escape dollar signs
-            .replace(/\r?\n/g, '\\n');  // Convert newlines to \n
-          
-          let replacedCount = 0;
-          
-          for (const jsFileName of jsFiles) {
-            const chunk: any = bundle[jsFileName];
-            if (chunk && typeof chunk.code === 'string') {
-              const originalCode = chunk.code;
-              
-              // Try multiple replacement strategies for minified code
-              // Strategy 1: Match with quotes (both single and double)
-              chunk.code = chunk.code.replace(
-                /["']__INJECT_CSS_HERE__["']/g,
-                '`' + escapedCss + '`'
-              );
-              
-              // Strategy 2: Match as a variable assignment
-              chunk.code = chunk.code.replace(
-                /=["']__INJECT_CSS_HERE__["']/g,
-                '=`' + escapedCss + '`'
-              );
-              
-              // Strategy 3: Match in const/let/var declarations
-              chunk.code = chunk.code.replace(
-                /(const|let|var)\s+\w+\s*=\s*["']__INJECT_CSS_HERE__["']/g,
-                (match) => match.replace(/["']__INJECT_CSS_HERE__["']/, '`' + escapedCss + '`')
-              );
-              
-              if (chunk.code !== originalCode) {
-                replacedCount++;
-                console.log(`✅ CSS injected into ${jsFileName} (${escapedCss.length} chars)`);
-              }
-            }
-          }
-          
-          // Only remove CSS if it was actually inlined
-          if (replacedCount > 0) {
-            delete bundle[cssFileName];
-            console.log(`✅ Inlined CSS into ${replacedCount} JS chunk(s); removed styles.css`);
-          } else {
-            console.warn('⚠️ CSS was not inlined; keeping styles.css for runtime fallback');
-          }
-        }
-      } else {
-        console.warn('⚠️ No CSS file found in bundle');
+        delete bundle[cssFileName];
       }
     }
   };
