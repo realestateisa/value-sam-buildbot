@@ -576,7 +576,7 @@ export const ChatWidget = () => {
             </div> : <>
               {/* Messages */}
               {/* Chat Messages - hidden when calendar or callback form is shown */}
-              {!showCalendar && !showCallbackForm && <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? "p-4 pr-6" : "pl-2 pr-2 py-3 md:p-3 md:pr-5"}`} ref={scrollRef}>
+              {!showCalendar && !showCallbackForm && <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? "p-4 pr-6" : "pl-2 pr-2 pb-3 md:pl-3 md:pr-5 md:pb-3"}`} ref={scrollRef}>
                   <div className={`max-w-full ${showCalendar ? "space-y-4" : "space-y-3"}`}>
                     {messages.map(message => <div key={message.id} className={`flex w-full max-w-full min-w-0 overflow-hidden ${message.role === "user" ? "justify-end" : "justify-start gap-2"} group`}>
                         {message.role === "assistant" && <img src={logo} alt="Sam" className={`h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1 transition-opacity ${isLoading ? "animate-pulse" : ""}`} />}
