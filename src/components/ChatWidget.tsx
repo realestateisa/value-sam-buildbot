@@ -704,7 +704,7 @@ export const ChatWidget = () => {
                   onClick={handleSendMessage} 
                   disabled={isLoading || !inputValue.trim()} 
                   size="icon" 
-                  className="h-[48px] w-[48px] rounded-xl bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-40 disabled:hover:scale-100 transition-all duration-200 flex-shrink-0 mb-0.5 mr-0.5" 
+                  className="h-[43px] w-[43px] rounded-xl bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-40 disabled:hover:scale-100 transition-all duration-200 flex-shrink-0 mb-0.5 mr-0.5"
                   aria-label="Send message"
                 >
                   {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
