@@ -121,6 +121,14 @@ export default {
             backgroundPosition: "-200% 0"
           }
         },
+        "shadow-pulse": {
+          "0%, 100%": {
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)"
+          },
+          "50%": {
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.25)"
+          }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -129,6 +137,7 @@ export default {
         "scale-in": "scale-in 0.3s ease-out",
         "slide-up": "slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
         "shimmer": "shimmer 7s linear infinite",
+        "shadow-pulse": "shadow-pulse 8s ease-in-out infinite",
       },
       scale: {
         '103': '1.03',
