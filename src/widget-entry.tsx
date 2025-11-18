@@ -59,13 +59,45 @@ class ValueBuildChatbot extends HTMLElement {
   private injectStyles() {
     if (!this.shadow) return;
 
-    // Create style element
-    this.styleElement = document.createElement("style");
-    
-    // Use the CSS that was inlined during build
-    // The build process replaces INJECTED_CSS with actual compiled CSS
-    this.styleElement.textContent = INJECTED_CSS;
-    this.shadow.appendChild(this.styleElement);
+    // If CSS was inlined during build, use it. Otherwise, load styles.css next to the script.
+    const injectedCss = String((INJECTED_CSS as unknown as string) || "");
+    const hasInlined = injectedCss !== "__INJECT_CSS_HERE__" && injectedCss.trim().length > 100;
+
+    if (hasInlined) {
+      this.styleElement = document.createElement("style");
+      this.styleElement.textContent = injectedCss;
+      this.shadow.appendChild(this.styleElement);
+      return;
+    }
+
+    // Fallback: attach external stylesheet inside Shadow DOM
+    const linkEl = document.createElement("link");
+    linkEl.rel = "stylesheet";
+
+    // Derive the URL of styles.css relative to the widget script
+    let scriptSrc = (document.currentScript as HTMLScriptElement | null)?.src || "";
+    if (!scriptSrc) {
+      const scripts = Array.from(document.getElementsByTagName("script")) as HTMLScriptElement[];
+      const found = scripts.find((s) => s.src.includes("chatbot-widget-v2.js"));
+      if (found) scriptSrc = found.src;
+    }
+    const cssUrl = scriptSrc ? new URL("styles.css", scriptSrc).toString() : "/widget-dist/styles.css";
+    linkEl.href = cssUrl;
+    this.shadow.appendChild(linkEl);
+
+    // Final fallback: fetch and inline if link fails
+    linkEl.onerror = async () => {
+      try {
+        const res = await fetch(cssUrl);
+        if (!res.ok) return;
+        const css = await res.text();
+        const style = document.createElement("style");
+        style.textContent = css;
+        this.shadow?.appendChild(style);
+      } catch {
+        // no-op
+      }
+    };
   }
 
   private mountReactApp() {
