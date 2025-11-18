@@ -478,7 +478,7 @@ export const ChatWidget = () => {
           ref={chatRef} 
           className="fixed bottom-[112px] right-6 flex flex-col glass-morphism z-50 overflow-visible w-[400px] h-[690px] rounded-2xl" 
           style={{
-            boxShadow: 'var(--chat-shadow-lg)',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)',
             transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
             ...(showCalendar ? { width: '500px', height: '828px' } : {})
           }}
