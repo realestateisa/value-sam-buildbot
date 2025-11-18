@@ -31,7 +31,7 @@ class ValueBuildChatbot extends HTMLElement {
     super();
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     // Attach Shadow DOM with open mode
     this.shadow = this.attachShadow({ mode: "open" });
 
@@ -41,8 +41,8 @@ class ValueBuildChatbot extends HTMLElement {
     this.container.style.cssText = "all: initial; display: contents;"; // Reset all styles
     this.shadow.appendChild(this.container);
 
-    // Inject styles into Shadow DOM
-    this.injectStyles();
+    // Inject styles into Shadow DOM (await to ensure styles load first)
+    await this.injectStyles();
 
     // Mount React app inside Shadow DOM
     this.mountReactApp();
@@ -56,21 +56,11 @@ class ValueBuildChatbot extends HTMLElement {
     }
   }
 
-  private injectStyles() {
+  private async injectStyles() {
     if (!this.shadow) return;
 
-    // If CSS was inlined during build, use it. Otherwise, load styles.css next to the script.
-    const injectedCss = String((INJECTED_CSS as unknown as string) || "");
-    const hasInlined = injectedCss !== "__INJECT_CSS_HERE__" && injectedCss.trim().length > 100;
-
-    if (hasInlined) {
-      this.styleElement = document.createElement("style");
-      this.styleElement.textContent = injectedCss;
-      this.shadow.appendChild(this.styleElement);
-      return;
-    }
-
-    // Fallback: attach external stylesheet inside Shadow DOM
+    // Always try to fetch and inline the stylesheet for Shadow DOM
+    // This ensures all Tailwind utilities and component styles load correctly
     const linkEl = document.createElement("link");
     linkEl.rel = "stylesheet";
 
@@ -81,23 +71,32 @@ class ValueBuildChatbot extends HTMLElement {
       const found = scripts.find((s) => s.src.includes("chatbot-widget-v2.js"));
       if (found) scriptSrc = found.src;
     }
-    const cssUrl = scriptSrc ? new URL("styles.css", scriptSrc).toString() : "/widget-dist/styles.css";
-    linkEl.href = cssUrl;
-    this.shadow.appendChild(linkEl);
-
-    // Final fallback: fetch and inline if link fails
-    linkEl.onerror = async () => {
-      try {
-        const res = await fetch(cssUrl);
-        if (!res.ok) return;
+    
+    // Construct CSS URL from script location
+    const cssUrl = scriptSrc 
+      ? new URL("styles.css", scriptSrc).toString() 
+      : `${window.location.origin}/widget-dist/styles.css`;
+    
+    console.log('[VBH Widget] Loading styles from:', cssUrl);
+    
+    // Fetch and inline CSS to ensure it loads in Shadow DOM
+    try {
+      const res = await fetch(cssUrl);
+      if (res.ok) {
         const css = await res.text();
         const style = document.createElement("style");
         style.textContent = css;
-        this.shadow?.appendChild(style);
-      } catch {
-        // no-op
+        this.shadow.appendChild(style);
+        console.log('[VBH Widget] ✅ Styles loaded successfully');
+        return;
       }
-    };
+    } catch (error) {
+      console.error('[VBH Widget] ❌ Failed to load styles:', error);
+    }
+
+    // Fallback: try link element
+    linkEl.href = cssUrl;
+    this.shadow.appendChild(linkEl);
   }
 
   private mountReactApp() {
