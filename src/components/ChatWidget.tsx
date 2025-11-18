@@ -220,36 +220,20 @@ export const ChatWidget = () => {
     return () => ro.disconnect();
   }, [isOpen, showCalendar]);
   const handleSendMessage = async () => {
-    console.log('[FOCUS-DEBUG] handleSendMessage - ENTRY', {
-      inputValue: inputValue.substring(0, 50) + '...',
-      inputLength: inputValue.length,
-      isLoading,
-      activeElement: document.activeElement?.tagName
-    });
-    
-    if (!inputValue.trim() || isLoading) {
-      console.log('[FOCUS-DEBUG] handleSendMessage - EARLY RETURN', {
-        reason: !inputValue.trim() ? 'empty input' : 'already loading'
-      });
-      return;
-    }
+    if (!inputValue.trim() || isLoading) return;
     
     const userMessage: Message = {
       id: Date.now().toString(),
       role: "user",
-      content: inputValue,
+      content: inputValue.trim(),
       timestamp: new Date()
     };
     
-    console.log('[FOCUS-DEBUG] Before flushSync - bundling all state updates', {
-      activeElement: document.activeElement?.tagName,
-      textareaHasFocus: document.activeElement === textareaRef.current
-    });
-    
-    // Bundle ALL state updates in single flushSync to prevent any focus loss
+    // Bundle ALL state updates (including isLoading) in a single flushSync
     flushSync(() => {
       setMessages(prev => [...prev, userMessage]);
       setInputValue("");
+      setIsLoading(true);
     });
     
     // Reset textarea height
@@ -257,52 +241,10 @@ export const ChatWidget = () => {
       textareaRef.current.style.height = "auto";
     }
     
-    console.log('[FOCUS-DEBUG] After flushSync - immediately forcing focus', {
-      activeElement: document.activeElement?.tagName,
-      textareaHasFocus: document.activeElement === textareaRef.current
-    });
-    
-    // Immediately force focus after synchronous state updates
+    // Immediately restore focus after synchronous state updates
     if (textareaRef.current) {
       textareaRef.current.focus();
-      console.log('[FOCUS-DEBUG] After immediate focus() call', {
-        activeElement: document.activeElement?.tagName,
-        textareaHasFocus: document.activeElement === textareaRef.current
-      });
     }
-    
-    console.log('[FOCUS-DEBUG] Before setIsLoading(true)', {
-      activeElement: document.activeElement?.tagName
-    });
-    
-    setIsLoading(true);
-    
-    console.log('[FOCUS-DEBUG] After setIsLoading(true), scheduling 50ms focus guard');
-
-    // Guard focus: ensure it's set after all state updates and effects
-    setTimeout(() => {
-      console.log('[FOCUS-DEBUG] 50ms setTimeout - INSIDE', {
-        activeElement: document.activeElement?.tagName,
-        textareaExists: !!textareaRef.current,
-        showCalendar,
-        showLocationInput,
-        showCallbackForm,
-        conditionsMet: textareaRef.current && !showCalendar && !showLocationInput && !showCallbackForm
-      });
-      
-      if (textareaRef.current && !showCalendar && !showLocationInput && !showCallbackForm) {
-        console.log('[FOCUS-DEBUG] Conditions met, attempting focus in setTimeout');
-        textareaRef.current.focus({ preventScroll: true });
-        
-        console.log('[FOCUS-DEBUG] After setTimeout focus', {
-          activeElement: document.activeElement?.tagName,
-          textareaHasFocus: document.activeElement === textareaRef.current,
-          success: document.activeElement === textareaRef.current ? 'YES' : 'NO'
-        });
-      } else {
-        console.log('[FOCUS-DEBUG] Conditions NOT met, skipping focus in setTimeout');
-      }
-    }, 50); // 50ms delay ensures all effects have run
 
     // Check if message contains location information
     const territory = detectTerritory(inputValue);
@@ -373,6 +315,10 @@ export const ChatWidget = () => {
       });
     } finally {
       setIsLoading(false);
+      // Restore focus after response is complete
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
     }
   };
   const handleBookAppointment = () => {
@@ -818,40 +764,11 @@ export const ChatWidget = () => {
                     onChange={e => setInputValue(e.target.value)} 
                     onKeyDown={e => {
                       if (e.key === "Enter" && !e.shiftKey) {
-                        console.log('[FOCUS-DEBUG] Enter key pressed', {
-                          activeElement: document.activeElement?.tagName,
-                          textareaHasFocus: document.activeElement === textareaRef.current
-                        });
-                        
                         e.preventDefault();
-                        
-                        console.log('[FOCUS-DEBUG] Before handleSendMessage in Enter handler');
                         handleSendMessage();
-                        console.log('[FOCUS-DEBUG] After handleSendMessage in Enter handler', {
-                          activeElement: document.activeElement?.tagName
-                        });
-                        
-                        // Maintain focus after message send (belt and suspenders approach)
-                        console.log('[FOCUS-DEBUG] Scheduling requestAnimationFrame in Enter handler');
-                        requestAnimationFrame(() => {
-                          console.log('[FOCUS-DEBUG] Enter handler requestAnimationFrame - INSIDE', {
-                            activeElement: document.activeElement?.tagName,
-                            textareaExists: !!textareaRef.current
-                          });
-                          
-                          if (textareaRef.current) {
-                            textareaRef.current.focus({ preventScroll: true });
-                            console.log('[FOCUS-DEBUG] After Enter handler focus', {
-                              activeElement: document.activeElement?.tagName,
-                              textareaHasFocus: document.activeElement === textareaRef.current,
-                              success: document.activeElement === textareaRef.current ? 'YES' : 'NO'
-                            });
-                          }
-                        });
                       }
                     }}
                     placeholder="" 
-                    disabled={isLoading} 
                     className="min-h-[48px] max-h-[120px] resize-none py-3.5 px-4 text-base bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all" 
                     rows={1}
                     aria-label="Type your message" 
