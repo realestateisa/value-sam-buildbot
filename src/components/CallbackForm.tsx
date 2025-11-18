@@ -107,7 +107,7 @@ export const CallbackForm = ({
         <div className="max-w-md mx-auto space-y-6 mt-8">
           <p className="text-muted-foreground text-sm text-center font-bold">
             Have a specific question?
-Request a call back from our team!                  
+Request a call back from our team!                                              
 
 
 
