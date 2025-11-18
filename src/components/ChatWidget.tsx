@@ -665,22 +665,22 @@ export const ChatWidget = () => {
           {showCallbackForm && <CallbackForm onClose={() => setShowCallbackForm(false)} />}
 
           {/* Action Buttons */}
-          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="p-4 border-t border-border/30 flex gap-3 stagger-animation bg-gradient-to-b from-background to-muted/20">
+          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="p-5 border-t border-border/20 flex gap-2.5 bg-background/50 backdrop-blur-sm">
               <Button 
                 onClick={() => setShowCallbackForm(true)} 
-                className="group flex-1 font-medium button-lift bg-background text-primary hover:text-primary border-primary border-2 hover:bg-primary/5 rounded-xl" 
+                className="group flex-1 h-11 font-semibold button-lift bg-background text-foreground hover:bg-muted border border-border/40 hover:border-border/60 rounded-xl shadow-sm hover:shadow-md transition-all duration-200" 
                 aria-label="Request callback"
               >
-                <Phone className="h-4.5 w-4.5 mr-1.5 fill-[#E2362B] transition-transform group-hover:-translate-y-[2px]" strokeWidth={2} />
-                Request Callback
+                <Phone className="h-4 w-4 mr-2 text-primary transition-transform group-hover:scale-110" strokeWidth={2.5} />
+                <span className="text-[13px]">Request Callback</span>
               </Button>
               <Button 
                 onClick={handleBookAppointment} 
-                className="group flex-1 font-medium button-lift bg-gradient-to-r from-primary to-primary/90 text-primary-foreground hover:opacity-95 rounded-xl border-0" 
+                className="group flex-1 h-11 font-semibold button-lift bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl border-0 shadow-sm hover:shadow-md transition-all duration-200" 
                 aria-label="Book an appointment"
               >
-                <Calendar className="h-4.5 w-4.5 mr-1.5 text-white transition-transform group-hover:-translate-y-[2px]" strokeWidth={2} />
-                Book Appointment
+                <Calendar className="h-4 w-4 mr-2 transition-transform group-hover:scale-110" strokeWidth={2.5} />
+                <span className="text-[13px]">Book Appointment</span>
               </Button>
             </div>}
 
