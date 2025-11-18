@@ -112,3 +112,18 @@ All colors MUST be HSL.
     overflow-wrap: break-word;
   }
 }
+
+/* Custom keyframes for animations */
+@keyframes shadow-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  }
+}
+
+/* Apply ultra-slow animation - 60s for clearly visible slowdown */
+.animate-shadow-pulse {
+  animation: shadow-pulse 60s ease-in-out infinite;
+}
