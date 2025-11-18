@@ -59,11 +59,44 @@ class ValueBuildChatbot extends HTMLElement {
   private injectStyles() {
     if (!this.shadow) return;
 
-    // Always set the style content; build step replaces the placeholder
     const style = document.createElement("style");
-    style.textContent = INJECTED_CSS;
-    this.shadow.appendChild(style);
-    console.log('[VBH Widget] ✅ Styles injected into Shadow DOM');
+
+    const inlineCss = (typeof INJECTED_CSS === "string" ? INJECTED_CSS : "") || "";
+    const hasRealCss = inlineCss.trim().length > 0 && !inlineCss.includes("__INJECT_CSS_HERE__");
+
+    if (hasRealCss) {
+      style.textContent = inlineCss;
+      this.shadow.appendChild(style);
+      console.log('[VBH Widget] ✅ Styles injected (inlined) into Shadow DOM');
+      return;
+    }
+
+    // Fallback: fetch external styles.css next to the script
+    const findScriptSrc = () => {
+      const scripts = Array.from(document.querySelectorAll('script[src]')) as HTMLScriptElement[];
+      for (const s of scripts) {
+        if (s.src.includes('chatbot-widget-v2.js')) return s.src;
+      }
+      if ((document.currentScript as HTMLScriptElement)?.src) {
+        return (document.currentScript as HTMLScriptElement).src;
+      }
+      return '';
+    };
+
+    const scriptSrc = findScriptSrc();
+    const baseUrl = scriptSrc ? scriptSrc.slice(0, scriptSrc.lastIndexOf('/')) : `${location.origin}/widget-dist`;
+    const cssUrl = `${baseUrl}/styles.css`;
+
+    fetch(cssUrl)
+      .then(r => r.ok ? r.text() : Promise.reject(new Error(`HTTP ${r.status}`)))
+      .then(cssText => {
+        style.textContent = cssText;
+        this.shadow!.appendChild(style);
+        console.log('[VBH Widget] ✅ Styles injected (fetched) into Shadow DOM');
+      })
+      .catch(err => {
+        console.error('[VBH Widget] ❌ Failed to load widget CSS fallback', err);
+      });
   }
 
   private mountReactApp() {

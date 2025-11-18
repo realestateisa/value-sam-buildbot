@@ -54,8 +54,13 @@ function inlineCssPlugin() {
             }
           }
           
-            // Remove the separate CSS file since it's now inlined (or at least attempted)
+          // Only remove CSS if it was actually inlined
+          if (replacedCount > 0) {
             delete bundle[cssFileName];
+            console.log(`✅ Inlined CSS into ${replacedCount} JS chunk(s); removed styles.css`);
+          } else {
+            console.warn('⚠️ CSS was not inlined; keeping styles.css for runtime fallback');
+          }
         }
       } else {
         console.warn('⚠️ No CSS file found in bundle');
