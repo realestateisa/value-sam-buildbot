@@ -58,7 +58,6 @@ export const CallbackForm = ({
 
       // Here you would typically send the data to your backend
       // For now, we'll just show a success message
-      console.log('Callback request submitted:', validatedData);
       toast({
         title: "Request Submitted",
         description: "We'll call you back soon!"
