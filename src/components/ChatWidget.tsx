@@ -669,7 +669,7 @@ export const ChatWidget = () => {
               <Button 
                 onClick={() => setShowCallbackForm(true)} 
                 variant="outline"
-                className="group flex-1 h-12 font-medium bg-card hover:bg-accent border-2 border-border hover:border-accent rounded-xl transition-all duration-300 shadow-sm hover:shadow min-w-0" 
+                className="group flex-1 h-12 font-medium bg-card hover:bg-card/80 border-2 border-border hover:border-border/50 rounded-xl transition-all duration-300 shadow-sm hover:shadow min-w-0" 
                 aria-label="Request callback"
               >
                 <Phone className="h-4 w-4 mr-2 text-primary transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
