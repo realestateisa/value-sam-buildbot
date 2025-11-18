@@ -665,7 +665,7 @@ export const ChatWidget = () => {
           {showCallbackForm && <CallbackForm onClose={() => setShowCallbackForm(false)} />}
 
           {/* Action Buttons */}
-          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="p-4 border-t border-border/10 bg-gradient-to-b from-background to-muted/20 w-full">
+          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="p-2 border-t border-border/10 bg-gradient-to-b from-background to-muted/20 w-full">
               <Button 
                 onClick={handleBookAppointment} 
                 className="group w-full h-12 font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border-0" 
