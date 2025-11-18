@@ -6,16 +6,11 @@ import { useState } from 'react';
 const EmbedDemo = () => {
   const [copied, setCopied] = useState(false);
 
-  const embedCode = `<!-- Value Build Homes Chatbot Widget -->
-<div id="vbh-chatbot-root"></div>
-<script>
-  (function() {
-    var script = document.createElement('script');
-    script.src = '${window.location.origin}/chatbot-widget.js';
-    script.async = true;
-    document.body.appendChild(script);
-  })();
-</script>`;
+  const embedCode = `<!-- Value Build Homes Chatbot Widget (Shadow DOM) -->
+<script src="${window.location.origin}/widget-dist/chatbot-widget-v2.js" async></script>
+
+<!-- Optional: Manual placement (if data-auto-inject="false") -->
+<!-- <vbh-chatbot></vbh-chatbot> -->`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(embedCode);
