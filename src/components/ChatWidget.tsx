@@ -52,6 +52,7 @@ export const ChatWidget = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   // Load saved chat session on mount
@@ -369,20 +370,18 @@ export const ChatWidget = () => {
       }
     }
 
-    // Clear any previous inline render
-    const containerId = `cal-inline-${selectedTerritory}`;
-    const container = queryRoot.querySelector(`#${containerId}`) as HTMLElement;
-    if (container) container.innerHTML = "";
-    
-    if (!container) {
-      console.error("Calendar container not found:", containerId);
-      setCalendarError("Calendar container not found");
-      setCalendarLoading(false);
-      return;
-    }
-
-    // Function to initialize Cal.com after script loads
+    // Function to initialize Cal.com after both script and container are ready
     const initCal = () => {
+      const container = calendarRef.current;
+      
+      if (!container) {
+        console.error("Calendar container ref not found");
+        return;
+      }
+
+      // Clear any previous inline render
+      container.innerHTML = "";
+
       // Queue init with namespace
       w.Cal("init", territory.calNamespace, { origin: "https://app.cal.com" });
 
@@ -410,7 +409,12 @@ export const ChatWidget = () => {
       const script = document.createElement("script");
       script.src = "https://app.cal.com/embed/embed.js";
       script.async = true;
-      script.onload = initCal;
+      script.onload = () => {
+        // Wait for container to be rendered before initializing
+        if (calendarRef.current) {
+          initCal();
+        }
+      };
       script.onerror = () => {
         console.error("Failed to load Cal.com script");
         setCalendarError("Failed to load calendar");
@@ -420,13 +424,47 @@ export const ChatWidget = () => {
     } else {
       // Script already exists, check if it's loaded
       if (w.Cal && typeof w.Cal === 'function' && w.Cal.ns) {
-        initCal();
+        // Wait for container to be rendered before initializing
+        if (calendarRef.current) {
+          initCal();
+        }
       } else {
         // Script exists but not loaded yet, wait for it
-        existingScript.addEventListener('load', initCal);
+        existingScript.addEventListener('load', () => {
+          if (calendarRef.current) {
+            initCal();
+          }
+        });
       }
     }
   }, [showCalendar, selectedTerritory]);
+
+  // Initialize calendar when container ref becomes available
+  useEffect(() => {
+    if (showCalendar && selectedTerritory && calendarRef.current) {
+      const w = window as any;
+      if (w.Cal && typeof w.Cal === 'function' && w.Cal.ns) {
+        const territory = TERRITORIES[selectedTerritory];
+        if (!territory) return;
+
+        // Clear and initialize
+        calendarRef.current.innerHTML = "";
+        w.Cal("init", territory.calNamespace, { origin: "https://app.cal.com" });
+        w.Cal("ui", {
+          hideEventTypeDetails: true,
+          layout: "month_view",
+          styles: { branding: { brandColor: "#000000" } },
+        });
+        w.Cal("inline", {
+          namespace: territory.calNamespace,
+          elementOrSelector: calendarRef.current,
+          calLink: territory.calLink,
+          config: { theme: "light" },
+        });
+        setCalendarLoading(false);
+      }
+    }
+  }, [calendarRef.current, showCalendar, selectedTerritory]);
 
   const content = (
     <>
@@ -772,7 +810,7 @@ export const ChatWidget = () => {
           {/* Calendar View - standalone when active */}
           {showCalendar && selectedTerritory && (
             <div className="flex-1 flex flex-col overflow-hidden">
-              <div id={`cal-inline-${selectedTerritory}`} className="flex-1 w-full overflow-auto"></div>
+              <div ref={calendarRef} id={`cal-inline-${selectedTerritory}`} className="flex-1 w-full overflow-auto"></div>
             </div>
           )}
 
