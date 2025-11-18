@@ -11,19 +11,18 @@ function inlineCssPlugin() {
       const cssFileName = Object.keys(bundle).find(name => name.endsWith('.css'));
       if (cssFileName) {
         const cssContent = bundle[cssFileName].source;
-        const jsFileName = Object.keys(bundle).find(name => name.endsWith('.js'));
-        
-        if (jsFileName) {
-          let jsContent = bundle[jsFileName].code;
-          
-          // Replace the CSS_STYLES_PLACEHOLDER with actual CSS
-          jsContent = jsContent.replace(
-            '"__INJECT_CSS_HERE__"',
-            '`' + cssContent.replace(/`/g, '\\`').replace(/\$/g, '\\$') + '`'
-          );
-          
-          bundle[jsFileName].code = jsContent;
-          
+        const jsFiles = Object.keys(bundle).filter(name => name.endsWith('.js'));
+        if (jsFiles.length) {
+          const escapedCss = cssContent.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+          const placeholderRegex = /(['"])__INJECT_CSS_HERE__\1/g;
+
+          for (const jsFileName of jsFiles) {
+            const chunk: any = bundle[jsFileName];
+            if (chunk && typeof chunk.code === 'string' && chunk.code.includes('__INJECT_CSS_HERE__')) {
+              chunk.code = chunk.code.replace(placeholderRegex, '`' + escapedCss + '`');
+            }
+          }
+
           // Remove the separate CSS file since it's now inlined
           delete bundle[cssFileName];
         }
