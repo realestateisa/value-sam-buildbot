@@ -679,7 +679,14 @@ export const ChatWidget = () => {
           {/* Message Input - hidden when calendar, location input, or callback form is shown */}
           {!showCalendar && !showLocationInput && !showCallbackForm && <div className="px-5 pt-2 pb-5 border-t border-border/20 bg-gradient-to-b from-background via-muted/5 to-muted/10 rounded-b-2xl">
               <div className="relative flex items-end gap-2 p-1 rounded-2xl bg-gradient-to-br from-background to-muted/30 border border-border/40 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.14)] transition-all duration-300">
-                <div className="flex-1 relative">
+                <div className="flex-1 relative group">
+                  {!inputValue && (
+                    <div className="absolute inset-0 pointer-events-none flex items-center px-4 py-3.5">
+                      <span className="text-base bg-[linear-gradient(90deg,hsl(var(--muted-foreground)/0.6)_0%,hsl(var(--muted-foreground)/0.6)_40%,hsl(var(--foreground)/0.95)_50%,hsl(var(--muted-foreground)/0.6)_60%,hsl(var(--muted-foreground)/0.6)_100%)] bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer">
+                        Ask me anything..
+                      </span>
+                    </div>
+                  )}
                   <Textarea 
                     ref={textareaRef} 
                     value={inputValue} 
@@ -690,9 +697,9 @@ export const ChatWidget = () => {
                         handleSendMessage();
                       }
                     }} 
-                    placeholder="Ask me anything.." 
+                    placeholder="" 
                     disabled={isLoading} 
-                    className="min-h-[48px] max-h-[120px] resize-none py-3.5 px-4 text-base bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all placeholder:bg-[linear-gradient(90deg,hsl(var(--muted-foreground)/0.75)_0%,hsl(var(--muted-foreground)/0.75)_40%,hsl(var(--foreground)/0.9)_50%,hsl(var(--muted-foreground)/0.75)_60%,hsl(var(--muted-foreground)/0.75)_100%)] placeholder:bg-[length:200%_100%] placeholder:bg-clip-text placeholder:text-transparent placeholder:animate-shimmer" 
+                    className="min-h-[48px] max-h-[120px] resize-none py-3.5 px-4 text-base bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all" 
                     rows={1}
                     aria-label="Type your message" 
                   />
