@@ -3,6 +3,9 @@
  * Uses :host instead of :root for proper Shadow DOM scoping
  */
 
+/* Import Google Fonts FIRST for Shadow DOM */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -114,6 +117,14 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
   
+  /* Ensure all elements inherit Inter font */
+  :host *,
+  :host button,
+  :host input,
+  :host textarea {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  
   /* Force proper word wrapping for all text */
   :host p,
   :host span,
@@ -143,9 +154,6 @@
     z-index: 9999;
   }
 }
-
-/* Import Google Fonts into Shadow DOM */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* Shadow DOM specific utility classes */
 @layer utilities {
