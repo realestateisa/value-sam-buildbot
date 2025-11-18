@@ -678,7 +678,7 @@ export const ChatWidget = () => {
 
           {/* Message Input - hidden when calendar, location input, or callback form is shown */}
           {!showCalendar && !showLocationInput && !showCallbackForm && <div className="p-4 border-t border-border/30 bg-muted/10 rounded-b-2xl">
-              <div className="relative border border-border/40 rounded-xl bg-background hover:border-border/60 transition-colors">
+              <div className="relative border-2 border-border rounded-xl bg-background hover:border-border/80 transition-colors">
                 <Textarea 
                   ref={textareaRef} 
                   value={inputValue} 
