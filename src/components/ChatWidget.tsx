@@ -327,40 +327,6 @@ export const ChatWidget = () => {
     }
   }, [showCalendar, selectedTerritory]);
 
-  // Initialize calendar when container ref becomes available
-  useEffect(() => {
-    if (showCalendar && selectedTerritory && calendarRef.current) {
-      const w = window as any;
-      if (w.Cal && typeof w.Cal === 'function' && w.Cal.ns) {
-        const territory = TERRITORIES[selectedTerritory];
-        if (!territory) return;
-
-        // Clear and initialize
-        calendarRef.current.innerHTML = "";
-        w.Cal("init", territory.calNamespace, {
-          origin: "https://app.cal.com"
-        });
-        w.Cal("ui", {
-          hideEventTypeDetails: true,
-          layout: "month_view",
-          styles: {
-            branding: {
-              brandColor: "#000000"
-            }
-          }
-        });
-        w.Cal("inline", {
-          namespace: territory.calNamespace,
-          elementOrSelector: calendarRef.current,
-          calLink: territory.calLink,
-          config: {
-            theme: "light"
-          }
-        });
-        setCalendarLoading(false);
-      }
-    }
-  }, [calendarRef.current, showCalendar, selectedTerritory]);
   const content = <>
       {/* Chat Button */}
       <div className="fixed bottom-6 right-6 z-50">
