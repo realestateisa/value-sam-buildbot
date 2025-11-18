@@ -6,6 +6,7 @@ import "./widget.css"; // Import Shadow DOM specific styles
 
 // Placeholder for CSS injection - will be replaced during build
 const INJECTED_CSS = "__INJECT_CSS_HERE__";
+const HAS_CSS = INJECTED_CSS.length > 50; // Check if CSS was actually injected
 
 // Create QueryClient instance for the widget
 const queryClient = new QueryClient({
@@ -60,7 +61,7 @@ class ValueBuildChatbot extends HTMLElement {
     if (!this.shadow) return;
 
     // Use the inlined CSS that was injected during build
-    if (INJECTED_CSS && INJECTED_CSS !== "__INJECT_CSS_HERE__") {
+    if (HAS_CSS) {
       const style = document.createElement("style");
       style.textContent = INJECTED_CSS;
       this.shadow.appendChild(style);
