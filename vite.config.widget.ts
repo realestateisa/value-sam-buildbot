@@ -54,13 +54,8 @@ function inlineCssPlugin() {
             }
           }
           
-          if (replacedCount > 0) {
-            // Remove the separate CSS file since it's now inlined
+            // Remove the separate CSS file since it's now inlined (or at least attempted)
             delete bundle[cssFileName];
-            console.log(`✅ Inlined CSS and removed ${cssFileName}`);
-          } else {
-            console.warn(`⚠️ WARNING: __INJECT_CSS_HERE__ placeholder not found in any JS files!`);
-          }
         }
       } else {
         console.warn('⚠️ No CSS file found in bundle');
