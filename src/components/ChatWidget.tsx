@@ -665,23 +665,23 @@ export const ChatWidget = () => {
           {showCallbackForm && <CallbackForm onClose={() => setShowCallbackForm(false)} />}
 
           {/* Action Buttons */}
-          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="p-5 border-t border-border/10 bg-gradient-to-b from-background to-muted/20 flex gap-2.5">
+          {!showLocationInput && !showCalendar && !showCallbackForm && <div className="p-4 border-t border-border/10 bg-gradient-to-b from-background to-muted/20 flex gap-2 w-full">
               <Button 
                 onClick={() => setShowCallbackForm(true)} 
                 variant="outline"
-                className="group flex-1 h-12 font-medium bg-card hover:bg-accent border-2 border-border hover:border-primary/30 rounded-xl transition-all duration-300 shadow-sm hover:shadow" 
+                className="group flex-1 h-12 font-medium bg-card hover:bg-accent border-2 border-border hover:border-primary/30 rounded-xl transition-all duration-300 shadow-sm hover:shadow min-w-0" 
                 aria-label="Request callback"
               >
-                <Phone className="h-4 w-4 mr-2 text-primary transition-all duration-300 group-hover:scale-110" strokeWidth={2.5} />
-                <span className="text-sm font-semibold text-foreground">Request Callback</span>
+                <Phone className="h-4 w-4 mr-2 text-primary transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
+                <span className="text-sm font-semibold text-foreground truncate">Request Callback</span>
               </Button>
               <Button 
                 onClick={handleBookAppointment} 
-                className="group flex-1 h-12 font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border-0" 
+                className="group flex-1 h-12 font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border-0 min-w-0" 
                 aria-label="Book an appointment"
               >
-                <Calendar className="h-4 w-4 mr-2 transition-all duration-300 group-hover:scale-110" strokeWidth={2.5} />
-                <span className="text-sm font-semibold">Book Appointment</span>
+                <Calendar className="h-4 w-4 mr-2 transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
+                <span className="text-sm font-semibold truncate">Book Appointment</span>
               </Button>
             </div>}
 
