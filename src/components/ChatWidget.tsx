@@ -13,6 +13,7 @@ import logo from "@/assets/logo.png";
 import TypingIndicator from "@/components/TypingIndicator";
 import { saveChatSession, loadChatSession, clearChatSession } from "@/utils/chatStorage";
 import { CallbackForm } from "@/components/CallbackForm";
+import { CalendarEmbed } from "@/components/CalendarEmbed";
 const TERRITORY_ADDRESSES: Record<string, string> = {
   oxford: "3015 S Jefferson Davis Hwy, Sanford, NC 27332",
   greenville: "783 East Butler Rd, Suite D, Mauldin, SC 29662",
@@ -38,7 +39,6 @@ export const ChatWidget = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const calendarRef = useRef<HTMLDivElement>(null);
   const {
     toast
   } = useToast();
@@ -309,116 +309,21 @@ export const ChatWidget = () => {
       setIsLoading(false);
     }
   };
-  useEffect(() => {
-    if (!showCalendar || !selectedTerritory) return;
-    setCalendarLoading(true);
-    const territory = Object.values(TERRITORIES).find(t => t.calNamespace === selectedTerritory);
-    if (!territory) return;
-    const w = window as any;
+  // Calendar loading handlers
+  const handleCalendarLoaded = () => {
+    setCalendarLoading(false);
+  };
 
-    // Detect if we're in Shadow DOM or regular DOM
-    const rootElement = document.querySelector('#cal-inline-' + selectedTerritory);
-    const rootNode = rootElement?.getRootNode() as ShadowRoot | Document;
-    const isShadowDOM = rootNode && 'host' in rootNode;
+  const handleCalendarError = (error: string) => {
+    setCalendarError(error);
+    setCalendarLoading(false);
+  };
 
-    // Get the appropriate document head (Shadow DOM or regular document)
-    const targetHead = isShadowDOM ? rootNode as ShadowRoot : document.head;
-    const queryRoot = isShadowDOM ? rootNode as ShadowRoot : document;
-
-    // Ensure Cal stub exists BEFORE loading script (prevents 'Cal is not defined')
-    if (!w.Cal) {
-      const Cal = function (...args: any[]) {
-        (Cal as any).q = (Cal as any).q || [];
-        (Cal as any).q.push(args);
-      } as any;
-      Cal.ns = {}; // Add namespace support
-      w.Cal = Cal;
-    }
-
-    // Ensure Cal embed CSS
-    if (!queryRoot.querySelector('link[href="https://app.cal.com/embed/embed.css"]')) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "https://app.cal.com/embed/embed.css";
-      if (isShadowDOM) {
-        (targetHead as ShadowRoot).appendChild(link);
-      } else {
-        document.head.appendChild(link);
-      }
-    }
-
-    // Function to initialize Cal.com after both script and container are ready
-    const initCal = () => {
-      const container = calendarRef.current;
-      if (!container) {
-        console.error("Calendar container ref not found");
-        return;
-      }
-
-      // Clear any previous inline render
-      container.innerHTML = "";
-
-      // Queue init with namespace
-      w.Cal("init", territory.calNamespace, {
-        origin: "https://app.cal.com"
-      });
-
-      // Configure UI settings
-      w.Cal("ui", {
-        hideEventTypeDetails: true,
-        layout: "month_view",
-        styles: {
-          branding: {
-            brandColor: "#000000"
-          }
-        }
-      });
-
-      // Pass the actual DOM element instead of selector
-      w.Cal("inline", {
-        namespace: territory.calNamespace,
-        elementOrSelector: container,
-        calLink: territory.calLink,
-        config: {
-          theme: "light"
-        }
-      });
-      setCalendarLoading(false);
-    };
-
-    // Ensure Cal embed JS - always in main document head as it needs window access
-    const existingScript = document.querySelector('script[src="https://app.cal.com/embed/embed.js"]');
-    if (!existingScript) {
-      const script = document.createElement("script");
-      script.src = "https://app.cal.com/embed/embed.js";
-      script.async = true;
-      script.onload = () => {
-        // Wait for container to be rendered before initializing
-        if (calendarRef.current) {
-          initCal();
-        }
-      };
-      script.onerror = () => {
-        console.error("Failed to load Cal.com script");
-        setCalendarError("Failed to load calendar");
-        setCalendarLoading(false);
-      };
-      document.head.appendChild(script);
-    } else {
-      // Script already exists, check if it's loaded
-      if (w.Cal && typeof w.Cal === 'function' && w.Cal.ns) {
-        // Wait for container to be rendered before initializing
-        if (calendarRef.current) {
-          initCal();
-        }
-      } else {
-        // Script exists but not loaded yet, wait for it
-        existingScript.addEventListener('load', () => {
-          if (calendarRef.current) {
-            initCal();
-          }
-        });
-      }
+  // Set loading state when calendar is shown
+  useLayoutEffect(() => {
+    if (showCalendar && selectedTerritory) {
+      setCalendarLoading(true);
+      setCalendarError(null);
     }
   }, [showCalendar, selectedTerritory]);
 
@@ -649,7 +554,11 @@ export const ChatWidget = () => {
 
           {/* Calendar View - standalone when active */}
           {showCalendar && selectedTerritory && <div className="flex-1 flex flex-col overflow-hidden">
-              <div ref={calendarRef} id={`cal-inline-${selectedTerritory}`} className="flex-1 w-full overflow-auto"></div>
+              <CalendarEmbed 
+                territory={selectedTerritory}
+                onError={handleCalendarError}
+                onLoaded={handleCalendarLoaded}
+              />
             </div>}
 
           {/* Callback Form View - standalone when active */}
