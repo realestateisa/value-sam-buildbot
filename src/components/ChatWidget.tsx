@@ -749,7 +749,12 @@ export const ChatWidget = () => {
 
           {/* Message Input - hidden when calendar, location input, or callback form is shown */}
           {!showCalendar && !showLocationInput && !showCallbackForm && <div className="px-5 pt-2 pb-5 border-t border-border/20 bg-gradient-to-b from-background via-muted/5 to-muted/10 rounded-b-2xl">
-              <div className="relative flex items-end gap-2 p-1 rounded-2xl bg-gradient-to-br from-background to-muted/30 border border-border/40 animate-shadow-pulse transition-all duration-300">
+              <div 
+                className="relative flex items-end gap-2 p-1 rounded-2xl bg-gradient-to-br from-background to-muted/30 border border-border/40 transition-all duration-300"
+                style={{
+                  animation: 'shadowPulseCustom 60s ease-in-out infinite',
+                }}
+              >
                 <div className="flex-1 relative group">
                   {!inputValue && (
                     <div className="absolute inset-0 pointer-events-none flex items-center px-4 py-3.5">
