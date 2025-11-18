@@ -58,7 +58,7 @@
     
     /* Shadow DOM specific */
     all: initial;
-    display: contents;
+    display: block;
   }
 
   /* Dark mode support - scoped to Shadow DOM */

@@ -35,7 +35,8 @@ class ValueBuildChatbot extends HTMLElement {
     // Create container for React app
     this.container = document.createElement("div");
     this.container.id = "chatbot-root";
-    this.container.style.cssText = "all: initial; display: contents;"; // Reset all styles
+    // Avoid resetting or using display: contents here so fonts inherit correctly; CSS handles scoping
+    this.container.style.cssText = "";
     this.shadow.appendChild(this.container);
 
     // Inject styles into Shadow DOM (synchronous, from inlined bundle)
