@@ -75,12 +75,23 @@ export const ChatWidget = () => {
   // Smooth scroll to bottom when messages change
   useEffect(() => {
     if (scrollRef.current) {
+      // Check if textarea currently has focus BEFORE scrolling
+      const textareaHadFocus = document.activeElement === textareaRef.current;
+      
       const scrollElement = scrollRef.current.querySelector("[data-radix-scroll-area-viewport]") as HTMLElement;
       if (scrollElement) {
         scrollElement.scrollTo({
           top: scrollElement.scrollHeight,
           behavior: "smooth"
         });
+        
+        // If textarea had focus before scroll, restore it after scroll animation
+        if (textareaHadFocus && textareaRef.current) {
+          // Use requestAnimationFrame to wait for scroll animation to start
+          requestAnimationFrame(() => {
+            textareaRef.current?.focus();
+          });
+        }
       }
     }
   }, [messages, isLoading, showTypingIndicator]);
@@ -179,13 +190,22 @@ export const ChatWidget = () => {
     setInputValue("");
     
     // Refocus the textarea after clearing input
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       if (textareaRef.current) {
         textareaRef.current.focus();
+        // Ensure focus is really set by also using preventScroll
+        textareaRef.current.focus({ preventScroll: true });
       }
-    }, 0);
+    });
     
     setIsLoading(true);
+
+    // Guard focus: ensure it's set after all state updates and effects
+    setTimeout(() => {
+      if (textareaRef.current && !showCalendar && !showLocationInput && !showCallbackForm) {
+        textareaRef.current.focus({ preventScroll: true });
+      }
+    }, 50); // 50ms delay ensures all effects have run
 
     // Check if message contains location information
     const territory = detectTerritory(inputValue);
@@ -703,8 +723,14 @@ export const ChatWidget = () => {
                       if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault();
                         handleSendMessage();
+                        // Maintain focus after message send (belt and suspenders approach)
+                        requestAnimationFrame(() => {
+                          if (textareaRef.current) {
+                            textareaRef.current.focus({ preventScroll: true });
+                          }
+                        });
                       }
-                    }} 
+                    }}
                     placeholder="" 
                     disabled={isLoading} 
                     className="min-h-[48px] max-h-[120px] resize-none py-3.5 px-4 text-base bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all" 
