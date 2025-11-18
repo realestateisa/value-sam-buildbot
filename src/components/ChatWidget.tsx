@@ -673,7 +673,7 @@ export const ChatWidget = () => {
                 aria-label="Request callback"
               >
                 <Phone className="h-4 w-4 mr-2 text-primary transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
-                <span className="text-sm font-semibold text-foreground truncate">Request Callback</span>
+                <span className="text-xs font-semibold text-foreground truncate">Request Callback</span>
               </Button>
               <Button 
                 onClick={handleBookAppointment} 
@@ -681,7 +681,7 @@ export const ChatWidget = () => {
                 aria-label="Book an appointment"
               >
                 <Calendar className="h-4 w-4 mr-2 transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
-                <span className="text-sm font-semibold truncate">Book Appointment</span>
+                <span className="text-xs font-semibold truncate">Book Appointment</span>
               </Button>
             </div>}
 
