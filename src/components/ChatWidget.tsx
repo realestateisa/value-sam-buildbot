@@ -671,9 +671,7 @@ export const ChatWidget = () => {
                 className="group flex-1 h-11 font-semibold button-lift bg-background text-foreground hover:bg-muted border border-border/40 hover:border-border/60 rounded-xl shadow-sm hover:shadow-md transition-all duration-200" 
                 aria-label="Request callback"
               >
-                <div className="p-1 rounded-full border-2 border-red-500 mr-2 transition-transform group-hover:scale-110">
-                  <Phone className="h-3 w-3 text-primary" strokeWidth={2.5} />
-                </div>
+                <Phone className="h-4 w-4 mr-2 text-primary transition-transform group-hover:scale-110" strokeWidth={2.5} />
                 <span className="text-[13px]">Request Callback</span>
               </Button>
               <Button 
