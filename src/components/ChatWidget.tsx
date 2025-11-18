@@ -677,35 +677,37 @@ export const ChatWidget = () => {
             </div>}
 
           {/* Message Input - hidden when calendar, location input, or callback form is shown */}
-          {!showCalendar && !showLocationInput && !showCallbackForm && <div className="p-4 border-t border-border/30 bg-muted/10 rounded-b-2xl">
-              <div className="relative border-2 border-border rounded-xl bg-background hover:border-border/80 transition-colors">
-                <Textarea 
-                  ref={textareaRef} 
-                  value={inputValue} 
-                  onChange={e => setInputValue(e.target.value)} 
-                  onKeyDown={e => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }} 
-                  placeholder="Ask me anything.." 
-                  disabled={isLoading} 
-                  className="min-h-[44px] max-h-[120px] resize-none py-3 pl-4 pr-12 text-sm bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all" 
-                  rows={1} 
-                  aria-label="Type your message" 
-                />
-                {inputValue.length > 500 && <span className="absolute bottom-2 right-14 text-[10px] text-muted-foreground">
-                    {inputValue.length}
-                  </span>}
+          {!showCalendar && !showLocationInput && !showCallbackForm && <div className="p-5 border-t border-border/20 bg-gradient-to-b from-background via-muted/5 to-muted/10 rounded-b-2xl">
+              <div className="relative flex items-end gap-2 p-1 rounded-2xl bg-gradient-to-br from-background to-muted/30 border border-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300">
+                <div className="flex-1 relative">
+                  <Textarea 
+                    ref={textareaRef} 
+                    value={inputValue} 
+                    onChange={e => setInputValue(e.target.value)} 
+                    onKeyDown={e => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }} 
+                    placeholder="Ask me anything.." 
+                    disabled={isLoading} 
+                    className="min-h-[48px] max-h-[120px] resize-none py-3.5 px-4 text-sm bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all placeholder:text-muted-foreground/60" 
+                    rows={1} 
+                    aria-label="Type your message" 
+                  />
+                  {inputValue.length > 500 && <span className="absolute bottom-3 right-4 text-[10px] text-muted-foreground font-medium">
+                      {inputValue.length}
+                    </span>}
+                </div>
                 <Button 
                   onClick={handleSendMessage} 
                   disabled={isLoading || !inputValue.trim()} 
                   size="icon" 
-                  className="absolute right-3 bottom-3 h-[36px] w-[36px] rounded-lg disabled:opacity-50" 
+                  className="h-[48px] w-[48px] rounded-xl bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-40 disabled:hover:scale-100 transition-all duration-200 flex-shrink-0 mb-0.5 mr-0.5" 
                   aria-label="Send message"
                 >
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                  {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
                 </Button>
               </div>
             </div>}
