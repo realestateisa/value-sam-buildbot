@@ -177,6 +177,14 @@ export const ChatWidget = () => {
       textareaRef.current.style.height = "auto";
     }
     setInputValue("");
+    
+    // Refocus the textarea after clearing input
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }, 0);
+    
     setIsLoading(true);
 
     // Check if message contains location information
