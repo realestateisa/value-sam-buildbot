@@ -135,8 +135,10 @@ export const ChatWidgetCreekside = () => {
           <img src={creeksideLogo} alt="Creekside Homes" className="w-full h-full object-contain rounded-full" />
         </button>}
 
-      {isOpen && <div className="fixed bottom-6 right-6 w-[400px] h-[690px] glass-morphism rounded-2xl shadow-2xl flex flex-col z-50 md:w-[400px] md:h-[690px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0">
-          <div className="p-4 border-b flex justify-between items-center" style={{
+      {isOpen && <div className="fixed bottom-6 right-6 w-[400px] h-[690px] glass-morphism rounded-2xl shadow-2xl flex flex-col z-50 md:w-[400px] md:h-[690px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0" style={{
+        overflow: 'hidden'
+      }}>
+          <div className="p-4 border-b flex justify-between items-center rounded-t-2xl" style={{
         backgroundColor: '#465E4C'
       }}>
             <div className="flex items-center gap-3">
@@ -188,7 +190,7 @@ export const ChatWidgetCreekside = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-4 border-t space-y-2" style={{
+          <div className="p-4 border-t space-y-2 rounded-b-2xl" style={{
         backgroundColor: '#F9FAFB'
       }}>
             <div className="flex flex-col gap-2">
