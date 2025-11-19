@@ -242,24 +242,22 @@ export const ChatWidgetCreekside = () => {
           </div>
 
           <div className="p-4 border-t space-y-2" style={{ backgroundColor: '#F9FAFB' }}>
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
               <Button
                 onClick={handleScheduleAppointment}
-                className="flex-1 text-white hover:opacity-90"
-                size="sm"
+                className="w-full text-white hover:opacity-90"
                 style={{ backgroundColor: '#465E4C' }}
               >
-                <Calendar className="h-4 w-4 mr-2" />
+                <Calendar className="h-5 w-5 mr-2" />
                 Schedule Appointment
               </Button>
               <Button
                 onClick={handleCallbackRequest}
                 variant="outline"
-                className="flex-1"
-                size="sm"
+                className="w-full"
                 style={{ borderColor: '#465E4C', color: '#465E4C' }}
               >
-                <Phone className="h-4 w-4 mr-2" />
+                <Phone className="h-5 w-5 mr-2" />
                 Request Callback
               </Button>
             </div>
