@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader2, Calendar, Phone, RotateCcw } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Calendar, Phone, RotateCcw, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import TypingIndicator from './TypingIndicator';
 import { CallbackFormCreekside } from './CallbackFormCreekside';
 import { saveChatSession, loadChatSession, clearChatSession } from '@/utils/chatStorageCreekside';
+import creeksideLogo from '@/assets/creekside-logo.png';
 
 export const ChatWidgetCreekside = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -141,21 +142,39 @@ export const ChatWidgetCreekside = () => {
   return (
     <>
       {!isOpen && (
-        <Button
+        <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:scale-110 transition-transform z-50"
-          style={{ backgroundColor: '#465E4C' }}
+          className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 button-lift"
+          style={{ 
+            backgroundColor: '#465E4C',
+            padding: '0.5rem'
+          }}
         >
-          <MessageCircle className="h-6 w-6 text-white" />
-        </Button>
+          <img 
+            src={creeksideLogo} 
+            alt="Creekside Homes" 
+            className="w-full h-full object-contain rounded-full"
+          />
+        </button>
       )}
 
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-[400px] h-[600px] bg-white rounded-lg shadow-2xl flex flex-col z-50 md:w-[400px] md:h-[600px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0">
+        <div className="fixed bottom-6 right-6 w-[400px] h-[690px] glass-morphism rounded-lg shadow-2xl flex flex-col z-50 md:w-[400px] md:h-[690px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0">
           <div className="p-4 border-b flex justify-between items-center" style={{ backgroundColor: '#465E4C' }}>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <h3 className="font-semibold text-white">Chat with SAM</h3>
+            <div className="flex items-center gap-3">
+              <img 
+                src={creeksideLogo} 
+                alt="Creekside Homes" 
+                className="h-10 w-10 rounded-full bg-white p-0.5"
+              />
+              <div className="flex flex-col">
+                <span className="font-semibold text-white">SAM</span>
+                <span className="text-xs text-white/80">Digital Assistant</span>
+              </div>
+              <div className="flex items-center gap-1 ml-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-xs text-white/80">Online</span>
+              </div>
             </div>
             <div className="flex gap-2">
               <Button
@@ -164,7 +183,7 @@ export const ChatWidgetCreekside = () => {
                 onClick={handleResetChat}
                 className="text-white hover:bg-white/20"
               >
-                <RotateCcw className="h-4 w-4" />
+                <RefreshCw className="h-4 w-4" />
               </Button>
               <Button
                 variant="ghost"
