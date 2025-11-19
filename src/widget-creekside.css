@@ -130,6 +130,10 @@ button:disabled {
   border-radius: 0.5rem;
 }
 
+.rounded-2xl {
+  border-radius: 1rem;
+}
+
 .shadow-2xl {
   box-shadow: 0 25px 50px -12px rgba(70, 94, 76, 0.25);
 }
