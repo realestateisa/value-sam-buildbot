@@ -198,13 +198,7 @@ export const ChatWidgetCreekside = () => {
                 <Calendar className="h-5 w-5 mr-2" />
                 Schedule Appointment
               </Button>
-              <Button onClick={handleCallbackRequest} variant="outline" className="w-full" style={{
-            borderColor: '#465E4C',
-            color: '#465E4C'
-          }}>
-                <Phone className="h-5 w-5 mr-2" />
-                Request Callback
-              </Button>
+              
             </div>
             <div className="flex gap-2">
               <Textarea value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={handleKeyPress} placeholder="Type your message..." className="resize-none" rows={2} disabled={isLoading} />
