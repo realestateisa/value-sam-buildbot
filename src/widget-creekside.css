@@ -118,8 +118,8 @@ button:disabled {
   width: 400px;
 }
 
-.h-\[600px\] {
-  height: 600px;
+.h-\[690px\] {
+  height: 690px;
 }
 
 .bg-white {
@@ -132,6 +132,45 @@ button:disabled {
 
 .shadow-2xl {
   box-shadow: 0 25px 50px -12px rgba(70, 94, 76, 0.25);
+}
+
+/* Glass-morphism effect */
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Button lift effect */
+.button-lift {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button-lift::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, 
+    rgba(70, 94, 76, 0.4), 
+    rgba(179, 140, 97, 0.3));
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+  filter: blur(8px);
+}
+
+.button-lift:hover::before {
+  opacity: 1;
+}
+
+.button-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 24px -8px rgba(70, 94, 76, 0.3),
+    0 6px 12px -4px rgba(70, 94, 76, 0.2);
 }
 
 .flex {
@@ -393,4 +432,57 @@ label {
 
 .w-6 {
   width: 1.5rem;
+}
+
+.h-10 {
+  height: 2.5rem;
+}
+
+.w-10 {
+  width: 2.5rem;
+}
+
+.h-16 {
+  height: 4rem;
+}
+
+.w-16 {
+  width: 4rem;
+}
+
+.object-contain {
+  object-fit: contain;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.p-0\.5 {
+  padding: 0.125rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.text-white\/80 {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.text-white\/20 {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.hover\:bg-white\/20:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
