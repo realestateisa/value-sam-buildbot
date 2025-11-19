@@ -135,7 +135,7 @@ export const ChatWidgetCreekside = () => {
           <img src={creeksideLogo} alt="Creekside Homes" className="w-full h-full object-contain rounded-full" />
         </button>}
 
-      {isOpen && <div className="fixed bottom-6 right-6 w-[400px] h-[690px] glass-morphism rounded-lg shadow-2xl flex flex-col z-50 md:w-[400px] md:h-[690px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0">
+      {isOpen && <div className="fixed bottom-6 right-6 w-[400px] h-[690px] glass-morphism rounded-2xl shadow-2xl flex flex-col z-50 md:w-[400px] md:h-[690px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0">
           <div className="p-4 border-b flex justify-between items-center" style={{
         backgroundColor: '#465E4C'
       }}>
