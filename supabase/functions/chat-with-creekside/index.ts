@@ -97,7 +97,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           prompt: userPrompt,
-          response_source: 'all',
+          response_source: 'default',
         }),
       }
     );
