@@ -10,7 +10,7 @@ import { Message, Citation } from '@/types/chat';
 import { supabase } from '@/integrations/supabase/client';
 import { CallbackFormCreekside } from './CallbackFormCreekside';
 import { saveChatSession, loadChatSession, clearChatSession } from '@/utils/chatStorageCreekside';
-import TypingIndicator from '@/components/TypingIndicator';
+import TypingIndicatorCreekside from '@/components/TypingIndicatorCreekside';
 import creeksideLogo from '@/assets/creekside-logo.png';
 export const ChatWidgetCreekside = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -397,7 +397,7 @@ export const ChatWidgetCreekside = () => {
               ))}
 
               {/* Typing Indicator with Creekside branding */}
-              {showTypingIndicator && <TypingIndicator logo={creeksideLogo} altText="Creekside SAM" />}
+              {showTypingIndicator && <TypingIndicatorCreekside />}
             </div>
           </ScrollArea>}
 
