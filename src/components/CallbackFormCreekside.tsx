@@ -68,8 +68,8 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
   };
 
   return (
-    <div className="fixed bottom-6 right-6 w-[400px] bg-white rounded-lg shadow-2xl flex flex-col z-50 md:w-[400px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0">
-      <div className="p-4 border-b flex justify-between items-center" style={{ backgroundColor: '#465E4C' }}>
+    <div className="flex flex-col">
+      <div className="p-4 border-b flex justify-between items-center -mx-6 -mt-6 rounded-t-lg" style={{ backgroundColor: '#465E4C' }}>
         <h3 className="font-semibold text-white">Request a Call Back</h3>
         <Button
           variant="ghost"
@@ -81,7 +81,7 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
         </Button>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-6 space-y-4" style={{ backgroundColor: '#F9FAFB' }}>
+      <form onSubmit={handleSubmit} className="pt-6 space-y-4">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name</Label>
           <Input
@@ -139,7 +139,7 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
           )}
         </div>
 
-        <div className="flex gap-2 pt-4">
+        <div className="flex gap-3 pt-4">
           <Button
             type="button"
             variant="outline"
