@@ -18,7 +18,7 @@ const EmbedDemoCreekside = () => {
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-[hsl(12,78%,58%)]">
+          <h1 className="text-4xl font-bold text-[hsl(130,15%,32%)]">
             Creekside Homes Chatbot
           </h1>
           <p className="text-lg text-muted-foreground">
@@ -40,7 +40,7 @@ const EmbedDemoCreekside = () => {
               </pre>
               <Button
                 onClick={handleCopy}
-                className="absolute top-2 right-2 bg-[hsl(12,78%,58%)] hover:bg-[hsl(12,78%,48%)] text-white"
+                className="absolute top-2 right-2 bg-[hsl(130,15%,32%)] hover:bg-[hsl(130,15%,42%)] text-white"
                 size="sm"
               >
                 {copied ? (
@@ -65,7 +65,7 @@ const EmbedDemoCreekside = () => {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(130,15%,32%)]" />
               <div>
                 <h3 className="font-semibold text-foreground">AI-Powered Conversations</h3>
                 <p className="text-sm text-muted-foreground">
@@ -74,7 +74,7 @@ const EmbedDemoCreekside = () => {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(130,15%,32%)]" />
               <div>
                 <h3 className="font-semibold text-foreground">Direct Appointment Booking</h3>
                 <p className="text-sm text-muted-foreground">
@@ -83,7 +83,7 @@ const EmbedDemoCreekside = () => {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(130,15%,32%)]" />
               <div>
                 <h3 className="font-semibold text-foreground">Callback Request Form</h3>
                 <p className="text-sm text-muted-foreground">
@@ -92,7 +92,7 @@ const EmbedDemoCreekside = () => {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(130,15%,32%)]" />
               <div>
                 <h3 className="font-semibold text-foreground">Persistent Chat Sessions</h3>
                 <p className="text-sm text-muted-foreground">
@@ -101,7 +101,7 @@ const EmbedDemoCreekside = () => {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(130,15%,32%)]" />
               <div>
                 <h3 className="font-semibold text-foreground">Mobile Optimized</h3>
                 <p className="text-sm text-muted-foreground">
@@ -110,7 +110,7 @@ const EmbedDemoCreekside = () => {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(130,15%,32%)]" />
               <div>
                 <h3 className="font-semibold text-foreground">Source Citations</h3>
                 <p className="text-sm text-muted-foreground">
@@ -127,7 +127,7 @@ const EmbedDemoCreekside = () => {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,68%,48%)]" />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(130,15%,42%)]" />
               <div>
                 <h3 className="font-semibold text-foreground">Shadow DOM Isolation</h3>
                 <p className="text-sm text-muted-foreground">
@@ -136,7 +136,7 @@ const EmbedDemoCreekside = () => {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,68%,48%)]" />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(130,15%,42%)]" />
               <div>
                 <h3 className="font-semibold text-foreground">Lightweight & Fast</h3>
                 <p className="text-sm text-muted-foreground">
@@ -145,7 +145,7 @@ const EmbedDemoCreekside = () => {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,68%,48%)]" />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(130,15%,42%)]" />
               <div>
                 <h3 className="font-semibold text-foreground">CustomGPT Integration</h3>
                 <p className="text-sm text-muted-foreground">
@@ -154,7 +154,7 @@ const EmbedDemoCreekside = () => {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,68%,48%)]" />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(130,15%,42%)]" />
               <div>
                 <h3 className="font-semibold text-foreground">Lovable Cloud Backend</h3>
                 <p className="text-sm text-muted-foreground">
@@ -172,7 +172,7 @@ const EmbedDemoCreekside = () => {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <h3 className="font-semibold flex items-center gap-2 text-foreground">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(12,78%,58%)]">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(130,15%,32%)]">
                   1
                 </span>
                 Visitor Opens Chat
@@ -183,7 +183,7 @@ const EmbedDemoCreekside = () => {
             </div>
             <div className="space-y-2">
               <h3 className="font-semibold flex items-center gap-2 text-foreground">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(12,78%,58%)]">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(130,15%,32%)]">
                   2
                 </span>
                 Ask Questions
@@ -194,7 +194,7 @@ const EmbedDemoCreekside = () => {
             </div>
             <div className="space-y-2">
               <h3 className="font-semibold flex items-center gap-2 text-foreground">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(12,78%,58%)]">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(130,15%,32%)]">
                   3
                 </span>
                 Get Accurate Answers
@@ -205,7 +205,7 @@ const EmbedDemoCreekside = () => {
             </div>
             <div className="space-y-2">
               <h3 className="font-semibold flex items-center gap-2 text-foreground">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(12,78%,58%)]">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(130,15%,32%)]">
                   4
                 </span>
                 Schedule or Request Callback
@@ -219,7 +219,7 @@ const EmbedDemoCreekside = () => {
 
         <Card className="text-center">
           <CardContent className="pt-6">
-            <h3 className="text-xl font-semibold mb-4 text-[hsl(12,78%,58%)]">
+            <h3 className="text-xl font-semibold mb-4 text-[hsl(130,15%,32%)]">
               Test the Chatbot
             </h3>
             <p className="text-muted-foreground mb-4">
