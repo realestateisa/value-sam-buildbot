@@ -139,7 +139,7 @@ export const ChatWidgetCreekside = () => {
           )}
         </button>
 
-      {isOpen && <div className="fixed bottom-[112px] right-6 w-[400px] h-[600px] glass-morphism rounded-2xl shadow-2xl flex flex-col z-40 md:w-[400px] md:h-[600px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0" style={{
+      {isOpen && <div className="fixed bottom-[112px] right-6 w-[400px] h-[690px] glass-morphism rounded-2xl shadow-2xl flex flex-col z-40 md:w-[400px] md:h-[690px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0" style={{
         overflow: 'hidden'
       }}>
           <div className="p-4 border-b flex justify-between items-center rounded-t-2xl" style={{
