@@ -78,14 +78,24 @@ export const ChatWidgetCreekside = () => {
       if (!customGptSessionId && functionData.sessionId) {
         setCustomGptSessionId(functionData.sessionId);
       }
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: functionData.message,
-        timestamp: new Date(),
-        citations: functionData.citations as Citation[]
-      };
-      setMessages(prev => [...prev, aiMessage]);
+
+      // Check if AI doesn't know the answer and should trigger callback form
+      const rawMsg = functionData.message ?? "";
+      const normalizedMsg = rawMsg.replace(/\u2019/g, "'").trim();
+      const isUnknown = normalizedMsg === "I don't know the answer to that just yet. Please reach out to support for further help." || rawMsg.toLowerCase().includes("reach out to support for further help");
+      
+      if (isUnknown) {
+        setShowCallbackForm(true);
+      } else {
+        const aiMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: functionData.message,
+          timestamp: new Date(),
+          citations: functionData.citations as Citation[]
+        };
+        setMessages(prev => [...prev, aiMessage]);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
