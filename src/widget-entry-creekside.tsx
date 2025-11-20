@@ -31,10 +31,10 @@ class CreeksideChatbot extends HTMLElement {
     // Attach Shadow DOM
     this.shadow = this.attachShadow({ mode: 'open' });
     
-    // Create container with pointer events enabled
+    // Create container
     this.container = document.createElement('div');
     this.container.id = 'creekside-chatbot-root';
-    this.container.style.cssText = 'pointer-events: auto;';
+    this.container.style.cssText = '';
     this.shadow.appendChild(this.container);
     
     // Inject styles and mount
