@@ -1,495 +1,207 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* 
+ * Shadow DOM specific styles for the Creekside chatbot widget
+ * Uses :host instead of :root for proper Shadow DOM scoping
+ */
 
-:host {
-  all: initial;
-  display: block;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* Import Google Fonts FIRST for Shadow DOM */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-* {
-  box-sizing: border-box;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Creekside Homes Color Palette */
-:root {
-  --creekside-primary: #465E4C;
-  --creekside-background: #F9FAFB;
-  --creekside-accent: #B38C61;
-  --creekside-text: #1a1a1a;
-  --creekside-border: #e5e7eb;
-}
+@layer base {
+  /* Shadow DOM root - replaces :root */
+  :host {
+    /* Creekside theme colors */
+    --creekside-primary: 142 47% 42%;
+    --creekside-secondary: 142 31% 35%;
+    --creekside-background: 39 33% 88%;
+    --creekside-text: 0 0% 20%;
+    --creekside-accent: 142 47% 52%;
+    --creekside-muted: 39 20% 75%;
+    
+    /* Core theme colors mapped to Creekside palette */
+    --background: 39 33% 88%;
+    --foreground: 0 0% 20%;
 
-/* Mobile full-screen styles */
-@media (max-width: 768px) {
-  .mobile\:fixed {
-    position: fixed !important;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 20%;
+
+    --primary: 142 47% 42%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 20%;
+
+    --muted: 39 20% 75%;
+    --muted-foreground: 0 0% 46%;
+
+    --accent: 142 47% 52%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 142 47% 42%;
+
+    --radius: 0.75rem;
+    
+    --chat-shadow: 0 4px 24px rgba(76, 130, 89, 0.15);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 142 47% 42%;
+    
+    /* Shadow DOM specific */
+    all: initial;
+    display: block;
+  }
+
+  /* Dark mode support - scoped to Shadow DOM */
+  :host(.dark) {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 15%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 142 47% 42%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 142 47% 52%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 142 47% 42%;
+    
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 142 47% 42%;
+  }
+
+  /* Reset and base styles for Shadow DOM content */
+  :host * {
+    box-sizing: border-box;
   }
   
-  .mobile\:inset-0 {
-    top: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
+  :host *,
+  :host *::before,
+  :host *::after {
+    @apply border-border;
+  }
+
+  /* Apply background and text colors to the container */
+  :host #creekside-chatbot-root {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
   
+  /* Ensure all elements inherit Inter font */
+  :host *,
+  :host button,
+  :host input,
+  :host textarea {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  
+  /* Force proper word wrapping for all text */
+  :host p,
+  :host span,
+  :host div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Ensure fixed positioning works relative to viewport, not Shadow DOM */
+  :host [class*="fixed"] {
+    position: fixed;
+  }
+
+  /* Ensure high z-index for dropdowns and modals */
+  :host [role="dialog"],
+  :host [role="menu"],
+  :host [data-radix-popper-content-wrapper] {
+    z-index: 999999;
+  }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 640px) {
   .mobile\:w-full {
-    width: 100% !important;
+    width: 100%;
   }
   
   .mobile\:h-full {
-    height: 100% !important;
+    height: 100%;
   }
   
   .mobile\:rounded-none {
-    border-radius: 0 !important;
-  }
-  
-  .mobile\:bottom-0 {
-    bottom: 0 !important;
+    border-radius: 0;
   }
   
   .mobile\:right-0 {
-    right: 0 !important;
+    right: 0;
+  }
+  
+  .mobile\:bottom-0 {
+    bottom: 0;
   }
 }
 
-/* Base styles */
-.fixed {
-  position: fixed;
+/* Scrollbar styling for Shadow DOM */
+:host ::-webkit-scrollbar {
+  width: 8px;
 }
 
-.bottom-6 {
-  bottom: 1.5rem;
+:host ::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
 }
 
-.right-6 {
-  right: 1.5rem;
+:host ::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 4px;
 }
 
-.z-50 {
-  z-index: 50;
+:host ::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
 }
 
-/* Button base styles */
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  transition: all 0.2s;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Chat button */
-.h-14 {
-  height: 3.5rem;
-}
-
-.w-14 {
-  width: 3.5rem;
-}
-
-.rounded-full {
-  border-radius: 9999px;
-}
-
-.shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(70, 94, 76, 0.1), 0 4px 6px -2px rgba(70, 94, 76, 0.05);
-}
-
-.hover\:scale-110:hover {
-  transform: scale(1.1);
-}
-
-.transition-transform {
-  transition-property: transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-/* Chat widget container */
-.w-\[400px\] {
-  width: 400px;
-}
-
-.h-\[690px\] {
-  height: 690px;
-}
-
-.h-\[600px\] {
-  height: 600px;
-}
-
-.h-\[48px\] {
-  height: 48px;
-}
-
-.h-\[43px\] {
-  height: 43px;
-}
-
-.w-\[43px\] {
-  width: 43px;
-}
-
-.min-h-\[48px\] {
-  min-height: 48px;
-}
-
-.max-h-\[120px\] {
-  max-height: 120px;
-}
-
-.max-w-\[85vw\] {
-  max-width: 85vw;
-}
-
-.md\:max-w-\[312px\] {
-  @media (min-width: 768px) {
-    max-width: 312px;
-  }
-}
-
-.bg-white {
-  background-color: white;
-}
-
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
-.rounded-2xl {
-  border-radius: 1rem;
-}
-
-.rounded-t-2xl {
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
-}
-
-.rounded-b-2xl {
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-}
-
-.shadow-2xl {
-  box-shadow: 0 4px 24px rgba(70, 94, 76, 0.15);
-}
-
-.shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.hover\:shadow-md:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.shadow-md {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.hover\:shadow-lg:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.hover\:scale-105:hover {
-  transform: scale(1.05);
-}
-
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-.duration-200 {
-  transition-duration: 200ms;
-}
-
-.duration-300 {
-  transition-duration: 300ms;
-}
-
-/* Glass-morphism effect */
-.glass-morphism {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Button lift effect */
-.button-lift {
-  position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.button-lift::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, 
-    rgba(70, 94, 76, 0.4), 
-    rgba(179, 140, 97, 0.3));
-  opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: -1;
-  filter: blur(8px);
-}
-
-.button-lift:hover::before {
-  opacity: 1;
-}
-
-.button-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 12px 24px -8px rgba(70, 94, 76, 0.3),
-    0 6px 12px -4px rgba(70, 94, 76, 0.2);
-}
-
-.flex {
-  display: flex;
-}
-
-.flex-col {
-  flex-direction: column;
-}
-
-/* Header */
-.p-4 {
-  padding: 1rem;
-}
-
-.border-b {
-  border-bottom-width: 1px;
-  border-color: var(--creekside-border);
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.gap-2 {
-  gap: 0.5rem;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.text-white {
-  color: white;
-}
-
-/* Messages container */
-.flex-1 {
-  flex: 1 1 0%;
-}
-
-.overflow-y-auto {
-  overflow-y: auto;
-}
-
-.space-y-4 > * + * {
-  margin-top: 1rem;
-}
-
-.space-y-3 > * + * {
-  margin-top: 0.75rem;
-}
-
-.py-3\.5 {
-  padding-top: 0.875rem;
-  padding-bottom: 0.875rem;
-}
-
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.px-5 {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-}
-
-.pb-5 {
-  padding-bottom: 1.25rem;
-}
-
-.pt-3 {
-  padding-top: 0.75rem;
-}
-
-.pb-2 {
-  padding-bottom: 0.5rem;
-}
-
-.pb-3 {
-  padding-bottom: 0.75rem;
-}
-
-.pl-2 {
-  padding-left: 0.5rem;
-}
-
-.pr-2 {
-  padding-right: 0.5rem;
-}
-
-.md\:pl-3 {
-  @media (min-width: 768px) {
-    padding-left: 0.75rem;
-  }
-}
-
-.md\:pr-5 {
-  @media (min-width: 768px) {
-    padding-right: 1.25rem;
-  }
-}
-
-.md\:pb-3 {
-  @media (min-width: 768px) {
-    padding-bottom: 0.75rem;
-  }
-}
-
-.p-2\.5 {
-  padding: 0.625rem;
-}
-
-.leading-relaxed {
-  line-height: 1.625;
-}
-
-.break-words {
-  word-break: break-word;
-}
-
-.rounded-xl {
-  border-radius: 0.75rem;
-}
-
-.justify-end {
-  justify-content: flex-end;
-}
-
-.justify-start {
-  justify-content: flex-start;
-}
-
-.max-w-\[80\%\] {
-  max-width: 80%;
-}
-
-.p-3 {
-  padding: 0.75rem;
-}
-
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.whitespace-pre-wrap {
-  white-space: pre-wrap;
-}
-
-/* Message bubble for user */
-.bg-creekside-primary {
-  background-color: var(--creekside-primary);
-}
-
-/* Message bubble for assistant */
-.border {
-  border-width: 1px;
-  border-color: var(--creekside-border);
-}
-
-/* Citations */
-.mt-2 {
-  margin-top: 0.5rem;
-}
-
-.mt-1 {
-  margin-top: 0.25rem;
-}
-
-.pt-2 {
-  padding-top: 0.5rem;
-}
-
-.border-t {
-  border-top-width: 1px;
-}
-
-.text-xs {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.mb-1 {
-  margin-bottom: 0.25rem;
-}
-
-.block {
-  display: block;
-}
-
-.hover\:underline:hover {
-  text-decoration: underline;
-}
-
-/* Input area */
-.space-y-2 > * + * {
-  margin-top: 0.5rem;
-}
-
-.resize-none {
-  resize: none;
-}
-
-/* Buttons */
-.h-4 {
-  height: 1rem;
-}
-
-.w-4 {
-  width: 1rem;
-}
-
-.mr-2 {
-  margin-right: 0.5rem;
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
+/* Animation keyframes */
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
   to {
     transform: rotate(360deg);
   }
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse {
@@ -501,206 +213,28 @@ button:disabled {
   }
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--creekside-background);
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--creekside-accent);
-  border-radius: 4px;
+/* Button lift effect */
+.button-lift {
+  transition: var(--transition-smooth);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--creekside-primary);
+.button-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(76, 130, 89, 0.2);
 }
 
-/* Utility classes */
-.w-2 {
-  width: 0.5rem;
-}
-
-.h-2 {
-  height: 0.5rem;
-}
-
-.bg-green-400 {
-  background-color: #4ade80;
-}
-
-.flex-shrink-0 {
-  flex-shrink: 0;
-}
-
-.relative {
-  position: relative;
-}
-
-.group:hover .group-hover\:scale-110 {
-  transform: scale(1.1);
-}
-
-.text-base {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
-
-.focus-visible\:ring-0:focus-visible {
-  box-shadow: none;
-}
-
-.focus-visible\:ring-offset-0:focus-visible {
-  box-shadow: none;
-}
-
-.truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Form styles */
-.space-y-4 > * + * {
-  margin-top: 1rem;
-}
-
-.p-6 {
-  padding: 1.5rem;
-}
-
-input, textarea {
-  font-family: inherit;
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--creekside-border);
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-input:focus, textarea:focus {
-  border-color: var(--creekside-primary);
-}
-
-input::placeholder, textarea::placeholder {
-  color: #9ca3af;
-}
-
-label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: var(--creekside-text);
-}
-
-.border-red-500 {
-  border-color: #ef4444 !important;
-}
-
-.text-red-500 {
-  color: #ef4444;
-}
-
-/* Button variants */
-.flex-1 {
-  flex: 1 1 0%;
-}
-
-.pt-4 {
-  padding-top: 1rem;
-}
-
-.h-6 {
-  height: 1.5rem;
-}
-
-.w-6 {
-  width: 1.5rem;
-}
-
-.h-10 {
-  height: 2.5rem;
-}
-
-.w-10 {
-  width: 2.5rem;
-}
-
-.h-16 {
-  height: 4rem;
-}
-
-.w-16 {
-  width: 4rem;
-}
-
-.h-20 {
-  height: 5rem;
-}
-
-.w-20 {
-  width: 5rem;
-}
-
-.h-12 {
-  height: 3rem;
-}
-
-.h-8 {
-  height: 2rem;
-}
-
-.w-8 {
-  width: 2rem;
-}
-
-.h-5 {
-  height: 1.25rem;
-}
-
-.w-5 {
-  width: 1.25rem;
-}
-
-.object-contain {
-  object-fit: contain;
-}
-
-.gap-3 {
-  gap: 0.75rem;
-}
-
-.gap-1 {
-  gap: 0.25rem;
-}
-
-.ml-2 {
-  margin-left: 0.5rem;
-}
-
-.p-0\.5 {
-  padding: 0.125rem;
-}
-
-.text-xs {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.text-white\/80 {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.text-white\/20 {
-  color: rgba(255, 255, 255, 0.2);
-}
-
-.hover\:bg-white\/20:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+/* Glass morphism effect */
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }

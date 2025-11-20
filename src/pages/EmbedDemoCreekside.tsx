@@ -6,7 +6,7 @@ import { Copy, Check } from 'lucide-react';
 const EmbedDemoCreekside = () => {
   const [copied, setCopied] = useState(false);
   
-  const embedCode = `<script src="https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/creekside-chatbot-widget.js"></script>`;
+  const embedCode = `<script src="https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/creekside-chatbot-widget.js"></script>`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(embedCode);
