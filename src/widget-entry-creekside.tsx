@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot, Root } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ChatWidgetCreekside } from './components/ChatWidgetCreekside';
 import widgetStyles from './widget-creekside.css?inline';
@@ -16,15 +16,24 @@ const queryClient = new QueryClient({
 
 // Define the custom element class
 class CreeksideChatbot extends HTMLElement {
-  private root: ReactDOM.Root | null = null;
-  private shadow: ShadowRoot;
+  private shadow: ShadowRoot | null = null;
+  private root: Root | null = null;
+  private container: HTMLDivElement | null = null;
 
   constructor() {
     super();
-    this.shadow = this.attachShadow({ mode: 'open' });
   }
 
   connectedCallback() {
+    // Attach Shadow DOM
+    this.shadow = this.attachShadow({ mode: 'open' });
+    
+    // Create container
+    this.container = document.createElement('div');
+    this.container.id = 'creekside-chatbot-root';
+    this.shadow.appendChild(this.container);
+    
+    // Inject styles and mount
     this.injectStyles();
     this.mountReactApp();
   }
@@ -37,17 +46,17 @@ class CreeksideChatbot extends HTMLElement {
   }
 
   private injectStyles() {
+    if (!this.shadow) return;
+    
     const style = document.createElement('style');
     style.textContent = widgetStyles;
     this.shadow.appendChild(style);
   }
 
   private mountReactApp() {
-    const container = document.createElement('div');
-    container.id = 'creekside-chatbot-root';
-    this.shadow.appendChild(container);
-
-    this.root = ReactDOM.createRoot(container);
+    if (!this.container) return;
+    
+    this.root = createRoot(this.container);
     this.root.render(
       <React.StrictMode>
         <QueryClientProvider client={queryClient}>
@@ -73,23 +82,30 @@ if (!customElements.get('creekside-chatbot')) {
   customElements.define('creekside-chatbot', CreeksideChatbot);
 }
 
-// Auto-inject the widget if not explicitly disabled
-(() => {
-  const autoInject = !document.querySelector('creekside-chatbot[no-auto-inject]');
-  
-  if (autoInject) {
-    const init = () => {
-      if (!document.querySelector('creekside-chatbot')) {
-        const widget = document.createElement('creekside-chatbot');
-        document.body.appendChild(widget);
-      }
-    };
+// Auto-inject mode: automatically create and append the element
+(function autoInject() {
+  // Check if auto-inject is disabled via script attribute
+  const currentScript = document.currentScript as HTMLScriptElement;
+  const autoInject = currentScript?.getAttribute("data-auto-inject") !== "false";
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
+  if (autoInject) {
+    // Wait for DOM to be ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", injectWidget);
     } else {
-      init();
+      injectWidget();
     }
+  }
+
+  function injectWidget() {
+    // Check if element already exists
+    if (document.querySelector("creekside-chatbot")) {
+      return;
+    }
+
+    // Create and append the widget
+    const widget = document.createElement("creekside-chatbot");
+    document.body.appendChild(widget);
   }
 })();
 
