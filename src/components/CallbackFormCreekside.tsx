@@ -40,7 +40,26 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
 
       setIsSubmitting(true);
       
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Send webhook to Zapier
+      try {
+        await fetch('https://hooks.zapier.com/hooks/catch/5365219/u88do5x/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          mode: 'no-cors',
+          body: JSON.stringify({
+            firstName: validatedData.firstName,
+            lastName: validatedData.lastName,
+            phone: validatedData.phone,
+            email: validatedData.email,
+            timestamp: new Date().toISOString(),
+            source: 'Creekside Homes Chatbot',
+          }),
+        });
+      } catch (error) {
+        console.error('Error sending webhook:', error);
+      }
 
       toast({
         title: 'Request Received',
