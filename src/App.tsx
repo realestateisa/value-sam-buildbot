@@ -14,7 +14,23 @@ const queryClient = new QueryClient();
 const RouteOverlay = () => {
   const location = useLocation();
   if (location.pathname === "/embed-demo") return <ChatWidget />;
-  if (location.pathname === "/embed-demo-creekside") return <ChatWidgetCreekside />;
+  if (location.pathname === "/embed-demo-creekside") {
+    return (
+      <div className="creekside-theme">
+        <style>{`
+          .creekside-theme {
+            --primary: 130 15% 32%;
+            --primary-foreground: 0 0% 100%;
+            --accent: 130 15% 32%;
+            --accent-foreground: 0 0% 100%;
+            --ring: 130 15% 32%;
+            --chat-shadow: 0 4px 24px rgba(70, 94, 76, 0.15);
+          }
+        `}</style>
+        <ChatWidgetCreekside />
+      </div>
+    );
+  }
   return null;
 };
 
