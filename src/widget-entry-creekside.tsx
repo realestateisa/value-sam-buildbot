@@ -25,12 +25,16 @@ class CreeksideChatbot extends HTMLElement {
   }
 
   connectedCallback() {
+    // Add positioning styles to the host element for proper viewport positioning
+    this.style.cssText = 'position: fixed; bottom: 0; right: 0; z-index: 999999; pointer-events: none;';
+    
     // Attach Shadow DOM
     this.shadow = this.attachShadow({ mode: 'open' });
     
-    // Create container
+    // Create container with pointer events enabled
     this.container = document.createElement('div');
     this.container.id = 'creekside-chatbot-root';
+    this.container.style.cssText = 'pointer-events: auto;';
     this.shadow.appendChild(this.container);
     
     // Inject styles and mount
