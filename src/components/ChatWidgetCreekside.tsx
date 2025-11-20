@@ -197,7 +197,8 @@ export const ChatWidgetCreekside = () => {
                     </div>}
                 </div>
               </div>)}
-            {isLoading && <div className="flex justify-start">
+            {isLoading && <div className="flex justify-start gap-2 pt-2">
+                <img src={creeksideLogo} alt="SAM" className="h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1" />
                 <div className="bg-white border rounded-lg p-3">
                   <TypingIndicator />
                 </div>
