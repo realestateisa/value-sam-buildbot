@@ -26,9 +26,12 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+    setSubmitSuccess(false);
 
     try {
       const validatedData = callbackSchema.parse({
@@ -50,14 +53,17 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
         source: 'Creekside Homes Chatbot',
       };
 
-      console.log('📤 Sending callback request to Zapier:', webhookPayload);
+      console.log('📤 [CREEKSIDE WIDGET] Sending callback request to Zapier:', webhookPayload);
+      console.log('🌐 [CREEKSIDE WIDGET] Current location:', window.location.href);
+      console.log('📍 [CREEKSIDE WIDGET] Widget context:', document.querySelector('creekside-chatbot') ? 'Shadow DOM' : 'Regular DOM');
       
       // Send webhook to Zapier
       const webhookUrl = 'https://hooks.zapier.com/hooks/catch/5365219/u88do5x/';
       
       try {
-        console.log('🔗 Webhook URL:', webhookUrl);
-        console.log('📦 Payload:', JSON.stringify(webhookPayload, null, 2));
+        console.log('🔗 [CREEKSIDE WIDGET] Webhook URL:', webhookUrl);
+        console.log('📦 [CREEKSIDE WIDGET] Payload:', JSON.stringify(webhookPayload, null, 2));
+        console.log('⏰ [CREEKSIDE WIDGET] Request timestamp:', new Date().toISOString());
         
         const response = await fetch(webhookUrl, {
           method: 'POST',
@@ -68,28 +74,39 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
           body: JSON.stringify(webhookPayload),
         });
         
-        console.log('✅ Webhook request sent successfully (no-cors mode - response is opaque)');
-        console.log('⚠️ Note: With no-cors mode, we cannot verify if Zapier received the data.');
-        console.log('📊 Check your Zapier dashboard to confirm the webhook was triggered.');
+        console.log('✅ [CREEKSIDE WIDGET] Webhook request sent successfully (no-cors mode - response is opaque)');
+        console.log('⚠️ [CREEKSIDE WIDGET] Note: With no-cors mode, we cannot verify if Zapier received the data.');
+        console.log('📊 [CREEKSIDE WIDGET] Check your Zapier dashboard to confirm the webhook was triggered.');
+        
+        // Show success state
+        setSubmitSuccess(true);
+        
+        // Wait 2 seconds to show success message, then close
+        setTimeout(() => {
+          setFirstName('');
+          setLastName('');
+          setPhone('');
+          setEmail('');
+          onClose();
+        }, 2000);
+        
       } catch (error) {
-        console.error('❌ Error sending webhook:', error);
-        console.error('Error details:', {
+        console.error('❌ [CREEKSIDE WIDGET] Error sending webhook:', error);
+        console.error('🔍 [CREEKSIDE WIDGET] Error details:', {
           message: error instanceof Error ? error.message : 'Unknown error',
+          name: error instanceof Error ? error.name : 'Unknown',
+          stack: error instanceof Error ? error.stack : undefined,
           webhookUrl,
-          payload: webhookPayload
+          payload: webhookPayload,
+          timestamp: new Date().toISOString()
         });
+        throw error;
       }
 
       toast({
         title: 'Request Received',
         description: 'Thank you! A Creekside Homes representative will contact you shortly.',
       });
-
-      setFirstName('');
-      setLastName('');
-      setPhone('');
-      setEmail('');
-      onClose();
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
@@ -119,7 +136,20 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
         </Button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 flex-1">
+      {submitSuccess ? (
+        <div className="flex-1 flex flex-col items-center justify-center space-y-4 p-6">
+          <div className="h-16 w-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#465E4C' }}>
+            <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-center">Request Submitted!</h3>
+          <p className="text-center text-muted-foreground">
+            Thank you! A Creekside Homes representative will contact you shortly.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4 flex-1">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name</Label>
           <Input
@@ -199,6 +229,7 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
           </Button>
         </div>
       </form>
+      )}
     </div>
   );
 };
