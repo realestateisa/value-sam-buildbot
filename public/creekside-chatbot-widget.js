@@ -1,6 +1,6 @@
 (function() {
-  // Configuration
-  const WIDGET_SRC = window.location.origin + '/embed-demo-creekside';
+  // Configuration - Use your deployed Lovable app URL
+  const WIDGET_SRC = 'https://value-sam-buildbot.lovable.app/embed-demo-creekside';
   const WIDGET_ID = 'creekside-chatbot-embed';
   
   // Check if widget already exists
