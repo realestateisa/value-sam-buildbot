@@ -1,5 +1,7 @@
 # Building the Widget Bundle
 
+<!-- Build trigger: 2025-01-13 -->
+
 ## Automated Build & CDN Deployment (Recommended)
 
 If your project is connected to GitHub, the widgets build and deploy automatically via jsDelivr CDN on every push.
