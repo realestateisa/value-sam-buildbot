@@ -203,7 +203,7 @@ export const ChatWidgetCreekside = () => {
               
             </div>
             <div className="flex gap-2">
-              <Textarea value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={handleKeyPress} placeholder="Type your message..." className="resize-none" rows={2} disabled={isLoading} />
+              <Textarea value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={handleKeyPress} placeholder="Type your message..." className="resize-none" rows={1} disabled={isLoading} />
               <Button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()} className="self-end text-white" style={{
             backgroundColor: '#465E4C'
           }}>
