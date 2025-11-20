@@ -175,7 +175,7 @@
   background: hsl(var(--primary) / 0.5);
 }
 
-/* Animation keyframes */
+/* Animation keyframes - keep outside @layer */
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -191,28 +191,36 @@
   }
 }
 
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Button lift effect */
-.button-lift {
-  transition: var(--transition-smooth);
-}
-
-.button-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(76, 130, 89, 0.2);
-}
-
-/* Glass morphism effect */
-.glass-morphism {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* Scoped utilities for Shadow DOM */
+@layer utilities {
+  :host .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  :host .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Button lift effect */
+  :host .button-lift {
+    transition: var(--transition-smooth);
+  }
+  
+  :host .button-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(76, 130, 89, 0.2);
+  }
+  
+  /* Glass morphism effect */
+  :host .glass-morphism {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Ensure hover scale works */
+  :host .hover\:scale-110:hover {
+    transform: scale(1.10);
+  }
 }

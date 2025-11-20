@@ -153,7 +153,7 @@ export const ChatWidgetCreekside = () => {
       }`}>
         <Button 
           onClick={() => setIsOpen(!isOpen)} 
-          className="h-20 w-20 rounded-full bg-primary text-primary-foreground button-lift hover:shadow-2xl hover:scale-110 transition-all duration-300 p-2" 
+          className="h-20 w-20 rounded-full bg-primary text-primary-foreground hover:shadow-2xl hover:scale-110 transition-all duration-300 p-2" 
           size="icon"
         >
           {isOpen ? (
