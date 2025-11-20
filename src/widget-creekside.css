@@ -155,28 +155,6 @@
   }
 }
 
-/* Mobile-specific styles */
-@media (max-width: 640px) {
-  .mobile\:w-full {
-    width: 100%;
-  }
-  
-  .mobile\:h-full {
-    height: 100%;
-  }
-  
-  .mobile\:rounded-none {
-    border-radius: 0;
-  }
-  
-  .mobile\:right-0 {
-    right: 0;
-  }
-  
-  .mobile\:bottom-0 {
-    bottom: 0;
-  }
-}
 
 /* Scrollbar styling for Shadow DOM */
 :host ::-webkit-scrollbar {

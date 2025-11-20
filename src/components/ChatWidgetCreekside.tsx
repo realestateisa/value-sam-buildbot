@@ -36,26 +36,6 @@ export const ChatWidgetCreekside = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
   
-  // Notify parent window about size changes
-  useEffect(() => {
-    const notifyParent = () => {
-      if (window.parent !== window) {
-        const width = isOpen ? (isMobile ? window.innerWidth : 448) : 88;
-        const height = isOpen ? (isMobile ? window.innerHeight : 600) : 146;
-        
-        window.parent.postMessage({
-          type: 'chatbot-resize',
-          width,
-          height,
-          isOpen,
-          isMobile
-        }, '*');
-      }
-    };
-    
-    notifyParent();
-  }, [isOpen, isMobile]);
-  
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -166,20 +146,36 @@ export const ChatWidgetCreekside = () => {
     setShowCallbackForm(true);
   };
   return <>
-      <button onClick={() => setIsOpen(!isOpen)} className="fixed bottom-6 right-6 h-20 w-20 rounded-full shadow-lg hover:scale-110 hover:shadow-2xl transition-all duration-300 z-50 button-lift mobile:top-4 mobile:right-4 mobile:bottom-auto" style={{
-      backgroundColor: '#465E4C',
-      padding: '0.5rem'
-    }}>
+      <div className={`fixed z-50 transition-all duration-300 ${
+        isOpen && isMobile 
+          ? 'top-4 right-4' 
+          : 'bottom-6 right-6'
+      }`}>
+        <Button 
+          onClick={() => setIsOpen(!isOpen)} 
+          className="h-20 w-20 rounded-full shadow-lg hover:scale-110 hover:shadow-2xl transition-all duration-300 button-lift"
+          style={{backgroundColor: '#465E4C', padding: '0.5rem'}}
+          size="icon"
+        >
           {isOpen ? (
-            <X className="w-full h-full text-white p-3" />
+            <X className="h-8 w-8 text-white" />
           ) : (
-            <img src={creeksideLogo} alt="Creekside Homes" className="w-full h-full object-contain rounded-full" />
+            <img src={creeksideLogo} alt="Creekside Homes" className="h-full w-full object-contain rounded-full" />
           )}
-        </button>
+        </Button>
+      </div>
 
-      {isOpen && <div className="fixed bottom-[112px] right-6 w-[400px] h-[690px] glass-morphism rounded-2xl shadow-2xl flex flex-col z-40 md:w-[400px] md:h-[690px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0" style={{
-        overflow: 'hidden'
-      }}>
+      {isOpen && <div 
+        className={`fixed flex flex-col glass-morphism z-40 overflow-hidden transition-all duration-300 ${
+          isMobile 
+            ? 'inset-0 w-full h-full rounded-none' 
+            : 'bottom-[112px] right-6 w-[400px] h-[690px] rounded-2xl'
+        }`}
+        style={{
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+          transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+        }}
+      >
           <div className="p-4 border-b flex justify-between items-center rounded-t-2xl" style={{
         backgroundColor: '#465E4C'
       }}>
