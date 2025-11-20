@@ -128,14 +128,14 @@ export const ChatWidgetCreekside = () => {
     return <CallbackFormCreekside onClose={() => setShowCallbackForm(false)} />;
   }
   return <>
-      {!isOpen && <button onClick={() => setIsOpen(true)} className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 button-lift" style={{
+      {!isOpen && <button onClick={() => setIsOpen(true)} className="fixed bottom-6 right-6 h-20 w-20 rounded-full shadow-lg hover:scale-110 hover:shadow-2xl transition-all duration-300 z-50 button-lift" style={{
       backgroundColor: '#465E4C',
       padding: '0.5rem'
     }}>
           <img src={creeksideLogo} alt="Creekside Homes" className="w-full h-full object-contain rounded-full" />
         </button>}
 
-      {isOpen && <div className="fixed bottom-6 right-6 w-[400px] h-[690px] glass-morphism rounded-2xl shadow-2xl flex flex-col z-50 md:w-[400px] md:h-[690px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0" style={{
+      {isOpen && <div className="fixed bottom-6 right-6 w-[400px] h-[600px] glass-morphism rounded-2xl shadow-2xl flex flex-col z-50 md:w-[400px] md:h-[600px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0" style={{
         overflow: 'hidden'
       }}>
           <div className="p-4 border-b flex justify-between items-center rounded-t-2xl" style={{
@@ -162,14 +162,15 @@ export const ChatWidgetCreekside = () => {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{
+          <div className="flex-1 overflow-y-auto pl-2 pr-2 pb-3 md:pl-3 md:pr-5 md:pb-3 space-y-3" style={{
         backgroundColor: '#F9FAFB'
       }}>
-            {messages.map(message => <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-lg p-3 ${message.role === 'user' ? 'text-white' : 'bg-white border'}`} style={message.role === 'user' ? {
+            {messages.map(message => <div key={message.id} className={`flex pt-2 ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}>
+                {message.role === 'assistant' && <img src={creeksideLogo} alt="SAM" className="h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1" />}
+                <div className={`max-w-[85vw] md:max-w-[312px] rounded-lg p-2.5 shadow-sm hover:shadow-md transition-all duration-200 ${message.role === 'user' ? 'text-white' : 'bg-white border'}`} style={message.role === 'user' ? {
             backgroundColor: '#465E4C'
           } : {}}>
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
                   {message.citations && message.citations.length > 0 && <div className="mt-2 pt-2 border-t border-gray-200">
                       <p className="text-xs font-semibold mb-1" style={{
                 color: '#B38C61'
@@ -190,24 +191,37 @@ export const ChatWidgetCreekside = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-4 border-t space-y-2 rounded-b-2xl" style={{
-        backgroundColor: '#F9FAFB'
+          {/* Action Button */}
+          <div className="px-4 pt-3 pb-2 border-t w-full" style={{
+        backgroundColor: '#F9FAFB',
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+        background: 'linear-gradient(to bottom, #F9FAFB, rgba(249, 250, 251, 0.8))'
       }}>
-            <div className="flex flex-col gap-2">
-              <Button onClick={handleScheduleAppointment} className="w-full text-white hover:opacity-90" style={{
+            <Button onClick={handleScheduleAppointment} className="group w-full h-12 font-medium text-white hover:opacity-90 rounded-xl shadow-md hover:shadow-lg transition-all duration-300" style={{
+          backgroundColor: '#465E4C'
+        }}>
+              <Calendar className="h-4 w-4 mr-2 transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
+              <span className="text-sm font-semibold truncate">Schedule Appointment</span>
+            </Button>
+          </div>
+
+          {/* Message Input */}
+          <div className="px-5 pt-2 pb-5 border-t rounded-b-2xl" style={{
+        backgroundColor: '#F9FAFB',
+        borderColor: 'rgba(0, 0, 0, 0.2)',
+        background: 'linear-gradient(to bottom, #F9FAFB, rgba(249, 250, 251, 0.9), rgba(249, 250, 251, 0.95))'
+      }}>
+            <div className="relative flex items-center gap-2 p-1 rounded-2xl border shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-300" style={{
+          background: 'linear-gradient(to bottom right, #F9FAFB, rgba(249, 250, 251, 0.7))',
+          borderColor: 'rgba(0, 0, 0, 0.1)'
+        }}>
+              <div className="flex-1 relative">
+                <Textarea value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={handleKeyPress} placeholder="Ask me anything.." className="min-h-[48px] max-h-[120px] resize-none py-3.5 px-4 text-base bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl transition-all" rows={1} disabled={isLoading} />
+              </div>
+              <Button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()} size="icon" className="h-[43px] w-[43px] rounded-xl text-white shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-40 disabled:hover:scale-100 transition-all duration-200 flex-shrink-0" style={{
             backgroundColor: '#465E4C'
           }}>
-                <Calendar className="h-5 w-5 mr-2" />
-                Schedule Appointment
-              </Button>
-              
-            </div>
-            <div className="flex gap-2">
-              <Textarea value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={handleKeyPress} placeholder="Type your message..." className="resize-none" rows={1} disabled={isLoading} />
-              <Button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()} className="self-end text-white" style={{
-            backgroundColor: '#465E4C'
-          }}>
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
               </Button>
             </div>
           </div>
