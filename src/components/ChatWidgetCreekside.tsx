@@ -152,7 +152,7 @@ export const ChatWidgetCreekside = () => {
       return;
     }
     
-    const baseWidth = 400;
+    const baseWidth = showCallbackForm ? 480 : 400;
     const baseHeight = 690;
     const paddingBottom = 140; // space for button/offset within iframe
 
@@ -166,7 +166,7 @@ export const ChatWidgetCreekside = () => {
     const ro = new ResizeObserver(() => sendCurrentSize());
     if (chatRef.current) ro.observe(chatRef.current);
     return () => ro.disconnect();
-  }, [isOpen, isMobile]);
+  }, [isOpen, isMobile, showCallbackForm]);
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
     
@@ -271,7 +271,9 @@ export const ChatWidgetCreekside = () => {
           className={`fixed flex flex-col glass-morphism z-50 overflow-visible transition-all duration-300 ${
             isMobile 
               ? 'inset-0 w-full h-full rounded-none' 
-              : 'bottom-[112px] right-6 w-[400px] h-[690px] rounded-2xl'
+              : showCallbackForm 
+                ? 'bottom-[112px] right-6 w-[480px] h-[690px] rounded-2xl'
+                : 'bottom-[112px] right-6 w-[400px] h-[690px] rounded-2xl'
           }`}
           style={{
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)',
