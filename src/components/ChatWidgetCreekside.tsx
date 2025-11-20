@@ -397,7 +397,7 @@ export const ChatWidgetCreekside = () => {
               ))}
 
               {/* Typing Indicator */}
-              {showTypingIndicator && <TypingIndicator />}
+              {showTypingIndicator && <TypingIndicator logo={creeksideLogo} altText="Creekside SAM" />}
             </div>
           </ScrollArea>}
 

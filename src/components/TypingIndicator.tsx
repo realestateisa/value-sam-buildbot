@@ -1,10 +1,15 @@
-import logo from '@/assets/logo.png';
+import vbhLogo from '@/assets/logo.png';
 
-const TypingIndicator = () => {
+interface TypingIndicatorProps {
+  logo?: string;
+  altText?: string;
+}
+
+const TypingIndicator = ({ logo = vbhLogo, altText = "Sam" }: TypingIndicatorProps) => {
   return (
     <div className="flex items-start gap-2 mb-3 animate-fade-in">
       <div className="flex-shrink-0">
-        <img src={logo} alt="Sam" className="h-9 w-9 rounded-full bg-white p-0.5 animate-pulse" />
+        <img src={logo} alt={altText} className="h-9 w-9 rounded-full bg-white p-0.5 animate-pulse" />
       </div>
       <div className="bg-muted rounded-lg p-3 shadow-sm">
         <div className="flex items-center space-x-1">
