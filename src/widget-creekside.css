@@ -151,7 +151,29 @@
   :host [role="dialog"],
   :host [role="menu"],
   :host [data-radix-popper-content-wrapper] {
-    z-index: 999999;
+    z-index: 9999 !important;
+  }
+  
+  /* Dropdown backgrounds - prevent transparency */
+  :host [role="menu"],
+  :host [role="listbox"],
+  :host [data-radix-select-content],
+  :host [data-radix-dropdown-menu-content] {
+    @apply bg-popover;
+    z-index: 9999;
+  }
+
+  /* Mobile full-screen support for Shadow DOM */
+  @media (max-width: 767px) {
+    :host [data-mobile-fullscreen="true"] {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 0 !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+    }
   }
 }
 
