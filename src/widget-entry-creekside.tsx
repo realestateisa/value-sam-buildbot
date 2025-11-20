@@ -25,8 +25,8 @@ class CreeksideChatbot extends HTMLElement {
   }
 
   connectedCallback() {
-    // Add positioning styles to the host element for proper viewport positioning
-    this.style.cssText = 'position: fixed; bottom: 0; right: 0; z-index: 999999; pointer-events: none;';
+    // No positioning on host - let Shadow DOM CSS handle it like VBH
+    this.style.cssText = '';
     
     // Attach Shadow DOM
     this.shadow = this.attachShadow({ mode: 'open' });
