@@ -1,49 +1,55 @@
 (function() {
-  // Configuration - Use your deployed Lovable app URL
-  const WIDGET_SRC = 'https://value-sam-buildbot.lovable.app/embed-demo-creekside';
-  const WIDGET_ID = 'creekside-chatbot-embed';
+  // Extract chatbot origin from the script's own source URL
+  const scriptSrc = document.currentScript?.src || document.querySelector('script[src*="creekside-chatbot-widget.js"]')?.src;
+  const chatbotOrigin = scriptSrc ? new URL(scriptSrc).origin : 'https://value-sam-buildbot.lovable.app';
   
-  // Check if widget already exists
-  if (document.getElementById(WIDGET_ID)) {
-    console.warn('Creekside chatbot widget already loaded');
-    return;
-  }
-
-  // Create container
-  const container = document.createElement('div');
-  container.id = WIDGET_ID;
-  container.style.cssText = 'position: fixed; bottom: 0; right: 0; z-index: 999999;';
-  
-  // Create iframe
+  // Create iframe to load the chatbot app
   const iframe = document.createElement('iframe');
-  iframe.src = WIDGET_SRC;
-  iframe.style.cssText = 'border: none; width: 100vw; height: 100vh; position: fixed; bottom: 0; right: 0;';
-  iframe.setAttribute('allow', 'clipboard-write');
-  iframe.setAttribute('title', 'Creekside Homes Chatbot');
+  iframe.src = chatbotOrigin + '/embed-demo-creekside';
+  iframe.style.cssText = 'position: fixed; bottom: 24px; right: 24px; width: 88px; height: 146px; border: none; z-index: 2147483647; background: transparent; pointer-events: auto; display: block; transition: all 0.3s ease-in-out; overflow: visible;';
+  iframe.title = 'Creekside Homes Chatbot';
+  iframe.allow = 'clipboard-write';
   
-  // Handle resize messages from the iframe
+  // Listen for messages from the chatbot to resize the iframe
   window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'creekside-chatbot-resize') {
-      const { width, height } = event.data;
-      iframe.style.width = width;
-      iframe.style.height = height;
+    if (event.origin !== chatbotOrigin) return;
+    
+    if (event.data.type === 'chatbot-resize') {
+      const { width, height, isOpen, isMobile } = event.data;
+
+      if (isOpen && isMobile) {
+        // Mobile full-screen
+        iframe.style.position = 'fixed';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.borderRadius = '0';
+        iframe.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+      } else if (isOpen) {
+        // Desktop positioned
+        iframe.style.position = 'fixed';
+        iframe.style.bottom = '24px';
+        iframe.style.right = '24px';
+        iframe.style.width = width + 'px';
+        iframe.style.height = height + 'px';
+        iframe.style.borderRadius = '0';
+        iframe.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+      } else {
+        // Closed button
+        iframe.style.position = 'fixed';
+        iframe.style.bottom = '24px';
+        iframe.style.right = '24px';
+        iframe.style.width = '88px';
+        iframe.style.height = '146px';
+        iframe.style.borderRadius = '0';
+        iframe.style.boxShadow = 'none';
+      }
     }
   });
   
-  container.appendChild(iframe);
-  
-  // Inject into page
-  function inject() {
-    if (document.body) {
-      document.body.appendChild(container);
-    } else {
-      setTimeout(inject, 100);
-    }
-  }
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', inject);
-  } else {
-    inject();
-  }
+  // Append to body to avoid clipping/overflow issues from parent containers
+  document.body.appendChild(iframe);
 })();
