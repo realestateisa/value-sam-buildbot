@@ -128,14 +128,18 @@ export const ChatWidgetCreekside = () => {
     return <CallbackFormCreekside onClose={() => setShowCallbackForm(false)} />;
   }
   return <>
-      {!isOpen && <button onClick={() => setIsOpen(true)} className="fixed bottom-6 right-6 h-20 w-20 rounded-full shadow-lg hover:scale-110 hover:shadow-2xl transition-all duration-300 z-50 button-lift" style={{
+      <button onClick={() => setIsOpen(!isOpen)} className="fixed bottom-6 right-6 h-20 w-20 rounded-full shadow-lg hover:scale-110 hover:shadow-2xl transition-all duration-300 z-50 button-lift mobile:top-4 mobile:right-4 mobile:bottom-auto" style={{
       backgroundColor: '#465E4C',
       padding: '0.5rem'
     }}>
-          <img src={creeksideLogo} alt="Creekside Homes" className="w-full h-full object-contain rounded-full" />
-        </button>}
+          {isOpen ? (
+            <X className="w-full h-full text-white p-3" />
+          ) : (
+            <img src={creeksideLogo} alt="Creekside Homes" className="w-full h-full object-contain rounded-full" />
+          )}
+        </button>
 
-      {isOpen && <div className="fixed bottom-6 right-6 w-[400px] h-[600px] glass-morphism rounded-2xl shadow-2xl flex flex-col z-50 md:w-[400px] md:h-[600px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0" style={{
+      {isOpen && <div className="fixed bottom-[112px] right-6 w-[400px] h-[600px] glass-morphism rounded-2xl shadow-2xl flex flex-col z-40 md:w-[400px] md:h-[600px] mobile:fixed mobile:inset-0 mobile:w-full mobile:h-full mobile:rounded-none mobile:bottom-0 mobile:right-0" style={{
         overflow: 'hidden'
       }}>
           <div className="p-4 border-b flex justify-between items-center rounded-t-2xl" style={{
