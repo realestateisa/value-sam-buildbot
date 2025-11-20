@@ -404,7 +404,11 @@ export const ChatWidgetCreekside = () => {
           </ScrollArea>}
 
           {/* Callback Form View - standalone when active */}
-          {showCallbackForm && <CallbackFormCreekside onClose={() => setShowCallbackForm(false)} />}
+          {showCallbackForm && (
+            <div className="flex-1 overflow-y-auto p-6">
+              <CallbackFormCreekside onClose={() => setShowCallbackForm(false)} />
+            </div>
+          )}
 
           {/* Action Buttons */}
           {!showCallbackForm && <div className="px-4 pt-3 pb-2 border-t border-border/10 bg-gradient-to-b from-background to-muted/20 w-full">
