@@ -1,19 +1,25 @@
 # Building the Widget Bundle
 
-## Automated Build (Recommended)
+## Automated Build & CDN Deployment (Recommended)
 
-If your project is connected to GitHub, the widget builds automatically on every push via GitHub Actions.
+If your project is connected to GitHub, the widgets build and deploy automatically via jsDelivr CDN on every push.
 
 **How it works:**
 1. Push code to GitHub (or make changes in Lovable)
 2. GitHub Actions workflow triggers automatically
-3. Widget builds and commits to `public/widget-dist/chatbot-widget-v2.js`
-4. Changes sync back to Lovable via bidirectional sync
-5. Click **Publish** in Lovable to deploy
+3. Widgets build for both VBH and Creekside
+4. Built files commit to `public/widget-dist/`
+5. jsDelivr CDN cache is purged for immediate updates
+6. Widgets are immediately available worldwide via CDN URLs
+
+**CDN URLs:**
+- VBH Widget: `https://cdn.jsdelivr.net/gh/{your-repo}@main/public/widget-dist/chatbot-widget.js`
+- Creekside Widget: `https://cdn.jsdelivr.net/gh/{your-repo}@main/public/widget-dist/creekside-chatbot-widget.js`
 
 **Setup:**
-- Workflow file: `.github/workflows/build-widget.yml` ✅ Already created
-- No additional setup needed - works automatically
+- Workflow file: `.github/workflows/build-widget.yml` ✅ Already configured
+- No additional setup needed - works automatically on push
+- CDN serves files globally with automatic caching and purging
 
 See `.github/workflows/README.md` for details.
 
@@ -210,12 +216,29 @@ project/
 
 ## Production Deployment
 
-When deploying:
-1. Run `npm run build:all`
-2. Upload `public/widget-dist/chatbot-widget-v2.js` to your CDN/server
-3. Update client integration URLs
-4. Test on staging site first
-5. Gradual rollout to production clients
+### Automatic CDN Deployment (Recommended)
+If using GitHub with the automated workflow:
+1. Push code to GitHub main/master branch
+2. Wait ~2-3 minutes for GitHub Actions to complete
+3. Widgets are automatically available on jsDelivr CDN
+4. No manual upload needed!
+
+**CDN Benefits:**
+- ✅ Global distribution (100+ countries)
+- ✅ Automatic caching and cache purging
+- ✅ 100% uptime SLA
+- ✅ Free for open source projects
+- ✅ HTTPS by default
+- ✅ No bandwidth limits
+
+### Manual Deployment
+If not using GitHub automation:
+1. Run `npm run build:widget` and `npx vite build --config vite.config.creekside.ts`
+2. Upload `public/widget-dist/chatbot-widget.js` to your CDN/server
+3. Upload `public/widget-dist/creekside-chatbot-widget.js` to your CDN/server
+4. Update client integration URLs
+5. Test on staging site first
+6. Gradual rollout to production clients
 
 ## Support for Old Browsers
 
