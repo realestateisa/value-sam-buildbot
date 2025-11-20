@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ChatWidgetCreekside } from './components/ChatWidgetCreekside';
+import { Toaster } from './components/ui/toaster';
 import widgetStyles from './widget-creekside.css?inline';
 
 // Create a QueryClient instance
@@ -65,6 +66,7 @@ class CreeksideChatbot extends HTMLElement {
       <React.StrictMode>
         <QueryClientProvider client={queryClient}>
           <ChatWidgetCreekside />
+          <Toaster />
         </QueryClientProvider>
       </React.StrictMode>
     );
