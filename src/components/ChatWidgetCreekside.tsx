@@ -15,6 +15,7 @@ export const ChatWidgetCreekside = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [customGptSessionId, setCustomGptSessionId] = useState<string | null>(null);
   const [showCallbackForm, setShowCallbackForm] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const {
     toast
@@ -24,6 +25,37 @@ export const ChatWidgetCreekside = () => {
       behavior: 'smooth'
     });
   };
+  
+  // Detect mobile devices
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  // Notify parent window about size changes
+  useEffect(() => {
+    const notifyParent = () => {
+      if (window.parent !== window) {
+        const width = isOpen ? (isMobile ? window.innerWidth : 448) : 88;
+        const height = isOpen ? (isMobile ? window.innerHeight : 600) : 146;
+        
+        window.parent.postMessage({
+          type: 'chatbot-resize',
+          width,
+          height,
+          isOpen,
+          isMobile
+        }, '*');
+      }
+    };
+    
+    notifyParent();
+  }, [isOpen, isMobile]);
+  
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
