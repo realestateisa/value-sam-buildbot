@@ -29,8 +29,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Build widget
+      - name: Build Value Build widget
         run: BUILD_TARGET=widget npx vite build
+      
+      - name: Build Creekside widget
+        run: npx vite build --config vite.config.creekside.ts
       
       - name: Check for changes
         id: git-check
