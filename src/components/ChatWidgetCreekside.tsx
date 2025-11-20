@@ -7,6 +7,7 @@ import { Message, Citation } from '@/types/chat';
 import { supabase } from '@/integrations/supabase/client';
 import { CallbackFormCreekside } from './CallbackFormCreekside';
 import { saveChatSession, loadChatSession, clearChatSession } from '@/utils/chatStorageCreekside';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import creeksideLogo from '@/assets/creekside-logo.png';
 export const ChatWidgetCreekside = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -133,10 +134,13 @@ export const ChatWidgetCreekside = () => {
   const handleCallbackRequest = () => {
     setShowCallbackForm(true);
   };
-  if (showCallbackForm) {
-    return <CallbackFormCreekside onClose={() => setShowCallbackForm(false)} />;
-  }
   return <>
+      <Dialog open={showCallbackForm} onOpenChange={setShowCallbackForm}>
+        <DialogContent className="sm:max-w-[425px]">
+          <CallbackFormCreekside onClose={() => setShowCallbackForm(false)} />
+        </DialogContent>
+      </Dialog>
+
       <button onClick={() => setIsOpen(!isOpen)} className="fixed bottom-6 right-6 h-20 w-20 rounded-full shadow-lg hover:scale-110 hover:shadow-2xl transition-all duration-300 z-50 button-lift mobile:top-4 mobile:right-4 mobile:bottom-auto" style={{
       backgroundColor: '#465E4C',
       padding: '0.5rem'
