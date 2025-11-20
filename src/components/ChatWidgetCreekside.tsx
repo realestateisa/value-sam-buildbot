@@ -7,7 +7,6 @@ import { Message, Citation } from '@/types/chat';
 import { supabase } from '@/integrations/supabase/client';
 import { CallbackFormCreekside } from './CallbackFormCreekside';
 import { saveChatSession, loadChatSession, clearChatSession } from '@/utils/chatStorageCreekside';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
 import creeksideLogo from '@/assets/creekside-logo.png';
 export const ChatWidgetCreekside = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -135,12 +134,6 @@ export const ChatWidgetCreekside = () => {
     setShowCallbackForm(true);
   };
   return <>
-      <Dialog open={showCallbackForm} onOpenChange={setShowCallbackForm}>
-        <DialogContent className="sm:max-w-[425px]">
-          <CallbackFormCreekside onClose={() => setShowCallbackForm(false)} />
-        </DialogContent>
-      </Dialog>
-
       <button onClick={() => setIsOpen(!isOpen)} className="fixed bottom-6 right-6 h-20 w-20 rounded-full shadow-lg hover:scale-110 hover:shadow-2xl transition-all duration-300 z-50 button-lift mobile:top-4 mobile:right-4 mobile:bottom-auto" style={{
       backgroundColor: '#465E4C',
       padding: '0.5rem'
@@ -179,7 +172,7 @@ export const ChatWidgetCreekside = () => {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto pl-2 pr-2 pb-3 md:pl-3 md:pr-5 md:pb-3 space-y-3" style={{
+          {!showCallbackForm && <div className="flex-1 overflow-y-auto pl-2 pr-2 pb-3 md:pl-3 md:pr-5 md:pb-3 space-y-3" style={{
         backgroundColor: '#F9FAFB'
       }}>
             {messages.map(message => <div key={message.id} className={`flex pt-2 ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}>
@@ -211,10 +204,13 @@ export const ChatWidgetCreekside = () => {
                 </div>
               </div>}
             <div ref={messagesEndRef} />
-          </div>
+          </div>}
+
+          {/* Callback Form View - standalone when active */}
+          {showCallbackForm && <CallbackFormCreekside onClose={() => setShowCallbackForm(false)} />}
 
           {/* Action Button */}
-          <div className="px-4 pt-3 pb-2 border-t w-full" style={{
+          {!showCallbackForm && <div className="px-4 pt-3 pb-2 border-t w-full" style={{
         backgroundColor: '#F9FAFB',
         borderColor: 'rgba(0, 0, 0, 0.1)',
         background: 'linear-gradient(to bottom, #F9FAFB, rgba(249, 250, 251, 0.8))'
@@ -225,10 +221,10 @@ export const ChatWidgetCreekside = () => {
               <Calendar className="h-4 w-4 mr-2 transition-all duration-300 group-hover:scale-110 flex-shrink-0" strokeWidth={2.5} />
               <span className="text-sm font-semibold truncate">Schedule Appointment</span>
             </Button>
-          </div>
+          </div>}
 
           {/* Message Input */}
-          <div className="px-5 pt-2 pb-5 border-t rounded-b-2xl" style={{
+          {!showCallbackForm && <div className="px-5 pt-2 pb-5 border-t rounded-b-2xl" style={{
         backgroundColor: '#F9FAFB',
         borderColor: 'rgba(0, 0, 0, 0.2)',
         background: 'linear-gradient(to bottom, #F9FAFB, rgba(249, 250, 251, 0.9), rgba(249, 250, 251, 0.95))'
@@ -246,7 +242,7 @@ export const ChatWidgetCreekside = () => {
                 {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
               </Button>
             </div>
-          </div>
+          </div>}
         </div>}
     </>;
 };
