@@ -53,8 +53,13 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
       console.log('📤 Sending callback request to Zapier:', webhookPayload);
       
       // Send webhook to Zapier
+      const webhookUrl = 'https://hooks.zapier.com/hooks/catch/5365219/u88do5x/';
+      
       try {
-        const response = await fetch('https://hooks.zapier.com/hooks/catch/5365219/u88do5x/', {
+        console.log('🔗 Webhook URL:', webhookUrl);
+        console.log('📦 Payload:', JSON.stringify(webhookPayload, null, 2));
+        
+        const response = await fetch(webhookUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -62,10 +67,17 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
           mode: 'no-cors',
           body: JSON.stringify(webhookPayload),
         });
-        console.log('✅ Webhook request sent successfully');
+        
+        console.log('✅ Webhook request sent successfully (no-cors mode - response is opaque)');
+        console.log('⚠️ Note: With no-cors mode, we cannot verify if Zapier received the data.');
+        console.log('📊 Check your Zapier dashboard to confirm the webhook was triggered.');
       } catch (error) {
         console.error('❌ Error sending webhook:', error);
-        // Still show success to user since no-cors mode prevents error detection
+        console.error('Error details:', {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          webhookUrl,
+          payload: webhookPayload
+        });
       }
 
       toast({
