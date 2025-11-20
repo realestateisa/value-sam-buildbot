@@ -15,13 +15,13 @@ const EmbedDemoCreekside = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F9FAFB] to-[#e8e9eb] p-8">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold" style={{ color: '#465E4C' }}>
+          <h1 className="text-4xl font-bold text-[hsl(12,78%,58%)]">
             Creekside Homes Chatbot
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-muted-foreground">
             Embed our AI-powered assistant on your website to help visitors learn about Creekside Homes
           </p>
         </div>
@@ -40,9 +40,8 @@ const EmbedDemoCreekside = () => {
               </pre>
               <Button
                 onClick={handleCopy}
-                className="absolute top-2 right-2"
+                className="absolute top-2 right-2 bg-[hsl(12,78%,58%)] hover:bg-[hsl(12,78%,48%)] text-white"
                 size="sm"
-                style={{ backgroundColor: '#465E4C' }}
               >
                 {copied ? (
                   <>
@@ -66,55 +65,55 @@ const EmbedDemoCreekside = () => {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#B38C61' }} />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
               <div>
-                <h3 className="font-semibold">AI-Powered Conversations</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-foreground">AI-Powered Conversations</h3>
+                <p className="text-sm text-muted-foreground">
                   SAM uses advanced AI trained on Creekside Homes' information to provide accurate, helpful responses
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#B38C61' }} />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
               <div>
-                <h3 className="font-semibold">Direct Appointment Booking</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-foreground">Direct Appointment Booking</h3>
+                <p className="text-sm text-muted-foreground">
                   One-click access to schedule appointments via Motion calendar integration
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#B38C61' }} />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
               <div>
-                <h3 className="font-semibold">Callback Request Form</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-foreground">Callback Request Form</h3>
+                <p className="text-sm text-muted-foreground">
                   Easy-to-use form for visitors who prefer to be contacted by phone
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#B38C61' }} />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
               <div>
-                <h3 className="font-semibold">Persistent Chat Sessions</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-foreground">Persistent Chat Sessions</h3>
+                <p className="text-sm text-muted-foreground">
                   Conversations are saved for 7 days so visitors can continue where they left off
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#B38C61' }} />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
               <div>
-                <h3 className="font-semibold">Mobile Optimized</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-foreground">Mobile Optimized</h3>
+                <p className="text-sm text-muted-foreground">
                   Full-screen experience on mobile devices with responsive design
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#B38C61' }} />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,78%,58%)]" />
               <div>
-                <h3 className="font-semibold">Source Citations</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-foreground">Source Citations</h3>
+                <p className="text-sm text-muted-foreground">
                   Every response includes links to source material for transparency and trust
                 </p>
               </div>
@@ -128,37 +127,37 @@ const EmbedDemoCreekside = () => {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#465E4C' }} />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,68%,48%)]" />
               <div>
-                <h3 className="font-semibold">Shadow DOM Isolation</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-foreground">Shadow DOM Isolation</h3>
+                <p className="text-sm text-muted-foreground">
                   Widget styles won't conflict with your website's existing CSS
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#465E4C' }} />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,68%,48%)]" />
               <div>
-                <h3 className="font-semibold">Lightweight & Fast</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-foreground">Lightweight & Fast</h3>
+                <p className="text-sm text-muted-foreground">
                   Optimized bundle size ensures quick loading without impacting page performance
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#465E4C' }} />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,68%,48%)]" />
               <div>
-                <h3 className="font-semibold">CustomGPT Integration</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-foreground">CustomGPT Integration</h3>
+                <p className="text-sm text-muted-foreground">
                   Powered by CustomGPT API for intelligent, context-aware responses
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#465E4C' }} />
+              <div className="w-2 h-2 rounded-full mt-2 bg-[hsl(12,68%,48%)]" />
               <div>
-                <h3 className="font-semibold">Lovable Cloud Backend</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-foreground">Lovable Cloud Backend</h3>
+                <p className="text-sm text-muted-foreground">
                   Serverless edge functions ensure reliability and scalability
                 </p>
               </div>
@@ -172,46 +171,46 @@ const EmbedDemoCreekside = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <h3 className="font-semibold flex items-center gap-2">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm" style={{ backgroundColor: '#465E4C' }}>
+              <h3 className="font-semibold flex items-center gap-2 text-foreground">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(12,78%,58%)]">
                   1
                 </span>
                 Visitor Opens Chat
               </h3>
-              <p className="text-sm text-gray-600 ml-8">
+              <p className="text-sm text-muted-foreground ml-8">
                 Clicking the chat button opens SAM, who greets them and offers assistance
               </p>
             </div>
             <div className="space-y-2">
-              <h3 className="font-semibold flex items-center gap-2">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm" style={{ backgroundColor: '#465E4C' }}>
+              <h3 className="font-semibold flex items-center gap-2 text-foreground">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(12,78%,58%)]">
                   2
                 </span>
                 Ask Questions
               </h3>
-              <p className="text-sm text-gray-600 ml-8">
+              <p className="text-sm text-muted-foreground ml-8">
                 Visitors can ask about homes, communities, pricing, features, and more
               </p>
             </div>
             <div className="space-y-2">
-              <h3 className="font-semibold flex items-center gap-2">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm" style={{ backgroundColor: '#465E4C' }}>
+              <h3 className="font-semibold flex items-center gap-2 text-foreground">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(12,78%,58%)]">
                   3
                 </span>
                 Get Accurate Answers
               </h3>
-              <p className="text-sm text-gray-600 ml-8">
+              <p className="text-sm text-muted-foreground ml-8">
                 SAM provides detailed responses with source citations for verification
               </p>
             </div>
             <div className="space-y-2">
-              <h3 className="font-semibold flex items-center gap-2">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm" style={{ backgroundColor: '#465E4C' }}>
+              <h3 className="font-semibold flex items-center gap-2 text-foreground">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-sm bg-[hsl(12,78%,58%)]">
                   4
                 </span>
                 Schedule or Request Callback
               </h3>
-              <p className="text-sm text-gray-600 ml-8">
+              <p className="text-sm text-muted-foreground ml-8">
                 When ready, visitors can book an appointment or request a callback with one click
               </p>
             </div>
@@ -220,14 +219,14 @@ const EmbedDemoCreekside = () => {
 
         <Card className="text-center">
           <CardContent className="pt-6">
-            <h3 className="text-xl font-semibold mb-4" style={{ color: '#465E4C' }}>
+            <h3 className="text-xl font-semibold mb-4 text-[hsl(12,78%,58%)]">
               Test the Chatbot
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-muted-foreground mb-4">
               The chatbot is already active on this page. Click the button in the bottom-right corner to try it out!
             </p>
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <div className="w-2 h-2 rounded-full bg-[hsl(142,71%,45%)] animate-pulse" />
               <span>Live and ready to chat</span>
             </div>
           </CardContent>
