@@ -6,11 +6,7 @@ import { Copy, Check } from 'lucide-react';
 const EmbedDemoCreekside = () => {
   const [copied, setCopied] = useState(false);
   
-  // Use GitHub raw URL which supports CORS
-  const embedCode = `<script src="https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/public/widget-dist/creekside-chatbot-widget.js"></script>`;
-  
-  // Alternative: If repo is public, you can use jsDelivr CDN which is faster
-  // const embedCode = `<script src="https://cdn.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME@main/public/widget-dist/creekside-chatbot-widget.js"></script>`;
+  const embedCode = `<script src="https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/creekside-chatbot-widget.js"></script>`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(embedCode);
