@@ -2,6 +2,13 @@ name: Build Widget
 permissions:
   contents: write
 
+# This workflow automatically builds and deploys widgets to jsDelivr CDN
+# When code is pushed to main/master:
+#   1. Builds both VBH and Creekside widgets
+#   2. Commits built files to repo
+#   3. Purges jsDelivr cache for immediate CDN updates
+#   4. Widgets are served globally via: cdn.jsdelivr.net/gh/{repo}@{branch}/public/widget-dist/
+
 on:
   push:
     branches: [ main, master ]
@@ -54,3 +61,30 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+      
+      - name: Purge jsDelivr CDN Cache
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          echo "Purging jsDelivr CDN cache for widget files..."
+          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js"
+          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/creekside-chatbot-widget.js"
+          echo "CDN cache purged successfully!"
+      
+      - name: Display CDN URLs
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          echo "## Widget Deployment Successful! 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### CDN URLs (jsDelivr):" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Value Build Widget:**" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Creekside Widget:**" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/creekside-chatbot-widget.js" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Widgets are now available worldwide via jsDelivr CDN! 🌍" >> $GITHUB_STEP_SUMMARY
