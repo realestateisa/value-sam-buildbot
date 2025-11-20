@@ -7,10 +7,10 @@ import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 
 const callbackSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  phone: z.string().regex(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/, 'Invalid phone number'),
-  email: z.string().email('Invalid email address'),
+  firstName: z.string().trim().min(1, 'First name is required').max(50, 'First name too long'),
+  lastName: z.string().trim().min(1, 'Last name is required').max(50, 'Last name too long'),
+  phone: z.string().trim().min(10, 'Phone number must be at least 10 digits').max(20, 'Phone number too long'),
+  email: z.string().trim().email('Invalid email address').max(100, 'Email too long'),
 });
 
 interface CallbackFormCreeksideProps {
@@ -40,25 +40,32 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
 
       setIsSubmitting(true);
       
+      // Prepare webhook payload
+      const webhookPayload = {
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        phone: validatedData.phone,
+        email: validatedData.email,
+        timestamp: new Date().toISOString(),
+        source: 'Creekside Homes Chatbot',
+      };
+
+      console.log('📤 Sending callback request to Zapier:', webhookPayload);
+      
       // Send webhook to Zapier
       try {
-        await fetch('https://hooks.zapier.com/hooks/catch/5365219/u88do5x/', {
+        const response = await fetch('https://hooks.zapier.com/hooks/catch/5365219/u88do5x/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           mode: 'no-cors',
-          body: JSON.stringify({
-            firstName: validatedData.firstName,
-            lastName: validatedData.lastName,
-            phone: validatedData.phone,
-            email: validatedData.email,
-            timestamp: new Date().toISOString(),
-            source: 'Creekside Homes Chatbot',
-          }),
+          body: JSON.stringify(webhookPayload),
         });
+        console.log('✅ Webhook request sent successfully');
       } catch (error) {
-        console.error('Error sending webhook:', error);
+        console.error('❌ Error sending webhook:', error);
+        // Still show success to user since no-cors mode prevents error detection
       }
 
       toast({
@@ -172,8 +179,9 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 text-white"
+            className="flex-1 text-white font-semibold hover:opacity-90 transition-opacity"
             style={{ backgroundColor: '#465E4C' }}
+            aria-label="Submit callback request"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Request'}
           </Button>
