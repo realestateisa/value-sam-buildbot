@@ -5,7 +5,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Message, Citation } from '@/types/chat';
 import { supabase } from '@/integrations/supabase/client';
-import TypingIndicator from './TypingIndicator';
 import { CallbackFormCreekside } from './CallbackFormCreekside';
 import { saveChatSession, loadChatSession, clearChatSession } from '@/utils/chatStorageCreekside';
 import creeksideLogo from '@/assets/creekside-logo.png';
@@ -200,7 +199,11 @@ export const ChatWidgetCreekside = () => {
             {isLoading && <div className="flex justify-start gap-2 pt-2">
                 <img src={creeksideLogo} alt="SAM" className="h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1" />
                 <div className="bg-white border rounded-lg p-3">
-                  <TypingIndicator />
+                  <div className="flex items-center space-x-1">
+                    <span className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></span>
+                    <span className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }}></span>
+                    <span className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></span>
+                  </div>
                 </div>
               </div>}
             <div ref={messagesEndRef} />
