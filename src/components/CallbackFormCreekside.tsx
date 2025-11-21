@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, X } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { ArrowLeft, X, CheckCircle } from 'lucide-react';
 import { z } from 'zod';
 
 const callbackSchema = z.object({
@@ -24,12 +23,12 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('🔵 Form submission started');
+  const handleSubmit = async () => {
+    console.log('🔵🔵🔵 BUTTON CLICKED - Form submission started');
     setErrors({});
+    setShowSuccess(false);
 
     try {
       console.log('🔵 Validating form data:', { firstName, lastName, phone, email });
@@ -43,7 +42,6 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
 
       setIsSubmitting(true);
       
-      // Prepare webhook payload
       const webhookPayload = {
         firstName: validatedData.firstName,
         lastName: validatedData.lastName,
@@ -55,35 +53,28 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
 
       console.log('📤 Sending callback request to Zapier:', webhookPayload);
       
-      // Send webhook to Zapier
-      try {
-        const response = await fetch('https://hooks.zapier.com/hooks/catch/5365219/u88do5x/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          mode: 'no-cors',
-          body: JSON.stringify(webhookPayload),
-        });
-        console.log('✅ Webhook request sent successfully');
-      } catch (error) {
-        console.error('❌ Error sending webhook:', error);
-        // Still show success to user since no-cors mode prevents error detection
-      }
-
-      console.log('🎉 Calling toast notification');
-      toast({
-        title: 'Request Received',
-        description: 'Thank you! A Creekside Homes representative will contact you shortly.',
+      await fetch('https://hooks.zapier.com/hooks/catch/5365219/u88do5x/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'no-cors',
+        body: JSON.stringify(webhookPayload),
       });
-      console.log('🎉 Toast called successfully');
-
-      console.log('🔄 Resetting form and closing');
-      setFirstName('');
-      setLastName('');
-      setPhone('');
-      setEmail('');
-      onClose();
+      
+      console.log('✅ Webhook sent! Showing success message');
+      setShowSuccess(true);
+      
+      setTimeout(() => {
+        console.log('🔄 Closing form after success');
+        setFirstName('');
+        setLastName('');
+        setPhone('');
+        setEmail('');
+        setShowSuccess(false);
+        onClose();
+      }, 2000);
+      
     } catch (error) {
       console.error('❌ Form submission error:', error);
       if (error instanceof z.ZodError) {
@@ -96,8 +87,6 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
         });
         setErrors(newErrors);
       }
-    } finally {
-      console.log('🔵 Form submission completed, isSubmitting:', false);
       setIsSubmitting(false);
     }
   };
@@ -116,7 +105,16 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
         </Button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 flex-1 pt-6">
+      {showSuccess ? (
+        <div className="flex flex-col items-center justify-center flex-1 space-y-4">
+          <CheckCircle className="h-16 w-16 text-green-600" />
+          <h3 className="text-xl font-semibold text-center">Request Received!</h3>
+          <p className="text-center text-muted-foreground">
+            Thank you! A Creekside Homes representative will contact you shortly.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4 flex-1 pt-6">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name</Label>
           <Input
@@ -174,32 +172,33 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
           )}
         </div>
 
-        <div className="flex gap-3 pt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onClose}
-            className="flex-1"
-            style={{ borderColor: '#465E4C', color: '#465E4C' }}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Chat
-          </Button>
-          <Button
-            type="button"
-            onClick={(e) => {
-              console.log('🔵 Submit button clicked');
-              handleSubmit(e as any);
-            }}
-            disabled={isSubmitting}
-            className="flex-1 text-white font-semibold hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: '#465E4C' }}
-            aria-label="Submit callback request"
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Request'}
-          </Button>
+          <div className="flex gap-3 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="flex-1"
+              style={{ borderColor: '#465E4C', color: '#465E4C' }}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Chat
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                console.log('🔵🔵🔵 SUBMIT BUTTON CLICKED');
+                handleSubmit();
+              }}
+              disabled={isSubmitting}
+              className="flex-1 text-white font-semibold hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: '#465E4C' }}
+              aria-label="Submit callback request"
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Request'}
+            </Button>
+          </div>
         </div>
-      </form>
+      )}
     </div>
   );
 };

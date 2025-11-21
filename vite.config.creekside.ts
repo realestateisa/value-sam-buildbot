@@ -16,7 +16,7 @@ function inlineCssPlugin() {
   };
 }
 
-// Vite configuration for Creekside widget build (Shadow DOM) - Direct onClick handler
+// Vite configuration for Creekside widget build (Shadow DOM) - No toast dependencies
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), inlineCssPlugin()],
