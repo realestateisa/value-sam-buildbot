@@ -28,15 +28,18 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🔵 Form submission started');
     setErrors({});
 
     try {
+      console.log('🔵 Validating form data:', { firstName, lastName, phone, email });
       const validatedData = callbackSchema.parse({
         firstName,
         lastName,
         phone,
         email,
       });
+      console.log('✅ Form validation passed:', validatedData);
 
       setIsSubmitting(true);
       
@@ -68,18 +71,23 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
         // Still show success to user since no-cors mode prevents error detection
       }
 
+      console.log('🎉 Calling toast notification');
       toast({
         title: 'Request Received',
         description: 'Thank you! A Creekside Homes representative will contact you shortly.',
       });
+      console.log('🎉 Toast called successfully');
 
+      console.log('🔄 Resetting form and closing');
       setFirstName('');
       setLastName('');
       setPhone('');
       setEmail('');
       onClose();
     } catch (error) {
+      console.error('❌ Form submission error:', error);
       if (error instanceof z.ZodError) {
+        console.error('❌ Validation errors:', error.errors);
         const newErrors: Record<string, string> = {};
         error.errors.forEach((err) => {
           if (err.path[0]) {
@@ -89,6 +97,7 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
         setErrors(newErrors);
       }
     } finally {
+      console.log('🔵 Form submission completed, isSubmitting:', false);
       setIsSubmitting(false);
     }
   };
