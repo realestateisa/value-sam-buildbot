@@ -186,7 +186,11 @@ export const CallbackFormCreekside = ({ onClose }: CallbackFormCreeksideProps) =
             Back to Chat
           </Button>
           <Button
-            type="submit"
+            type="button"
+            onClick={(e) => {
+              console.log('🔵 Submit button clicked');
+              handleSubmit(e as any);
+            }}
             disabled={isSubmitting}
             className="flex-1 text-white font-semibold hover:opacity-90 transition-opacity"
             style={{ backgroundColor: '#465E4C' }}

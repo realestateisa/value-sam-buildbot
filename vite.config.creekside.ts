@@ -16,7 +16,7 @@ function inlineCssPlugin() {
   };
 }
 
-// Vite configuration for Creekside widget build (Shadow DOM) - Debug enabled
+// Vite configuration for Creekside widget build (Shadow DOM) - Direct onClick handler
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), inlineCssPlugin()],
