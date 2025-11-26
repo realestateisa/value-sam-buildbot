@@ -258,10 +258,10 @@ export const ChatWidgetCreekside = () => {
       }`}>
         <Button 
           onClick={() => setIsOpen(!isOpen)} 
-          className="h-20 w-20 rounded-full bg-primary text-primary-foreground button-lift hover:shadow-2xl hover:scale-110 transition-all duration-300 p-0.5 border-4 border-[#B38C61]" 
+          className="h-20 w-20 rounded-full bg-primary text-primary-foreground button-lift hover:shadow-2xl hover:scale-110 transition-all duration-300 p-0 border-4 border-[#B38C61] flex items-center justify-center" 
           size="icon"
         >
-          {isOpen ? <X className="h-8 w-8" /> : <MessageCircle className="h-[70px] w-[70px]" fill="currentColor" />}
+          {isOpen ? <X className="h-8 w-8" /> : <MessageCircle className="h-[72px] w-[72px]" fill="currentColor" strokeWidth={1.5} />}
         </Button>
       </div>
 
