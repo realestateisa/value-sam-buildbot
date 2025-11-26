@@ -261,11 +261,13 @@ export const ChatWidgetCreekside = () => {
             className="h-20 w-20 rounded-full bg-primary text-primary-foreground button-lift hover:shadow-2xl hover:scale-110 transition-all duration-300 p-0 border-4 border-[#B38C61] flex items-center justify-center" 
             size="icon"
           >
-        {isOpen ? (
-          <X style={{ width: '28px', height: '28px' }} />
-        ) : (
-          <MessageCircle fill="currentColor" strokeWidth={1.5} style={{ width: '28px', height: '28px' }} />
-        )}
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {isOpen ? (
+            <X style={{ width: '28px', height: '28px' }} />
+          ) : (
+            <MessageCircle fill="currentColor" strokeWidth={1.5} style={{ width: '28px', height: '28px' }} />
+          )}
+        </span>
           </Button>
       </div>
 
