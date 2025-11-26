@@ -197,7 +197,7 @@
   /* Override Button's SVG size constraint for large chat icon */
   :host .chat-icon-override svg,
   :host .chat-icon-override [data-lucide] {
-    width: 56px !important;
-    height: 56px !important;
+    width: 36px !important;
+    height: 36px !important;
   }
 }
