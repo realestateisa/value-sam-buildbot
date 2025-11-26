@@ -1,10 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Copy, Check } from 'lucide-react';
 
 const EmbedDemoCreekside = () => {
   const [copied, setCopied] = useState(false);
+  
+  // Load the widget script for live preview
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = '/widget-dist/creekside-chatbot-widget.js';
+    script.async = true;
+    document.body.appendChild(script);
+    
+    return () => {
+      document.body.removeChild(script);
+      // Remove the custom element if it exists
+      const widget = document.querySelector('creekside-chatbot-widget');
+      if (widget) {
+        widget.remove();
+      }
+    };
+  }, []);
   
   const embedCode = `<script src="https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/creekside-chatbot-widget.js"></script>`;
 
