@@ -263,9 +263,9 @@ export const ChatWidgetCreekside = () => {
           >
         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {isOpen ? (
-            <X style={{ width: '28px', height: '28px' }} />
+            <X className="chat-icon-large" />
           ) : (
-            <MessageCircle fill="currentColor" strokeWidth={1.5} style={{ width: '28px', height: '28px' }} />
+            <MessageCircle fill="currentColor" strokeWidth={1.5} className="chat-icon-large" />
           )}
         </span>
           </Button>
