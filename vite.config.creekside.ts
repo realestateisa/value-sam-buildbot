@@ -16,7 +16,7 @@ function inlineCssPlugin() {
   };
 }
 
-// Vite configuration for Creekside widget build (Shadow DOM) - No toast dependencies
+// Vite configuration for Creekside widget build (Shadow DOM) - Border color update
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), inlineCssPlugin()],
