@@ -194,10 +194,11 @@
     transition: var(--transition-smooth);
   }
   
-  /* Override Button's SVG size constraint for large chat icon */
-  :host .chat-icon-override svg,
-  :host .chat-icon-override [data-lucide] {
-    width: 30px !important;
-    height: 30px !important;
-  }
+}
+
+/* Override Button's SVG size constraint - outside @layer for highest priority */
+:host .chat-icon-override svg,
+:host .chat-icon-override [data-lucide] {
+  width: 30px !important;
+  height: 30px !important;
 }
