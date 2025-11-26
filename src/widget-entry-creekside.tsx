@@ -84,7 +84,7 @@ class CreeksideChatbot extends HTMLElement {
 }
 
 // Register the custom element
-// Widget rebuild trigger: 2025-11-26
+// Widget rebuild trigger: 2025-11-26-icons-32px
 if (!customElements.get('creekside-chatbot')) {
   customElements.define('creekside-chatbot', CreeksideChatbot);
 }
