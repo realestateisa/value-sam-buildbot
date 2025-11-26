@@ -261,7 +261,7 @@ export const ChatWidgetCreekside = () => {
             className="chat-icon-override h-20 w-20 rounded-full bg-primary text-primary-foreground button-lift hover:shadow-2xl hover:scale-110 transition-all duration-300 p-0 border-4 border-[#B38C61] flex items-center justify-center" 
             size="icon"
           >
-            {isOpen ? <X size={32} /> : <MessageCircle size={36} fill="currentColor" strokeWidth={1.5} />}
+            {isOpen ? <X size={32} /> : <MessageCircle size={30} fill="currentColor" strokeWidth={1.5} />}
           </Button>
       </div>
 
