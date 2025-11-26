@@ -16,7 +16,7 @@ function inlineCssPlugin() {
   };
 }
 
-// Vite configuration for Creekside widget build (Shadow DOM) - Chat icon instead of logo
+// Vite configuration for Creekside widget build (Shadow DOM) - Solid chat icon
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), inlineCssPlugin()],
