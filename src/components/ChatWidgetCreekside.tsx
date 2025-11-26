@@ -256,13 +256,13 @@ export const ChatWidgetCreekside = () => {
           ? 'top-4 right-4' 
           : 'bottom-6 right-6'
       }`}>
-          <Button 
-            onClick={() => setIsOpen(!isOpen)} 
-            className="chat-icon-override h-20 w-20 rounded-full bg-primary text-primary-foreground button-lift hover:shadow-2xl hover:scale-110 transition-all duration-300 p-0 border-4 border-[#B38C61] flex items-center justify-center" 
-            size="icon"
-          >
-            {isOpen ? <X size={32} /> : <MessageCircle size={36} fill="currentColor" strokeWidth={1.5} />}
-          </Button>
+        <Button 
+          onClick={() => setIsOpen(!isOpen)} 
+          className="chat-icon-override h-20 w-20 rounded-full bg-primary text-primary-foreground button-lift hover:shadow-2xl hover:scale-110 transition-all duration-300 p-0 border-4 border-[#B38C61] flex items-center justify-center animate-subtle-pulse" 
+          size="icon"
+        >
+          {isOpen ? <X size={32} /> : <MessageCircle size={36} fill="currentColor" strokeWidth={1.5} />}
+        </Button>
       </div>
 
       {/* Chat Window */}
