@@ -194,4 +194,10 @@
     transition: var(--transition-smooth);
   }
   
+  /* Chat Icon Sizing - Override button default SVG size */
+  :host .chat-icon-large {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
 }
