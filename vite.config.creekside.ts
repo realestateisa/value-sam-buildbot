@@ -16,7 +16,7 @@ function inlineCssPlugin() {
   };
 }
 
-// Vite configuration for Creekside widget build (Shadow DOM) - Chat icon now fills circle properly
+// Vite configuration for Creekside widget build (Shadow DOM) - Chat icon uses inline styles to override button constraints
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), inlineCssPlugin()],
