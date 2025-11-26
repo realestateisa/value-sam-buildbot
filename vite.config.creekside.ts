@@ -16,7 +16,7 @@ function inlineCssPlugin() {
   };
 }
 
-// Vite configuration for Creekside widget build (Shadow DOM) - Significantly larger chat icon
+// Vite configuration for Creekside widget build (Shadow DOM) - Chat icon now fills circle properly
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), inlineCssPlugin()],
