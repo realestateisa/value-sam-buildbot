@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import EmbedDemo from "./pages/EmbedDemo";
 import EmbedDemoCreekside from "./pages/EmbedDemoCreekside";
+import WidgetHost from "./pages/WidgetHost";
 import NotFound from "./pages/NotFound";
 import { ChatWidget } from "./components/ChatWidget";
 import { ChatWidgetCreekside } from "./components/ChatWidgetCreekside";
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/" element={<Navigate to="/embed-demo" replace />} />
           <Route path="/embed-demo" element={<EmbedDemo />} />
           <Route path="/embed-demo-creekside" element={<EmbedDemoCreekside />} />
+          <Route path="/widget" element={<WidgetHost />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
