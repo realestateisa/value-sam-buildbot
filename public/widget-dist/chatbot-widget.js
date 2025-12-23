@@ -1,39 +1,47 @@
 /**
- * Value Build Homes Chatbot Widget Loader
- * This script loads the main widget bundle from the widget-dist directory
- * @version 1.0.1 - 2025-12-23 - Trigger rebuild for logo inlining
+ * VBH Widget Loader v2.0.7 - DISABLED / KILL SWITCH
+ * This loader removes any existing VBH widget elements immediately.
  */
 (function() {
   'use strict';
   
-  // Get the base URL from the current script's location
-  const currentScript = document.currentScript;
-  const scriptSrc = currentScript?.src || document.querySelector('script[src*="chatbot-widget.js"]')?.src;
+  console.log('[VBH Widget Loader] v2.0.7 - Widget disabled, cleaning up');
   
-  if (!scriptSrc) {
-    console.error('[VBH Widget] Could not determine script source');
-    return;
+  // Immediately remove any existing VBH widget elements
+  var selectors = [
+    'vbh-chatbot',
+    '#vbh-chatbot',
+    '.vbh-chatbot',
+    '#widget-container',
+    '.vbh-widget-container',
+    '[id*="vbh"]',
+    '[class*="vbh-widget"]',
+    'iframe[src*="widget"]',
+    'iframe[src*="vbh"]',
+    'iframe[src*="chatbot"]'
+  ];
+  
+  selectors.forEach(function(selector) {
+    try {
+      var elements = document.querySelectorAll(selector);
+      elements.forEach(function(el) {
+        el.remove();
+      });
+    } catch (e) {}
+  });
+  
+  // Also load the v2 bundle which has additional cleanup
+  var currentScript = document.currentScript;
+  var scriptSrc = currentScript?.src || document.querySelector('script[src*="chatbot-widget.js"]')?.src;
+  
+  if (scriptSrc) {
+    var scriptUrl = new URL(scriptSrc);
+    var basePath = scriptUrl.href.replace(/\/chatbot-widget\.js(\?.*)?$/, "/");
+    var widgetScript = document.createElement('script');
+    widgetScript.src = new URL('widget-dist/chatbot-widget-v2.js', basePath).toString();
+    widgetScript.async = true;
+    document.head.appendChild(widgetScript);
   }
   
-  const scriptUrl = new URL(scriptSrc);
-
-  // Base path is the directory containing this loader file.
-  // On jsDelivr this is typically: .../public/
-  const basePath = scriptUrl.href.replace(/\/chatbot-widget\.js(\?.*)?$/, "/");
-
-  // Create and load the main widget script (v2 embed)
-  const widgetScript = document.createElement('script');
-  widgetScript.src = new URL('widget-dist/chatbot-widget-v2.js', basePath).toString();
-  widgetScript.async = true;
-  
-  // Preserve data-auto-inject attribute if set
-  if (currentScript?.getAttribute('data-auto-inject') === 'false') {
-    widgetScript.setAttribute('data-auto-inject', 'false');
-  }
-  
-  widgetScript.onerror = function() {
-    console.error('[VBH Widget] Failed to load widget bundle from:', widgetScript.src);
-  };
-  
-  document.head.appendChild(widgetScript);
+  console.log('[VBH Widget Loader] Cleanup complete');
 })();

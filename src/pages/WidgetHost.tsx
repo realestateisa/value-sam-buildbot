@@ -1,17 +1,10 @@
-import { useEffect } from "react";
-import { ChatWidget } from "@/components/ChatWidget";
-
+/**
+ * Widget Host Page - DISABLED
+ * This page intentionally renders nothing.
+ * Any iframe embeds pointing here will show a blank transparent page.
+ */
 const WidgetHost = () => {
-  // SEO: this route is meant for iframe embedding; keep it minimal.
-  useEffect(() => {
-    document.title = "Value Build Homes Chatbot Widget";
-  }, []);
-
-  return (
-    <main className="min-h-screen bg-transparent">
-      <ChatWidget />
-    </main>
-  );
+  return null;
 };
 
 export default WidgetHost;
