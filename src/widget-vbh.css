@@ -13,6 +13,10 @@
 @layer base {
   /* Shadow DOM root - replaces :root */
   :host {
+    /* Shadow DOM isolation - MUST BE FIRST */
+    all: initial;
+    display: block;
+    
     /* Core theme colors - VBH red #E63329 */
     --background: 0 0% 100%;
     --foreground: 0 0% 20%;
@@ -55,10 +59,6 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 2 79% 53%;
-    
-    /* Shadow DOM specific - AFTER variable definitions */
-    all: initial;
-    display: block;
   }
 
   /* Dark mode support - scoped to Shadow DOM */
