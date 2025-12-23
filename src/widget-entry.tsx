@@ -28,21 +28,34 @@ class VBHChatbot extends HTMLElement {
 
   connectedCallback() {
     console.log('[VBH Widget] v2.1.2 - Initializing Shadow DOM widget');
-    
+
+    // Make the host element itself un-hideable by hostile site CSS
+    // (If the site has a rule like `vbh-chatbot { display:none }`, this forces visibility.)
+    this.style.cssText = [
+      'all: initial',
+      'display: block',
+      'position: fixed',
+      'bottom: 0',
+      'right: 0',
+      'z-index: 2147483647',
+      'pointer-events: auto',
+    ].join('; ');
+
     // Create shadow root for style isolation
     const shadow = this.attachShadow({ mode: 'open' });
-    
+
     // Inject styles into shadow DOM
     const styleElement = document.createElement('style');
     styleElement.textContent = widgetStyles;
     shadow.appendChild(styleElement);
-    
+
     // Create container for React app
     this.container = document.createElement('div');
     this.container.id = 'vbh-widget-root';
-    this.container.style.cssText = 'position: fixed; bottom: 0; right: 0; z-index: 2147483647; font-family: system-ui, -apple-system, sans-serif;';
+    // Keep container unpositioned; the React widget handles its own fixed positioning
+    this.container.style.cssText = 'position: relative; z-index: 2147483647;';
     shadow.appendChild(this.container);
-    
+
     // Mount React app
     this.root = createRoot(this.container);
     this.root.render(
