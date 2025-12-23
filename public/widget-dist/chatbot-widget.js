@@ -1,39 +1,89 @@
 /**
- * Value Build Homes Chatbot Widget Loader
- * This script loads the main widget bundle from the widget-dist directory
- * @version 1.0.1 - 2025-12-23 - Trigger rebuild for logo inlining
+ * Value Build Homes Chatbot Widget (Canonical)
+ * Embeds the chatbot as an iframe pointing to this domain's /widget route
+ * @version 2.0.8 - 2025-12-23
  */
-(function() {
+(function () {
   'use strict';
-  
-  // Get the base URL from the current script's location
-  const currentScript = document.currentScript;
-  const scriptSrc = currentScript?.src || document.querySelector('script[src*="chatbot-widget.js"]')?.src;
-  
-  if (!scriptSrc) {
-    console.error('[VBH Widget] Could not determine script source');
+
+  // Prevent double-loading
+  if (window.__VBH_CHATBOT_LOADED__) {
+    console.log('[VBH Widget] v2.0.8 - Already loaded, skipping...');
     return;
   }
-  
-  const scriptUrl = new URL(scriptSrc);
+  window.__VBH_CHATBOT_LOADED__ = true;
 
-  // Base path is the directory containing this loader file.
-  // On jsDelivr this is typically: .../public/
-  const basePath = scriptUrl.href.replace(/\/chatbot-widget\.js(\?.*)?$/, "/");
+  console.log('[VBH Widget] v2.0.8 - Initializing...');
 
-  // Create and load the main widget script (v2 embed)
-  const widgetScript = document.createElement('script');
-  widgetScript.src = new URL('widget-dist/chatbot-widget-v2.js', basePath).toString();
-  widgetScript.async = true;
-  
-  // Preserve data-auto-inject attribute if set
-  if (currentScript?.getAttribute('data-auto-inject') === 'false') {
-    widgetScript.setAttribute('data-auto-inject', 'false');
+  // IMPORTANT: Use same-origin widget URL so the iframe is embeddable on client sites.
+  // (Cross-site iframes are often blocked by frame-ancestors / X-Frame-Options.)
+  var CHATBOT_ORIGIN = 'https://vbh-chat-bot.com';
+
+  var root = document.getElementById('vbh-chatbot-root');
+  if (!root) {
+    root = document.createElement('div');
+    root.id = 'vbh-chatbot-root';
+    document.body.appendChild(root);
   }
-  
-  widgetScript.onerror = function() {
-    console.error('[VBH Widget] Failed to load widget bundle from:', widgetScript.src);
-  };
-  
-  document.head.appendChild(widgetScript);
+
+  var iframe = document.createElement('iframe');
+  iframe.src = CHATBOT_ORIGIN + '/widget';
+  iframe.id = 'vbh-chatbot-iframe';
+  iframe.title = 'Value Build Homes Chatbot';
+  iframe.allow = 'clipboard-write';
+  iframe.style.cssText = [
+    'position: fixed',
+    'bottom: 24px',
+    'right: 24px',
+    'width: 88px',
+    'height: 146px',
+    'border: none',
+    'z-index: 2147483647',
+    'background: transparent',
+    'pointer-events: auto',
+    'display: block',
+    'transition: all 0.3s ease-in-out',
+    'overflow: visible'
+  ].join('; ') + ';';
+
+  window.addEventListener('message', function (event) {
+    if (event.origin !== CHATBOT_ORIGIN) return;
+
+    if (event.data && event.data.type === 'chatbot-resize') {
+      var width = event.data.width;
+      var height = event.data.height;
+      var isOpen = event.data.isOpen;
+      var isMobile = event.data.isMobile;
+
+      if (isOpen && isMobile) {
+        iframe.style.position = 'fixed';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.borderRadius = '0';
+      } else if (isOpen) {
+        iframe.style.top = '';
+        iframe.style.left = '';
+        iframe.style.bottom = '24px';
+        iframe.style.right = '24px';
+        iframe.style.width = width + 'px';
+        iframe.style.height = height + 'px';
+        iframe.style.borderRadius = '24px';
+      } else {
+        iframe.style.top = '';
+        iframe.style.left = '';
+        iframe.style.bottom = '24px';
+        iframe.style.right = '24px';
+        iframe.style.width = '88px';
+        iframe.style.height = '146px';
+        iframe.style.borderRadius = '0';
+      }
+    }
+  });
+
+  root.appendChild(iframe);
+  console.log('[VBH Widget] v2.0.8 - Chatbot iframe created successfully');
 })();
