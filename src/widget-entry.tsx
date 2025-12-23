@@ -73,20 +73,46 @@ if (!customElements.get('vbh-chatbot')) {
 
 // Auto-inject the widget into the page
 function injectWidget() {
-  // Don't inject if already present
-  if (document.querySelector('vbh-chatbot')) {
-    console.log('[VBH Widget] Widget already exists, skipping injection');
-    return;
+  try {
+    // Ensure body exists
+    if (!document.body) return;
+
+    // Don't inject if already present
+    if (document.querySelector('vbh-chatbot')) {
+      console.log('[VBH Widget] Widget already exists, skipping injection');
+      return;
+    }
+
+    const widget = document.createElement('vbh-chatbot');
+    document.body.appendChild(widget);
+    console.log('[VBH Widget] Widget injected into page');
+  } catch (err) {
+    console.error('[VBH Widget] Inject failed', err);
   }
-  
-  const widget = document.createElement('vbh-chatbot');
-  document.body.appendChild(widget);
-  console.log('[VBH Widget] Widget injected into page');
+}
+
+function ensureInjected() {
+  // Inject immediately
+  injectWidget();
+
+  // Re-inject if another script removes the element (common on hostile pages / legacy loaders)
+  try {
+    const observer = new MutationObserver(() => {
+      if (!document.querySelector('vbh-chatbot')) {
+        injectWidget();
+      }
+    });
+
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  } catch (err) {
+    console.error('[VBH Widget] Observer failed', err);
+  }
 }
 
 // Inject when DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', injectWidget);
+  document.addEventListener('DOMContentLoaded', ensureInjected);
 } else {
-  injectWidget();
+  ensureInjected();
 }
+
