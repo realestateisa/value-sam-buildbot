@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import fs from "fs";
+import { build as esbuild } from "esbuild";
 import { componentTagger } from "lovable-tagger";
 
 // Custom plugin to remove separate CSS file since we import it inline
@@ -76,7 +78,82 @@ export default defineConfig(({ mode }) => {
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       },
     },
-    plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+    plugins: (() => {
+      const plugins: any[] = [react()];
+      if (mode === "development") plugins.push(componentTagger());
+
+      plugins.push({
+        // Ensure the production site always ships working embed files at:
+        //   /widget-dist/chatbot-widget-v2.js
+        //   /widget-dist/chatbot-widget.js
+        name: "build-vbh-widget-artifacts",
+        apply: "build" as const,
+        async closeBundle() {
+          const outDir = path.resolve(__dirname, "dist");
+          const widgetOutDir = path.join(outDir, "widget-dist");
+          fs.mkdirSync(widgetOutDir, { recursive: true });
+
+          const inlineQueryRE = /\?inline$/;
+
+          const result = await esbuild({
+            entryPoints: [path.resolve(__dirname, "src/widget-entry.tsx")],
+            bundle: true,
+            format: "iife",
+            globalName: "ValueBuildChatbot",
+            target: ["es2019"],
+            write: false,
+            minify: true,
+            loader: {
+              ".png": "dataurl",
+              ".jpg": "dataurl",
+              ".jpeg": "dataurl",
+              ".svg": "dataurl",
+              ".webp": "dataurl",
+              ".css": "text",
+            },
+            plugins: [
+              {
+                name: "inline-query-loader",
+                setup(build) {
+                  build.onResolve({ filter: inlineQueryRE }, (args) => {
+                    const cleaned = args.path.replace(inlineQueryRE, "");
+                    return {
+                      path: path.isAbsolute(cleaned)
+                        ? cleaned
+                        : path.resolve(args.resolveDir, cleaned),
+                      namespace: "inline-file",
+                    };
+                  });
+
+                  build.onLoad({ filter: /.*/, namespace: "inline-file" }, async (args) => {
+                    const contents = await fs.promises.readFile(args.path, "utf8");
+                    return { contents, loader: "text" };
+                  });
+                },
+              },
+              {
+                name: "alias-at",
+                setup(build) {
+                  build.onResolve({ filter: /^@\// }, (args) => {
+                    return {
+                      path: path.resolve(__dirname, "src", args.path.slice(2)),
+                    };
+                  });
+                },
+              },
+            ],
+          });
+
+          const code = result.outputFiles?.[0]?.text ?? "";
+          if (!code) throw new Error("Widget build produced empty output");
+
+          fs.writeFileSync(path.join(widgetOutDir, "chatbot-widget-v2.js"), code, "utf8");
+          fs.writeFileSync(path.join(widgetOutDir, "chatbot-widget.js"), code, "utf8");
+        },
+      });
+
+      return plugins;
+    })(),
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
