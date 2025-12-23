@@ -46,7 +46,7 @@ jobs:
         run: BUILD_TARGET=widget npx vite build
 
       - name: Build Value Build widget (v2 embed)
-        run: npx vite build --config vite.config.widget.ts
+        run: npx vite build --config vite.config.vbh.ts
       
       - name: Build Creekside widget
         run: npx vite build --config vite.config.creekside.ts
