@@ -65,22 +65,16 @@ class ValueBuildChatbot extends HTMLElement {
   private mountReactApp() {
     if (!this.container) return;
 
-    try {
-      // Create root and render React app
-      this.root = createRoot(this.container);
-      
-      this.root.render(
-        <React.StrictMode>
-          <QueryClientProvider client={queryClient}>
-            <ChatWidget />
-          </QueryClientProvider>
-        </React.StrictMode>
-      );
-      console.info(`[VBH Widget] Mounted successfully`);
-    } catch (error) {
-      console.error('[VBH Widget] Failed to mount:', error);
-      (window as any).__VBH_WIDGET_LAST_ERROR = error;
-    }
+    // Create root and render React app
+    this.root = createRoot(this.container);
+    
+    this.root.render(
+      <React.StrictMode>
+        <QueryClientProvider client={queryClient}>
+          <ChatWidget />
+        </QueryClientProvider>
+      </React.StrictMode>
+    );
   }
 
   // Allow external configuration via attributes
@@ -98,14 +92,7 @@ class ValueBuildChatbot extends HTMLElement {
   }
 }
 
-// Widget version stamp for debugging
-const WIDGET_VERSION = '2.0.2';
-const WIDGET_BUILD_DATE = '2025-01-07';
-
-// Expose version for debugging on client sites
-(window as any).__VBH_WIDGET_VERSION = WIDGET_VERSION;
-(window as any).__VBH_WIDGET_BUILD = WIDGET_BUILD_DATE;
-console.info(`[VBH Widget] Loading v${WIDGET_VERSION} (${WIDGET_BUILD_DATE})...`);
+// Widget rebuild trigger: Zapier webhook integration added to CallbackForm
 
 // Register the custom element
 if (!customElements.get("vbh-chatbot")) {

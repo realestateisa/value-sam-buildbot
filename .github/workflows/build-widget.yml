@@ -37,11 +37,11 @@ jobs:
         run: npm ci
       
       - name: Build Value Build widget
-        run: npx vite build --config vite.config.widget.ts
+        run: BUILD_TARGET=widget npx vite build
       
       - name: Build Creekside widget
         run: npx vite build --config vite.config.creekside.ts
-
+      
       - name: Check for changes
         id: git-check
         run: |
@@ -67,7 +67,6 @@ jobs:
         run: |
           echo "Purging jsDelivr CDN cache for widget files..."
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js"
-          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget-bundle.js"
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/creekside-chatbot-widget.js"
           echo "CDN cache purged successfully!"
       

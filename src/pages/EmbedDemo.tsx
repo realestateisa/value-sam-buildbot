@@ -12,7 +12,7 @@ const EmbedDemo = () => {
   const { toast } = useToast();
 
   const embedCode = `<!-- Value Build Homes Chatbot Widget -->
-<script src="https://vbh-chat-bot.com/widget-dist/chatbot-widget.js" async></script>`;
+<script src="https://vbh-chat-bot.com/widget-dist/chatbot-widget-v2.js" async></script>`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(embedCode);
