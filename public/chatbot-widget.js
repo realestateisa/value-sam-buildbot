@@ -1,6 +1,7 @@
 /**
  * Value Build Homes Chatbot Widget Loader
  * This script loads the main widget bundle from the widget-dist directory
+ * @version 1.0.1 - 2025-12-23 - Trigger rebuild for logo inlining
  */
 (function() {
   'use strict';
