@@ -15,6 +15,18 @@ import { saveChatSession, loadChatSession, clearChatSession } from "@/utils/chat
 import { CallbackForm } from "@/components/CallbackForm";
 import logo from "@/assets/logo.png";
 
+// Fallback SVG data URL if logo fails to load (inline, no network request)
+const LOGO_FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23E93424'/%3E%3Ctext x='50' y='62' text-anchor='middle' font-size='40' font-weight='bold' fill='white'%3EVBH%3C/text%3E%3C/svg%3E";
+
+// Handler for logo load errors
+const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const img = e.currentTarget;
+  if (img.src !== LOGO_FALLBACK) {
+    console.warn('[VBH Widget] Logo failed to load, using fallback');
+    img.src = LOGO_FALLBACK;
+  }
+};
+
 const TERRITORY_ADDRESSES: Record<string, string> = {
   oxford: "3015 S Jefferson Davis Hwy, Sanford, NC 27332",
   greenville: "783 East Butler Rd, Suite D, Mauldin, SC 29662",
@@ -504,7 +516,7 @@ export const ChatWidget = () => {
           className="h-20 w-20 rounded-full bg-primary text-primary-foreground button-lift hover:shadow-2xl hover:scale-110 transition-all duration-300 p-2" 
           size="icon"
         >
-          {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-full w-full rounded-full" />}
+          {isOpen ? <X className="h-8 w-8" /> : <img src={logo} alt="Value Build Homes" className="h-full w-full rounded-full" onError={handleLogoError} />}
         </Button>
       </div>
 
@@ -525,7 +537,7 @@ export const ChatWidget = () => {
           <div className={`${showCalendar || showCallbackForm ? "hidden" : ""} flex items-center justify-between p-4 border-b border-border/30 ${showLocationInput && !showCalendar ? "bg-[#E93424]" : "bg-gradient-to-r from-primary to-primary/90"} text-primary-foreground transition-all duration-300 rounded-t-2xl`}>
             {!showLocationInput && <div className="flex items-center gap-2">
                 <div className="relative">
-                  <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-0.5" />
+                  <img src={logo} alt="Value Build Homes" className="h-10 w-10 rounded-full bg-white p-0.5" onError={handleLogoError} />
                   <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-primary"></div>
                 </div>
                 <div>
@@ -597,7 +609,7 @@ export const ChatWidget = () => {
               <div className="w-full max-w-md space-y-6">
                 {/* Logo */}
                 <div className="flex justify-center">
-                  <img src={logo} alt="Value Build Homes" className="h-20 w-20 rounded-full bg-white p-1" />
+                  <img src={logo} alt="Value Build Homes" className="h-20 w-20 rounded-full bg-white p-1" onError={handleLogoError} />
                 </div>
 
                 {/* Title */}
@@ -617,7 +629,7 @@ export const ChatWidget = () => {
               {!showCalendar && !showCallbackForm && <ScrollArea className={`flex-1 overflow-hidden overflow-x-hidden ${showCalendar ? "p-4 pr-6" : "pl-2 pr-2 pb-3 md:pl-3 md:pr-5 md:pb-3"}`} ref={scrollRef}>
                   <div className={`max-w-full ${showCalendar ? "space-y-4" : "space-y-3"}`}>
                     {messages.map(message => <div key={message.id} className={`flex w-full max-w-full min-w-0 overflow-hidden pt-2 ${message.role === "user" ? "justify-end" : "justify-start gap-2"} group`}>
-                        {message.role === "assistant" && <img src={logo} alt="Sam" className={`h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1 transition-opacity ${isLoading ? "animate-pulse" : ""}`} />}
+                        {message.role === "assistant" && <img src={logo} alt="Sam" className={`h-8 w-8 rounded-full bg-white p-0.5 flex-shrink-0 mt-1 transition-opacity ${isLoading ? "animate-pulse" : ""}`} onError={handleLogoError} />}
                         <div className="flex flex-col max-w-full min-w-0 overflow-hidden">
                           <div className={`rounded-lg p-2.5 min-w-0 max-w-[85vw] md:max-w-[312px] ${message.role === "user" ? "inline-block" : "inline-block"} ${message.role === "user" ? "bg-primary text-primary-foreground shadow-sm hover:shadow-md" : "bg-muted shadow-sm hover:shadow-md"} ${message.role === "assistant" ? "" : ""} transition-all duration-200`}>
                             <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere leading-relaxed">
