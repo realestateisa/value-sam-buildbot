@@ -1,33 +1,39 @@
 /**
  * Value Build Homes Chatbot Widget Loader
- * Loads the v2 script (Shadow DOM iframe embed) from the same directory.
+ * This script loads the main widget bundle from the widget-dist directory
+ * @version 1.0.1 - 2025-12-23 - Trigger rebuild for logo inlining
  */
-(function () {
-  "use strict";
-
-  var currentScript = document.currentScript;
-  var scriptTag = document.querySelector('script[src*="chatbot-widget.js"]');
-  var scriptSrc = (currentScript && currentScript.src) || (scriptTag && scriptTag.src) || "";
-
+(function() {
+  'use strict';
+  
+  // Get the base URL from the current script's location
+  const currentScript = document.currentScript;
+  const scriptSrc = currentScript?.src || document.querySelector('script[src*="chatbot-widget.js"]')?.src;
+  
   if (!scriptSrc) {
-    console.error("[VBH Widget] Could not determine script source");
+    console.error('[VBH Widget] Could not determine script source');
     return;
   }
+  
+  const scriptUrl = new URL(scriptSrc);
 
-  var scriptUrl = new URL(scriptSrc);
-  var basePath = scriptUrl.href.replace(/\/chatbot-widget\.js(\?.*)?$/, "/");
+  // Base path is the directory containing this loader file.
+  // On jsDelivr this is typically: .../public/
+  const basePath = scriptUrl.href.replace(/\/chatbot-widget\.js(\?.*)?$/, "/");
 
-  var widgetScript = document.createElement("script");
-  widgetScript.src = new URL("chatbot-widget-v2.js", basePath).toString();
+  // Create and load the main widget script (v2 embed)
+  const widgetScript = document.createElement('script');
+  widgetScript.src = new URL('widget-dist/chatbot-widget-v2.js', basePath).toString();
   widgetScript.async = true;
-
-  if (currentScript && currentScript.getAttribute("data-auto-inject") === "false") {
-    widgetScript.setAttribute("data-auto-inject", "false");
+  
+  // Preserve data-auto-inject attribute if set
+  if (currentScript?.getAttribute('data-auto-inject') === 'false') {
+    widgetScript.setAttribute('data-auto-inject', 'false');
   }
-
-  widgetScript.onerror = function () {
-    console.error("[VBH Widget] Failed to load widget script from:", widgetScript.src);
+  
+  widgetScript.onerror = function() {
+    console.error('[VBH Widget] Failed to load widget bundle from:', widgetScript.src);
   };
-
+  
   document.head.appendChild(widgetScript);
 })();
