@@ -92,20 +92,6 @@ class ValueBuildChatbot extends HTMLElement {
   }
 }
 
-// Widget version stamp for debugging
-const WIDGET_VERSION = '2.0.2';
-const WIDGET_BUILD_DATE = new Date().toISOString().split('T')[0];
-
-// Expose version for debugging on client sites
-(window as any).__VBH_WIDGET_VERSION = WIDGET_VERSION;
-(window as any).__VBH_WIDGET_BUILD = WIDGET_BUILD_DATE;
-(window as any).__VBH_WIDGET_ZAPIER_URL = 'https://hooks.zapier.com/hooks/catch/5365219/ualt8zx/';
-
-// Clear boot log for instant verification
-console.info('%c[VBH Widget] boot v' + WIDGET_VERSION + ' (' + WIDGET_BUILD_DATE + ')', 'color: #22c55e; font-weight: bold;');
-console.info('[VBH Widget] Webhook target:', (window as any).__VBH_WIDGET_ZAPIER_URL);
-console.info('[VBH Widget] Shadow DOM mode enabled');
-
 // Register the custom element
 if (!customElements.get("vbh-chatbot")) {
   customElements.define("vbh-chatbot", ValueBuildChatbot);
