@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VBH Chatbot Widget - Shadow DOM Test</title>
+  <style>
+    /* Aggressive global styles to test Shadow DOM isolation */
+    * {
+      font-family: "Comic Sans MS", cursive !important;
+      color: red !important;
+      background: yellow !important;
+    }
+    
+    body {
+      font-family: "Comic Sans MS", cursive !important;
+      background: linear-gradient(45deg, #ff0000, #00ff00) !important;
+      color: blue !important;
+      padding: 20px;
+      min-height: 200vh;
+    }
+    
+    img {
+      border: 10px solid purple !important;
+      filter: invert(1) !important;
+    }
+    
+    button {
+      background: lime !important;
+      color: black !important;
+      border: 5px dashed orange !important;
+    }
+    
+    .test-section {
+      background: white !important;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+    
+    h1, h2, h3 {
+      color: purple !important;
+    }
+    
+    .status {
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    
+    .status.success {
+      background: #d4edda !important;
+      color: #155724 !important;
+    }
+    
+    .status.error {
+      background: #f8d7da !important;
+      color: #721c24 !important;
+    }
+    
+    .status.info {
+      background: #cce5ff !important;
+      color: #004085 !important;
+    }
+  </style>
+</head>
+<body>
+  <h1>🏠 VBH Chatbot Widget - Shadow DOM Isolation Test</h1>
+  
+  <div class="test-section">
+    <h2>Test Purpose</h2>
+    <p>This page has aggressive global styles that would break the widget if Shadow DOM isolation isn't working.</p>
+    <p>If the chatbot widget (bottom-right corner) looks normal with the VBH logo, Shadow DOM is working correctly.</p>
+  </div>
+
+  <div class="test-section">
+    <h2>Checklist</h2>
+    <ul>
+      <li>☐ Widget button visible in bottom-right corner</li>
+      <li>☐ VBH logo displays (not affected by global styles)</li>
+      <li>☐ Click widget - chat window opens with proper styling</li>
+      <li>☐ Header shows VBH branding correctly</li>
+      <li>☐ Console shows: <code>[VBH Widget] v2.0.6</code> or later</li>
+      <li>☐ Console shows: <code>[VBH Widget] Logo src type: INLINED (data URL)</code></li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>Console Output</h2>
+    <p>Open DevTools Console and look for:</p>
+    <pre style="background: #1e1e1e !important; color: #d4d4d4 !important; padding: 10px; border-radius: 4px;">
+[VBH Widget] v2.0.6 - Logo inlined as base64
+[VBH Widget] Logo src type: INLINED (data URL)
+[VBH Widget] Logo src preview: data:image/png;base64,iVBORw0KGgo...
+    </pre>
+  </div>
+
+  <div class="test-section">
+    <h2>Status</h2>
+    <div id="widget-status" class="status info">Checking for widget...</div>
+    <div id="shadow-status" class="status info">Checking for Shadow DOM...</div>
+    <div id="logo-status" class="status info">Checking for logo...</div>
+  </div>
+
+  <div class="test-section">
+    <h2>Scroll Test</h2>
+    <p>Scroll down to verify the widget stays fixed in position.</p>
+  </div>
+
+  <!-- Lots of content to enable scrolling -->
+  <div style="height: 1000px; background: linear-gradient(to bottom, #eee, #999) !important;"></div>
+
+  <!-- Load the VBH widget -->
+  <script src="./chatbot-widget-v2.js"></script>
+  
+  <script>
+    // Wait for widget to load and verify
+    setTimeout(() => {
+      const widgetStatus = document.getElementById('widget-status');
+      const shadowStatus = document.getElementById('shadow-status');
+      const logoStatus = document.getElementById('logo-status');
+      
+      // Check for widget element
+      const widget = document.querySelector('vbh-chatbot');
+      if (widget) {
+        widgetStatus.textContent = '✅ Widget element found: <vbh-chatbot>';
+        widgetStatus.className = 'status success';
+        
+        // Check for shadow root
+        const shadow = widget.shadowRoot;
+        if (shadow) {
+          shadowStatus.textContent = '✅ Shadow DOM attached successfully';
+          shadowStatus.className = 'status success';
+          
+          // Check for logo inside shadow DOM
+          const logos = shadow.querySelectorAll('img[alt*="Value Build"]');
+          if (logos.length > 0) {
+            const logoSrc = logos[0].src;
+            if (logoSrc.startsWith('data:image')) {
+              logoStatus.textContent = '✅ Logo is inlined as base64 data URL';
+              logoStatus.className = 'status success';
+            } else {
+              logoStatus.textContent = '⚠️ Logo uses external URL: ' + logoSrc.substring(0, 50) + '...';
+              logoStatus.className = 'status error';
+            }
+          } else {
+            logoStatus.textContent = '❌ No logo images found in Shadow DOM';
+            logoStatus.className = 'status error';
+          }
+        } else {
+          shadowStatus.textContent = '❌ No Shadow DOM found';
+          shadowStatus.className = 'status error';
+        }
+      } else {
+        widgetStatus.textContent = '❌ Widget element not found';
+        widgetStatus.className = 'status error';
+      }
+    }, 2000);
+  </script>
+</body>
+</html>
