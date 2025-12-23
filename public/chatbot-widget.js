@@ -15,11 +15,15 @@
     return;
   }
   
-  const origin = new URL(scriptSrc).origin;
-  
-  // Create and load the main widget script
+  const scriptUrl = new URL(scriptSrc);
+
+  // Base path is the directory containing this loader file.
+  // On jsDelivr this is typically: .../public/
+  const basePath = scriptUrl.href.replace(/\/chatbot-widget\.js(\?.*)?$/, "/");
+
+  // Create and load the main widget script (v2 embed)
   const widgetScript = document.createElement('script');
-  widgetScript.src = origin + '/widget-dist/chatbot-widget-v2.js';
+  widgetScript.src = new URL('widget-dist/chatbot-widget-v2.js', basePath).toString();
   widgetScript.async = true;
   
   // Preserve data-auto-inject attribute if set
