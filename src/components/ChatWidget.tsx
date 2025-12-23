@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import TypingIndicator from "@/components/TypingIndicator";
 import { saveChatSession, loadChatSession, clearChatSession } from "@/utils/chatStorage";
 import { CallbackForm } from "@/components/CallbackForm";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo.png?inline";
 
 const TERRITORY_ADDRESSES: Record<string, string> = {
   oxford: "3015 S Jefferson Davis Hwy, Sanford, NC 27332",
