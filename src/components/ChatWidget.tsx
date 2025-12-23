@@ -152,49 +152,7 @@ export const ChatWidget = () => {
     return () => ro.disconnect();
   }, []);
 
-  // Notify parent embed to resize iframe when widget opens/closes or size changes
-  useEffect(() => {
-    const postResize = (w: number, h: number, open: boolean, mobile: boolean) => {
-      try {
-        window.parent?.postMessage({
-          type: "chatbot-resize",
-          width: Math.ceil(w),
-          height: Math.ceil(h),
-          isOpen: open,
-          isMobile: mobile
-        }, "*");
-      } catch {}
-    };
-    const compact = {
-      width: 88,
-      height: 146
-    };
-    if (!isOpen) {
-      postResize(compact.width, compact.height, false, isMobile);
-      return;
-    }
-    
-    // On mobile full-screen, send viewport dimensions
-    if (isMobile) {
-      postResize(window.innerWidth, window.innerHeight, true, true);
-      return;
-    }
-    
-    const baseWidth = showCalendar ? 500 : 400;
-    const baseHeight = showCalendar ? 828 : 690;
-    const paddingBottom = 140; // space for button/offset within iframe
-
-    const sendCurrentSize = () => {
-      const rect = chatRef.current?.getBoundingClientRect();
-      const w = Math.max(baseWidth, rect?.width ?? baseWidth);
-      const h = (rect?.height ?? baseHeight) + paddingBottom;
-      postResize(w, h, true, false);
-    };
-    sendCurrentSize();
-    const ro = new ResizeObserver(() => sendCurrentSize());
-    if (chatRef.current) ro.observe(chatRef.current);
-    return () => ro.disconnect();
-  }, [isOpen, showCalendar, isMobile]);
+  // Shadow DOM widget - no iframe postMessage needed
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
     
