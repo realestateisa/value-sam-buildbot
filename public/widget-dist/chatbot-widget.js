@@ -1,8 +1,8 @@
 (function () {
   // VBH Widget Loader v2.0.2
-  // This loader injects the real widget bundle
+  // This loader injects the real widget bundle from /widget-dist
   var LOADER_VERSION = '2.0.2';
-  console.info('[VBH Widget] Loader v' + LOADER_VERSION + ' initializing...');
+  console.info('[VBH Widget] Root loader v' + LOADER_VERSION + ' initializing...');
 
   var scriptSrc =
     document.currentScript && document.currentScript.src ||
