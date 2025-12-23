@@ -2,9 +2,9 @@
 
 ## Production URLs
 
-### Value Build Homes Widget (v2 - Web Component)
+### Value Build Homes Widget
 ```
-https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/chatbot-widget-v2.js
+https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/chatbot-widget.js
 ```
 
 ### Creekside Homes Widget
@@ -14,9 +14,9 @@ https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-
 
 ## Integration Examples
 
-### VBH Integration (v2 - Recommended)
+### VBH Integration
 ```html
-<script src="https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/chatbot-widget-v2.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/chatbot-widget.js"></script>
 ```
 
 ### Creekside Integration
@@ -29,27 +29,27 @@ https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-
 ### Latest (Main Branch)
 Always serves the latest committed version:
 ```
-@main/public/widget-dist/chatbot-widget-v2.js
+@main/public/widget-dist/creekside-chatbot-widget.js
 ```
 
 ### Specific Commit
 Pin to a specific commit hash for stability:
 ```
-@abc123def/public/widget-dist/chatbot-widget-v2.js
+@abc123def/public/widget-dist/creekside-chatbot-widget.js
 ```
 
 ### Tagged Release
 Use Git tags for release management:
 ```
-@v1.0.0/public/widget-dist/chatbot-widget-v2.js
+@v1.0.0/public/widget-dist/creekside-chatbot-widget.js
 ```
 
 ## Cache Management
 
 ### Purge CDN Cache
 ```bash
-# Purge VBH widget (v2)
-curl https://purge.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/chatbot-widget-v2.js
+# Purge VBH widget
+curl https://purge.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/chatbot-widget.js
 
 # Purge Creekside widget
 curl https://purge.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/creekside-chatbot-widget.js
@@ -58,7 +58,7 @@ curl https://purge.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/
 ### Check File Stats
 ```bash
 # Get file info
-curl -I https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/chatbot-widget-v2.js
+curl -I https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/creekside-chatbot-widget.js
 ```
 
 ## Deployment Status
@@ -73,17 +73,3 @@ Check deployment status:
 - Cache is purged automatically by GitHub Actions
 - Global availability within seconds of deployment
 - No manual upload or deployment steps needed
-
-## Migration from v1 (iframe) to v2 (Web Component)
-
-The v2 widget uses Shadow DOM and mounts directly without an iframe, which eliminates the 404 error from `/widget` route requests.
-
-**Old (v1 - iframe based, deprecated):**
-```html
-<script src=".../chatbot-widget.js"></script>
-```
-
-**New (v2 - web component, recommended):**
-```html
-<script src=".../chatbot-widget-v2.js"></script>
-```

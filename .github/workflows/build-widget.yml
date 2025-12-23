@@ -36,27 +36,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Build Value Build widget (v2 web component)
-        run: npx vite build --config vite.config.widget.ts
+      - name: Build Value Build widget
+        run: BUILD_TARGET=widget npx vite build
       
       - name: Build Creekside widget
         run: npx vite build --config vite.config.creekside.ts
       
-      - name: List widget-dist outputs
-        run: |
-          echo "Widget build outputs:" 
-          ls -la public/widget-dist || true
-          echo "\nGit status (widget-dist):"
-          git status --porcelain public/widget-dist || true
-
       - name: Check for changes
         id: git-check
         run: |
-          # git diff does NOT detect newly generated (untracked) files.
-          # We need to detect both tracked modifications and new build artifacts.
-          if [ -n "$(git status --porcelain public/widget-dist)" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-          fi
+          git diff --exit-code public/widget-dist/ || echo "changed=true" >> $GITHUB_OUTPUT
       
       - name: Commit widget build
         if: steps.git-check.outputs.changed == 'true'
@@ -77,7 +66,7 @@ jobs:
         if: steps.git-check.outputs.changed == 'true'
         run: |
           echo "Purging jsDelivr CDN cache for widget files..."
-          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget-v2.js"
+          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js"
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/creekside-chatbot-widget.js"
           echo "CDN cache purged successfully!"
       
@@ -88,9 +77,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### CDN URLs (jsDelivr):" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Value Build Widget (v2 - Web Component):**" >> $GITHUB_STEP_SUMMARY
+          echo "**Value Build Widget:**" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget-v2.js" >> $GITHUB_STEP_SUMMARY
+          echo "https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Creekside Widget:**" >> $GITHUB_STEP_SUMMARY

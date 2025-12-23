@@ -2,7 +2,6 @@ import React from "react";
 import { createRoot, Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChatWidget } from "./components/ChatWidget";
-import { Toaster } from "./components/ui/toaster";
 import widgetStyles from "./widget.css?inline";
 
 // Create QueryClient instance for the widget
@@ -73,7 +72,6 @@ class ValueBuildChatbot extends HTMLElement {
       <React.StrictMode>
         <QueryClientProvider client={queryClient}>
           <ChatWidget />
-          <Toaster />
         </QueryClientProvider>
       </React.StrictMode>
     );
@@ -93,6 +91,8 @@ class ValueBuildChatbot extends HTMLElement {
     // Could trigger re-render with new props if needed
   }
 }
+
+// Widget rebuild trigger: Zapier webhook integration added to CallbackForm
 
 // Register the custom element
 if (!customElements.get("vbh-chatbot")) {

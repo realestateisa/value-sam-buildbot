@@ -28,9 +28,6 @@ export default defineConfig({
   build: {
     // Output to public directory so it can be served
     outDir: "public/widget-dist",
-    // IMPORTANT: keep existing files so multiple widget builds can run sequentially
-    // (e.g., VBH v2 + Creekside) without wiping each other's outputs.
-    emptyOutDir: false,
     // Library mode for bundling as a single file
     lib: {
       entry: path.resolve(__dirname, "src/widget-entry.tsx"),
