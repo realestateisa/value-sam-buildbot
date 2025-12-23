@@ -32,16 +32,11 @@ export default defineConfig(({ mode }) => {
       },
       build: {
         outDir: "public/widget-dist",
-        // Keep our hand-written loader shims (chatbot-widget.js, chatbot-widget-v2.js)
-        // and only replace the compiled bundle output.
-        emptyOutDir: false,
         lib: {
           entry: path.resolve(__dirname, "src/widget-entry.tsx"),
           formats: ["iife"],
           name: "ValueBuildChatbot",
-          // IMPORTANT: Vite will append ".iife.js" for iife builds.
-          // We normalize the filename in CI to "chatbot-widget.bundle.js".
-          fileName: () => "chatbot-widget.bundle",
+          fileName: () => "chatbot-widget-v2.js",
         },
         rollupOptions: {
           external: [],
@@ -58,7 +53,6 @@ export default defineConfig(({ mode }) => {
         },
         minify: true,
         chunkSizeWarningLimit: 1000,
-        assetsInlineLimit: 100000,
       },
       define: {
         'process.env.NODE_ENV': JSON.stringify('production'),

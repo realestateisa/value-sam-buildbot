@@ -56,8 +56,6 @@ export default defineConfig({
     minify: true,
     // Increase chunk size warning limit
     chunkSizeWarningLimit: 1000,
-    // Inline all assets as base64 to avoid 404s when embedded on external sites
-    assetsInlineLimit: 100000,
   },
   // Inline CSS into the bundle
   css: {
