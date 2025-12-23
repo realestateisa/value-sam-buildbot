@@ -93,7 +93,8 @@ class ValueBuildChatbot extends HTMLElement {
 }
 
 // Version stamp for debugging
-console.log('[VBH Widget] v2.0.3 - Shadow DOM Web Component loaded');
+// Version stamp for debugging - triggers rebuild
+console.log('[VBH Widget] v2.0.4 - Shadow DOM Web Component with guaranteed logo');
 
 // Register the custom element
 if (!customElements.get("vbh-chatbot")) {

@@ -51,6 +51,40 @@ jobs:
       - name: Build Creekside widget
         run: npx vite build --config vite.config.creekside.ts
       
+      - name: Verify all widget artifacts exist
+        run: |
+          echo "Verifying widget build artifacts..."
+          if [ ! -f public/widget-dist/chatbot-widget.js ]; then
+            echo "ERROR: chatbot-widget.js not found!"
+            exit 1
+          fi
+          if [ ! -f public/widget-dist/chatbot-widget-v2.js ]; then
+            echo "ERROR: chatbot-widget-v2.js not found!"
+            exit 1
+          fi
+          if [ ! -f public/widget-dist/creekside-chatbot-widget.js ]; then
+            echo "ERROR: creekside-chatbot-widget.js not found!"
+            exit 1
+          fi
+          echo "All widget artifacts verified ✓"
+          echo ""
+          echo "Checking for inlined logo assets..."
+          if grep -q "data:image" public/widget-dist/chatbot-widget.js; then
+            echo "chatbot-widget.js: logo inlined ✓"
+          else
+            echo "WARNING: chatbot-widget.js may not have inlined logo"
+          fi
+          if grep -q "data:image" public/widget-dist/chatbot-widget-v2.js; then
+            echo "chatbot-widget-v2.js: logo inlined ✓"
+          else
+            echo "WARNING: chatbot-widget-v2.js may not have inlined logo"
+          fi
+          if grep -q "data:image" public/widget-dist/creekside-chatbot-widget.js; then
+            echo "creekside-chatbot-widget.js: logo inlined ✓"
+          else
+            echo "WARNING: creekside-chatbot-widget.js may not have inlined logo"
+          fi
+      
       - name: Check for changes
         id: git-check
         run: |
