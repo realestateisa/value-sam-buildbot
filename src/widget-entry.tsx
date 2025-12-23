@@ -178,11 +178,49 @@ if (!customElements.get('vbh-chatbot')) {
     }
   }
 
+  function ensureGlobalLauncher() {
+    // Create an ultra-defensive launcher OUTSIDE Shadow DOM so it can't be hidden by Shadow DOM scoping.
+    // This is the only way to be resilient against sites that alter stacking contexts / positioning.
+    if (document.getElementById('vbh-widget-global-launcher')) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'vbh-widget-global-launcher';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Open chat');
+    btn.innerHTML = 'Chat';
+
+    // Inline styles + !important to beat aggressive site CSS.
+    btn.style.setProperty('position', 'fixed', 'important');
+    btn.style.setProperty('right', '24px', 'important');
+    btn.style.setProperty('bottom', '24px', 'important');
+    btn.style.setProperty('width', '72px', 'important');
+    btn.style.setProperty('height', '72px', 'important');
+    btn.style.setProperty('border-radius', '9999px', 'important');
+    btn.style.setProperty('border', '0', 'important');
+    btn.style.setProperty('cursor', 'pointer', 'important');
+    btn.style.setProperty('background', 'hsl(5 82% 53%)', 'important');
+    btn.style.setProperty('color', 'hsl(0 0% 100%)', 'important');
+    btn.style.setProperty('font', '600 14px/1 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif', 'important');
+    btn.style.setProperty('box-shadow', '0 16px 40px rgba(0,0,0,.25)', 'important');
+    btn.style.setProperty('z-index', '2147483647', 'important');
+    btn.style.setProperty('pointer-events', 'auto', 'important');
+
+    btn.addEventListener('click', () => {
+      const w = window as any;
+      if (typeof w.__VBH_WIDGET_TOGGLE__ === 'function') w.__VBH_WIDGET_TOGGLE__();
+    });
+
+    document.body.appendChild(btn);
+  }
+
   function injectWidget() {
+    ensureGlobalLauncher();
+
     if (document.querySelector('vbh-chatbot')) {
       console.log('[VBH Widget] Widget already exists, skipping injection');
       return;
     }
+
     const widget = document.createElement('vbh-chatbot');
     document.body.appendChild(widget);
     console.log('[VBH Widget] Widget injected into page');
