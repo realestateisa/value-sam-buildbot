@@ -42,10 +42,21 @@ jobs:
       - name: Build Creekside widget
         run: npx vite build --config vite.config.creekside.ts
       
+      - name: List widget-dist outputs
+        run: |
+          echo "Widget build outputs:" 
+          ls -la public/widget-dist || true
+          echo "\nGit status (widget-dist):"
+          git status --porcelain public/widget-dist || true
+
       - name: Check for changes
         id: git-check
         run: |
-          git diff --exit-code public/widget-dist/ || echo "changed=true" >> $GITHUB_OUTPUT
+          # git diff does NOT detect newly generated (untracked) files.
+          # We need to detect both tracked modifications and new build artifacts.
+          if [ -n "$(git status --porcelain public/widget-dist)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
       
       - name: Commit widget build
         if: steps.git-check.outputs.changed == 'true'
