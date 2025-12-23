@@ -87,9 +87,6 @@ if (!customElements.get('vbh-chatbot')) {
 // Auto-inject the widget into the page
 function injectWidget() {
   try {
-    // Ensure body exists
-    if (!document.body) return;
-
     // Don't inject if already present
     if (document.querySelector('vbh-chatbot')) {
       console.log('[VBH Widget] Widget already exists, skipping injection');
@@ -97,8 +94,30 @@ function injectWidget() {
     }
 
     const widget = document.createElement('vbh-chatbot');
-    document.body.appendChild(widget);
-    console.log('[VBH Widget] Widget injected into page');
+    
+    // Inject into documentElement (html) to escape body containment issues
+    // This avoids transforms/overflow:hidden on body that break fixed positioning
+    const target = document.documentElement || document.body;
+    target.appendChild(widget);
+    console.log('[VBH Widget] Widget injected into', target.tagName);
+    
+    // Post-mount diagnostics
+    requestAnimationFrame(() => {
+      const host = document.querySelector('vbh-chatbot');
+      if (host) {
+        const rect = host.getBoundingClientRect();
+        const styles = window.getComputedStyle(host);
+        console.log('[VBH Widget] Host diagnostics:', {
+          connected: host.isConnected,
+          rect: { top: rect.top, left: rect.left, width: rect.width, height: rect.height },
+          display: styles.display,
+          visibility: styles.visibility,
+          opacity: styles.opacity,
+          zIndex: styles.zIndex,
+          position: styles.position
+        });
+      }
+    });
   } catch (err) {
     console.error('[VBH Widget] Inject failed', err);
   }

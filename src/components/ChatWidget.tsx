@@ -44,6 +44,15 @@ const TERRITORY_ADDRESSES: Record<string, string> = {
   statesville: "201 Absher Park Rd, Statesville, NC 28625",
   sanford: "3015 S Jefferson Davis Hwy, Sanford, NC 27332",
 };
+// Hardened inline styles to escape hostile site CSS containment
+const LAUNCHER_STYLE: React.CSSProperties = {
+  position: 'fixed',
+  bottom: '24px',
+  right: '24px',
+  zIndex: 2147483647,
+  pointerEvents: 'auto',
+};
+
 export const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -737,5 +746,5 @@ export const ChatWidget = () => {
             </div>}
         </Card>}
     </>;
-  return content;
+  return <div style={LAUNCHER_STYLE}>{content}</div>;
 };
