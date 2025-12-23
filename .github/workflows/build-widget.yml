@@ -36,6 +36,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
+      - name: Clean widget-dist before builds
+        run: |
+          rm -f public/widget-dist/chatbot-widget.js
+          rm -f public/widget-dist/chatbot-widget-v2.js
+          rm -f public/widget-dist/creekside-chatbot-widget.js
+      
       - name: Build Value Build widget (canonical)
         run: BUILD_TARGET=widget npx vite build
 
@@ -69,6 +75,7 @@ jobs:
         if: steps.git-check.outputs.changed == 'true'
         run: |
           echo "Purging jsDelivr CDN cache for widget files..."
+          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/chatbot-widget.js"
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js"
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget-v2.js"
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/creekside-chatbot-widget.js"
