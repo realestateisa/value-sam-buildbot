@@ -44,12 +44,6 @@ const TERRITORY_ADDRESSES: Record<string, string> = {
   statesville: "201 Absher Park Rd, Statesville, NC 28625",
   sanford: "3015 S Jefferson Davis Hwy, Sanford, NC 27332",
 };
-  oxford: "3015 S Jefferson Davis Hwy, Sanford, NC 27332",
-  greenville: "783 East Butler Rd, Suite D, Mauldin, SC 29662",
-  smithfield: "721 Seafood House Rd, Selma, NC 27576",
-  statesville: "201 Absher Park Rd, Statesville, NC 28625",
-  sanford: "3015 S Jefferson Davis Hwy, Sanford, NC 27332"
-};
 export const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
