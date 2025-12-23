@@ -92,8 +92,8 @@ class ValueBuildChatbot extends HTMLElement {
   }
 }
 
-// Version stamp for debugging - v2.0.6
-console.log('[VBH Widget] v2.0.6 - Logo inlined as base64');
+// Version stamp for debugging - v2.0.7
+console.log('[VBH Widget] v2.0.7 - Added logo debug logging');
 
 // Register the custom element
 if (!customElements.get("vbh-chatbot")) {
