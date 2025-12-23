@@ -42,6 +42,22 @@ jobs:
       - name: Build Creekside widget
         run: npx vite build --config vite.config.creekside.ts
       
+      - name: Verify VBH bundle exists
+        run: |
+          if [ ! -f "public/widget-dist/chatbot-widget.bundle.js" ]; then
+            echo "ERROR: chatbot-widget.bundle.js was not created by the build!"
+            exit 1
+          fi
+          echo "✅ VBH bundle verified: $(wc -c < public/widget-dist/chatbot-widget.bundle.js) bytes"
+      
+      - name: Verify Creekside bundle exists
+        run: |
+          if [ ! -f "public/widget-dist/creekside-chatbot-widget.js" ]; then
+            echo "ERROR: creekside-chatbot-widget.js was not created by the build!"
+            exit 1
+          fi
+          echo "✅ Creekside bundle verified: $(wc -c < public/widget-dist/creekside-chatbot-widget.js) bytes"
+      
       - name: Check for changes
         id: git-check
         run: |
