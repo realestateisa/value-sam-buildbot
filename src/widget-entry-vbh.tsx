@@ -1,4 +1,4 @@
-// VBH Widget Entry - v2.1 with Cal.com scheduling overlay
+// VBH Widget Entry - v2.2 with red Schedule Appointment button styling
 import React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -43,7 +43,7 @@ class VBHChatbot extends HTMLElement {
     this.injectStyles();
     this.mountReactApp();
     
-    console.log('[VBH Widget] v2.0.0 - Mounted successfully');
+    console.log('[VBH Widget] v2.2.0 - Red button styling update');
   }
 
   disconnectedCallback() {
@@ -87,7 +87,7 @@ class VBHChatbot extends HTMLElement {
 }
 
 // Register the custom element
-// Widget rebuild: 2025-12-23-fresh-rebuild
+// Widget rebuild: 2025-12-23-red-button-styling
 if (!customElements.get('vbh-chatbot')) {
   customElements.define('vbh-chatbot', VBHChatbot);
 }
