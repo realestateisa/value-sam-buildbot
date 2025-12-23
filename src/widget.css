@@ -112,11 +112,11 @@
   }
 
   /* Apply background and text colors to the container */
-  :host #chatbot-root {
+  :host #vbh-widget-root {
     @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
-  
+
   /* Ensure all elements inherit Inter font */
   :host *,
   :host button,
