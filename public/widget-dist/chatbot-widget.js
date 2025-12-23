@@ -1,18 +1,26 @@
 (function () {
-  // Root loader that always pulls the canonical widget script from /widget-dist.
-  const scriptSrc =
-    document.currentScript?.src ||
-    document.querySelector('script[src*="chatbot-widget.js"]')?.src;
+  // Hotfix loader: ensure a real widget bundle is loaded (prevents self-referential infinite loop).
+  // NOTE: This will be replaced by the actual built VBH bundle in CI.
+  var scriptSrc =
+    (document.currentScript && document.currentScript.src) ||
+    (document.querySelector('script[src*="/widget-dist/chatbot-widget.js"]') || {}).src;
 
-  const origin = scriptSrc ? new URL(scriptSrc).origin : window.location.origin;
+  var origin = scriptSrc ? new URL(scriptSrc).origin : window.location.origin;
 
-  if (document.querySelector('script[data-vbh-widget="true"]')) return;
+  // Prevent double-inject
+  if (window.__VBH_WIDGET_CANONICAL_LOADED) return;
+  window.__VBH_WIDGET_CANONICAL_LOADED = true;
 
-  const widgetScript = document.createElement('script');
-  widgetScript.src = origin + '/widget-dist/chatbot-widget.js';
-  widgetScript.async = true;
-  widgetScript.defer = true;
-  widgetScript.dataset.vbhWidget = 'true';
+  // Load the existing bundled widget we know is present in /widget-dist.
+  // This restores the chatbot on client sites immediately.
+  var bundleSrc = origin + '/widget-dist/creekside-chatbot-widget.js';
 
-  document.head.appendChild(widgetScript);
+  var s = document.createElement('script');
+  s.src = bundleSrc;
+  s.async = true;
+  s.defer = true;
+  s.dataset.vbhWidget = 'true';
+
+  (document.head || document.documentElement).appendChild(s);
 })();
+
