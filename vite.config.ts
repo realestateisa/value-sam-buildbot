@@ -36,7 +36,7 @@ export default defineConfig(({ mode }) => {
           entry: path.resolve(__dirname, "src/widget-entry.tsx"),
           formats: ["iife"],
           name: "ValueBuildChatbot",
-          fileName: () => "chatbot-widget-v2.js",
+          fileName: () => "chatbot-widget.js",
         },
         rollupOptions: {
           external: [],

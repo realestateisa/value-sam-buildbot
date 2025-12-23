@@ -65,6 +65,8 @@ class ValueBuildChatbot extends HTMLElement {
   private mountReactApp() {
     if (!this.container) return;
 
+    console.log("[VBH Widget] Mounting React app...");
+    
     // Create root and render React app
     this.root = createRoot(this.container);
     
@@ -75,6 +77,8 @@ class ValueBuildChatbot extends HTMLElement {
         </QueryClientProvider>
       </React.StrictMode>
     );
+    
+    console.log("[VBH Widget] React app mounted successfully");
   }
 
   // Allow external configuration via attributes
@@ -92,11 +96,10 @@ class ValueBuildChatbot extends HTMLElement {
   }
 }
 
-// Widget rebuild trigger: Added assetsInlineLimit to vite.config.ts for logo fix
-
 // Register the custom element
 if (!customElements.get("vbh-chatbot")) {
   customElements.define("vbh-chatbot", ValueBuildChatbot);
+  console.log("[VBH Widget] v3.0.0 - Custom element registered");
 }
 
 // Auto-inject mode: automatically create and append the element

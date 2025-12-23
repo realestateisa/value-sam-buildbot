@@ -1,12 +1,12 @@
-// Value Build Homes Chatbot Widget Loader (Shadow DOM Version)
-// This loader fetches the self-contained web component bundle from /widget-dist/
+// Value Build Homes Chatbot Widget Loader
+// This is a convenience loader that redirects to the main widget bundle
 (function () {
   var currentScript = document.currentScript;
-  var scriptSrc = (currentScript && currentScript.src) || (document.querySelector('script[src*="chatbot-widget.js"]') && document.querySelector('script[src*="chatbot-widget.js"]').getAttribute('src')) || '';
+  var scriptSrc = (currentScript && currentScript.src) || '';
   var origin = scriptSrc ? new URL(scriptSrc, window.location.href).origin : window.location.origin;
 
   var widgetScript = document.createElement('script');
-  widgetScript.src = origin + '/widget-dist/chatbot-widget-v2.js';
+  widgetScript.src = origin + '/widget-dist/chatbot-widget.js';
   widgetScript.async = true;
 
   // Preserve auto-inject setting
@@ -16,4 +16,3 @@
 
   document.head.appendChild(widgetScript);
 })();
-
