@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { X, Phone, ChevronLeft, CheckCircle } from 'lucide-react';
+import { X, Phone, ChevronLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
-
-const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/5365219/ualt8zx/';
 const callbackSchema = z.object({
   firstName: z.string().trim().min(1, {
     message: "First name is required"
@@ -43,13 +41,12 @@ export const CallbackForm = ({
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
-    
     try {
       const validatedData = callbackSchema.parse({
         firstName,
@@ -57,46 +54,21 @@ export const CallbackForm = ({
         phone,
         email
       });
-      
       setIsSubmitting(true);
-      console.log('Sending callback request to Zapier webhook...');
 
-      const webhookPayload = {
-        firstName: validatedData.firstName,
-        lastName: validatedData.lastName,
-        phone: validatedData.phone,
-        email: validatedData.email,
-        timestamp: new Date().toISOString(),
-        source: 'Value Build Homes Chatbot'
-      };
-
-      await fetch(ZAPIER_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        mode: 'no-cors',
-        body: JSON.stringify(webhookPayload),
-      });
-
-      console.log('Callback request sent successfully');
-      
-      // Show success state
-      setShowSuccess(true);
-      
+      // Here you would typically send the data to your backend
+      // For now, we'll just show a success message
       toast({
         title: "Request Submitted",
         description: "We'll call you back soon!"
       });
 
-      // Reset form and close after delay
-      setTimeout(() => {
-        setFirstName('');
-        setLastName('');
-        setPhone('');
-        setEmail('');
-        setShowSuccess(false);
-        onClose();
-      }, 2000);
-      
+      // Reset form
+      setFirstName('');
+      setLastName('');
+      setPhone('');
+      setEmail('');
+      onClose();
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors: Record<string, string> = {};
@@ -106,38 +78,11 @@ export const CallbackForm = ({
           }
         });
         setErrors(fieldErrors);
-      } else {
-        console.error('Error sending callback request:', error);
-        toast({
-          title: "Error",
-          description: "Failed to submit request. Please try again.",
-          variant: "destructive"
-        });
       }
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (showSuccess) {
-    return (
-      <>
-        <div className="flex items-center justify-between p-3 text-primary-foreground bg-primary border-b">
-          <div className="flex items-center gap-2">
-            <Phone className="h-5 w-5" />
-            <h2 className="text-lg font-semibold">Request Callback</h2>
-          </div>
-        </div>
-        <div className="flex-1 flex flex-col items-center justify-center p-6">
-          <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-          <h3 className="text-xl font-semibold text-foreground mb-2">Thank You!</h3>
-          <p className="text-muted-foreground text-center">
-            Your callback request has been submitted. We'll be in touch soon!
-          </p>
-        </div>
-      </>
-    );
-  }
   return <>
       {/* Callback Form Header */}
       <div className="flex items-center justify-between p-3 text-primary-foreground bg-primary border-b">

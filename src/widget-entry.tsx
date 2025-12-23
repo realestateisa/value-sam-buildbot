@@ -92,8 +92,6 @@ class ValueBuildChatbot extends HTMLElement {
   }
 }
 
-// Widget rebuild trigger: Zapier webhook integration added to CallbackForm
-
 // Register the custom element
 if (!customElements.get("vbh-chatbot")) {
   customElements.define("vbh-chatbot", ValueBuildChatbot);
