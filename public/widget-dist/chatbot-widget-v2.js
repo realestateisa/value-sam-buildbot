@@ -1,28 +1,26 @@
-// Value Build Homes Chatbot Widget Loader v2.1.0
-// This loader fetches the compiled React bundle
+// Value Build Homes Chatbot Widget Loader v2.0.3 (legacy URL)
+// Kept for backwards compatibility - chains to stable loader
 (function () {
-  var VERSION = '2.1.0';
+  var VERSION = '2.0.3';
   var currentScript = document.currentScript;
   var scriptSrc = (currentScript && currentScript.src) || '';
   var origin = scriptSrc ? new URL(scriptSrc, window.location.href).origin : window.location.origin;
-  var bundleUrl = origin + '/widget-dist/chatbot-widget.bundle.js';
+  var loaderUrl = origin + '/widget-dist/chatbot-widget.js';
 
-  console.log('[VBH Widget Loader] v' + VERSION + ' - loading bundle from: ' + bundleUrl);
+  console.log('[VBH Widget v2 Shim] v' + VERSION + ' - loading stable loader from: ' + loaderUrl);
 
   var widgetScript = document.createElement('script');
-  widgetScript.src = bundleUrl;
+  widgetScript.src = loaderUrl;
   widgetScript.async = true;
 
-  // Error handler to catch 404s
   widgetScript.onerror = function () {
-    console.error('[VBH Widget Loader] ERROR: Failed to load bundle (404?) - ' + bundleUrl);
+    console.error('[VBH Widget v2 Shim] ERROR: Failed to load stable loader - ' + loaderUrl);
   };
 
   widgetScript.onload = function () {
-    console.log('[VBH Widget Loader] Bundle loaded successfully');
+    console.log('[VBH Widget v2 Shim] Stable loader loaded, bundle loading should follow...');
   };
 
-  // Preserve auto-inject setting
   if (currentScript && currentScript.getAttribute('data-auto-inject') === 'false') {
     widgetScript.setAttribute('data-auto-inject', 'false');
   }
