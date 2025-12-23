@@ -1,5 +1,5 @@
 (function () {
-  // Loader for the real Shadow DOM widget bundle (chatbot-widget-v2.js)
+  // Loader for the real Shadow DOM widget bundle (served from /widget-dist)
   const scriptSrc =
     document.currentScript?.src ||
     document.querySelector('script[src*="chatbot-widget.js"]')?.src;
