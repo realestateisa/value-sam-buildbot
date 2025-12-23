@@ -67,6 +67,8 @@ jobs:
         run: |
           echo "Purging jsDelivr CDN cache for widget files..."
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js"
+          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.bundle.js"
+          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget-v2.js"
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/creekside-chatbot-widget.js"
           echo "CDN cache purged successfully!"
       
