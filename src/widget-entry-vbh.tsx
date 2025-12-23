@@ -1,3 +1,4 @@
+// VBH Widget Entry - v2.1 with Cal.com scheduling overlay
 import React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
