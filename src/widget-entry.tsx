@@ -92,7 +92,7 @@ class ValueBuildChatbot extends HTMLElement {
   }
 }
 
-// Widget rebuild trigger: Fixed logo 404 by inlining assets as base64
+// Widget rebuild trigger: Added assetsInlineLimit to vite.config.ts for logo fix
 
 // Register the custom element
 if (!customElements.get("vbh-chatbot")) {

@@ -53,6 +53,7 @@ export default defineConfig(({ mode }) => {
         },
         minify: true,
         chunkSizeWarningLimit: 1000,
+        assetsInlineLimit: 100000,
       },
       define: {
         'process.env.NODE_ENV': JSON.stringify('production'),
