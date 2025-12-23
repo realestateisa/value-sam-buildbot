@@ -53,6 +53,34 @@ class VBHChatbot extends HTMLElement {
     this.container.style.cssText = '';
     this.shadow.appendChild(this.container);
 
+    // Always-visible fallback launcher (so something shows even if React button is hidden by site CSS)
+    const fallback = document.createElement('button');
+    fallback.id = 'vbh-widget-fallback-launcher';
+    fallback.type = 'button';
+    fallback.textContent = 'Chat';
+    fallback.setAttribute('aria-label', 'Open chat');
+    fallback.style.cssText = [
+      'position:fixed',
+      'right:24px',
+      'bottom:24px',
+      'width:72px',
+      'height:72px',
+      'border-radius:9999px',
+      'border:0',
+      'cursor:pointer',
+      'background:#E93424',
+      'color:#fff',
+      'font:600 14px/1 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
+      'box-shadow:0 16px 40px rgba(0,0,0,.25)',
+      'z-index:2147483647',
+      'pointer-events:auto',
+    ].join(';');
+    fallback.addEventListener('click', () => {
+      const w = window as any;
+      if (typeof w.__VBH_WIDGET_TOGGLE__ === 'function') w.__VBH_WIDGET_TOGGLE__();
+    });
+    this.shadow.appendChild(fallback);
+
     // Inject styles and mount React
     this.injectStyles();
     this.mountReactApp();
@@ -95,7 +123,7 @@ class VBHChatbot extends HTMLElement {
 
   private mountReactApp() {
     if (!this.container) return;
-    
+
     this.root = createRoot(this.container);
     this.root.render(
       <React.StrictMode>
@@ -105,6 +133,19 @@ class VBHChatbot extends HTMLElement {
         </QueryClientProvider>
       </React.StrictMode>
     );
+
+    // Hide fallback launcher once React exposes the global toggle
+    window.setTimeout(() => {
+      try {
+        const w = window as any;
+        const fallback = this.shadow?.getElementById('vbh-widget-fallback-launcher') as HTMLElement | null;
+        if (fallback && typeof w.__VBH_WIDGET_TOGGLE__ === 'function') {
+          fallback.style.display = 'none';
+        }
+      } catch {
+        // ignore
+      }
+    }, 250);
   }
 
   static get observedAttributes() {
