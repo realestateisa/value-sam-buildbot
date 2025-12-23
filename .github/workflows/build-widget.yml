@@ -36,8 +36,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Build Value Build widget
+      - name: Build Value Build widget (canonical)
         run: BUILD_TARGET=widget npx vite build
+
+      - name: Build Value Build widget (v2 embed)
+        run: npx vite build --config vite.config.widget.ts
       
       - name: Build Creekside widget
         run: npx vite build --config vite.config.creekside.ts
@@ -67,6 +70,7 @@ jobs:
         run: |
           echo "Purging jsDelivr CDN cache for widget files..."
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js"
+          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget-v2.js"
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/creekside-chatbot-widget.js"
           echo "CDN cache purged successfully!"
       
@@ -77,9 +81,14 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### CDN URLs (jsDelivr):" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Value Build Widget:**" >> $GITHUB_STEP_SUMMARY
+          echo "**Value Build Widget (canonical):**" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Value Build Widget (v2 embed):**" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget-v2.js" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Creekside Widget:**" >> $GITHUB_STEP_SUMMARY
