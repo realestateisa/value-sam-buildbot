@@ -92,7 +92,8 @@ class ValueBuildChatbot extends HTMLElement {
   }
 }
 
-// Widget rebuild trigger: Zapier webhook integration added to CallbackForm
+// Version stamp for debugging
+console.log('[VBH Widget] v2.0.3 - Shadow DOM Web Component loaded');
 
 // Register the custom element
 if (!customElements.get("vbh-chatbot")) {
