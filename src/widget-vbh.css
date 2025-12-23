@@ -1,0 +1,203 @@
+/* 
+ * Shadow DOM specific styles for the VBH chatbot widget
+ * Uses :host instead of :root for proper Shadow DOM scoping
+ */
+
+/* Import Google Fonts FIRST for Shadow DOM */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Shadow DOM root - replaces :root */
+  :host {
+    /* Core theme colors - VBH red #E63329 */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 20%;
+
+    --primary: 2 79% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 20%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 46%;
+
+    --accent: 2 79% 53%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 2 79% 53%;
+
+    --radius: 0.75rem;
+    
+    --chat-shadow: 0 4px 24px rgba(230, 51, 41, 0.15);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 2 79% 53%;
+    
+    /* Shadow DOM specific - AFTER variable definitions */
+    all: initial;
+    display: block;
+  }
+
+  /* Dark mode support - scoped to Shadow DOM */
+  :host(.dark) {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 15%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 2 79% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 2 79% 53%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 2 79% 53%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 2 79% 53%;
+  }
+
+  /* Reset and base styles for Shadow DOM content */
+  :host * {
+    box-sizing: border-box;
+  }
+  
+  :host *,
+  :host *::before,
+  :host *::after {
+    @apply border-border;
+  }
+
+  /* Apply background and text colors to the container */
+  :host #vbh-chatbot-root {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  
+  /* Ensure all elements inherit Inter font */
+  :host *,
+  :host button,
+  :host input,
+  :host textarea {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  
+  /* Force proper word wrapping for all text */
+  :host p,
+  :host span,
+  :host div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Ensure fixed positioning works relative to viewport, not Shadow DOM */
+  :host [class*="fixed"] {
+    position: fixed;
+  }
+
+  /* Ensure high z-index for dropdowns and modals */
+  :host [role="dialog"],
+  :host [role="menu"],
+  :host [data-radix-popper-content-wrapper] {
+    z-index: 9999 !important;
+  }
+  
+  /* Dropdown backgrounds - prevent transparency */
+  :host [role="menu"],
+  :host [role="listbox"],
+  :host [data-radix-select-content],
+  :host [data-radix-dropdown-menu-content] {
+    @apply bg-popover;
+    z-index: 9999;
+  }
+
+  /* Mobile full-screen support for Shadow DOM */
+  @media (max-width: 767px) {
+    :host [data-mobile-fullscreen="true"] {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 0 !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+    }
+  }
+}
+
+
+/* Shadow DOM specific utility classes */
+@layer utilities {
+  /* Ensure animations work in Shadow DOM */
+  :host .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+  
+  :host .animate-accordion-down {
+    animation: accordion-down 0.2s ease-out;
+  }
+  
+  :host .animate-accordion-up {
+    animation: accordion-up 0.2s ease-out;
+  }
+  
+  /* Hover scale with proper transform origin */
+  :host .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Transition utilities */
+  :host .transition-all {
+    transition: var(--transition-smooth);
+  }
+  
+  /* Chat Icon Sizing - Override button default SVG size */
+  :host .chat-icon-large {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+}
