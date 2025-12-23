@@ -28,6 +28,7 @@ export default defineConfig({
   build: {
     // Output to public directory so it can be served
     outDir: "public/widget-dist",
+    emptyOutDir: false, // Don't wipe directory - other widget builds write here too
     // Inline ALL assets as base64 (critical for standalone widget on external sites)
     assetsInlineLimit: 1000000, // 1MB - inline everything
     // Library mode for bundling as a single file
