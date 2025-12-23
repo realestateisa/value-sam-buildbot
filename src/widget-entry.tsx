@@ -92,7 +92,7 @@ class ValueBuildChatbot extends HTMLElement {
   }
 }
 
-// Widget rebuild trigger: Zapier webhook integration added to CallbackForm
+// Widget rebuild trigger: Fixed logo 404 by inlining assets as base64
 
 // Register the custom element
 if (!customElements.get("vbh-chatbot")) {
