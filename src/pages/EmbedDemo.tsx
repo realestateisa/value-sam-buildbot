@@ -1,10 +1,15 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Send, Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
+
+const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/5365219/ualt8zx/';
 
 const EmbedDemo = () => {
   const [copied, setCopied] = useState(false);
+  const [testingWebhook, setTestingWebhook] = useState(false);
+  const { toast } = useToast();
 
   const embedCode = `<!-- Value Build Homes Chatbot Widget -->
 <script src="https://vbh-chat-bot.com/widget-dist/chatbot-widget-v2.js" async></script>`;
@@ -13,6 +18,42 @@ const EmbedDemo = () => {
     navigator.clipboard.writeText(embedCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleTestWebhook = async () => {
+    setTestingWebhook(true);
+    
+    const testPayload = {
+      firstName: 'Test',
+      lastName: 'User',
+      phone: '(555) 000-0000',
+      email: 'test@example.com',
+      timestamp: new Date().toISOString(),
+      source: 'Value Build Homes Chatbot - Demo Test'
+    };
+
+    try {
+      await fetch(ZAPIER_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'no-cors',
+        body: JSON.stringify(testPayload),
+      });
+
+      toast({
+        title: "Test Request Sent",
+        description: "Check your Zapier dashboard to verify the webhook received the test data."
+      });
+    } catch (error) {
+      console.error('Error testing webhook:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send test request. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setTestingWebhook(false);
+    }
   };
 
   return (
@@ -134,6 +175,33 @@ const EmbedDemo = () => {
             <li><span className="font-semibold text-foreground">5.</span> Inline calendar appears for easy appointment booking</li>
             <li><span className="font-semibold text-foreground">6.</span> Session is saved for seamless return visits</li>
           </ol>
+        </Card>
+
+        <Card className="p-6">
+          <h2 className="text-2xl font-semibold mb-4">Test Webhook</h2>
+          <p className="text-muted-foreground mb-4">
+            Send a test callback request to the Zapier webhook to verify integration is working.
+          </p>
+          <Button 
+            onClick={handleTestWebhook} 
+            disabled={testingWebhook}
+            className="w-full sm:w-auto"
+          >
+            {testingWebhook ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>
+                <Send className="h-4 w-4 mr-2" />
+                Test Webhook
+              </>
+            )}
+          </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            This sends test data: Test User, (555) 000-0000, test@example.com
+          </p>
         </Card>
 
         <Card className="p-6 bg-primary text-primary-foreground">
