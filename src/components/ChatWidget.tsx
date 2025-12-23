@@ -67,10 +67,20 @@ export const ChatWidget = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Expose a global toggle so the Shadow DOM host can provide a guaranteed fallback launcher
+  useEffect(() => {
+    const w = window as any;
+    w.__VBH_WIDGET_TOGGLE__ = () => setIsOpen((prev) => !prev);
+    return () => {
+      // Only cleanup if nobody overwrote it
+      if (w.__VBH_WIDGET_TOGGLE__) delete w.__VBH_WIDGET_TOGGLE__;
+    };
   }, []);
 
   // Load saved chat session on mount
