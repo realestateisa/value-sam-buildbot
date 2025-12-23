@@ -45,6 +45,8 @@ export default defineConfig({
   },
   build: {
     outDir: "public/widget-dist",
+    // Inline ALL assets as base64 (critical for standalone widget on external sites)
+    assetsInlineLimit: 1000000, // 1MB - inline everything
     lib: {
       entry: path.resolve(__dirname, "src/widget-entry-creekside.tsx"),
       formats: ["iife"],
