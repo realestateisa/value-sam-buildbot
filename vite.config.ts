@@ -32,16 +32,21 @@ export default defineConfig(({ mode }) => {
       },
       build: {
         outDir: "public/widget-dist",
+        // Keep our hand-written loader shims (chatbot-widget.js, chatbot-widget-v2.js)
+        // and only replace the compiled bundle output.
+        emptyOutDir: false,
         lib: {
           entry: path.resolve(__dirname, "src/widget-entry.tsx"),
           formats: ["iife"],
           name: "ValueBuildChatbot",
           // Emit the REAL bundle with a distinct name so chatbot-widget.js can stay a tiny loader
-          fileName: () => "chatbot-widget.bundle.js",
+          fileName: () => "chatbot-widget.bundle",
         },
         rollupOptions: {
           external: [],
           output: {
+            // Ensure a stable, non-hashed filename for the compiled bundle
+            entryFileNames: "chatbot-widget.bundle.js",
             inlineDynamicImports: true,
             manualChunks: undefined,
             assetFileNames: (assetInfo) => {
