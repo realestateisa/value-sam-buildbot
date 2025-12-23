@@ -45,6 +45,8 @@ export default defineConfig({
   },
   build: {
     outDir: "public/widget-dist",
+    // IMPORTANT: keep existing files so this build doesn't wipe the VBH v2 output
+    emptyOutDir: false,
     lib: {
       entry: path.resolve(__dirname, "src/widget-entry-creekside.tsx"),
       formats: ["iife"],

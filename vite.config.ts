@@ -32,6 +32,8 @@ export default defineConfig(({ mode }) => {
       },
       build: {
         outDir: "public/widget-dist",
+        // IMPORTANT: keep existing files so sequential builds don't wipe each other's outputs
+        emptyOutDir: false,
         lib: {
           entry: path.resolve(__dirname, "src/widget-entry.tsx"),
           formats: ["iife"],
