@@ -59,8 +59,7 @@ export const CallbackForm = ({
       });
       
       setIsSubmitting(true);
-      console.log('Sending callback request to Zapier webhook...');
-
+      
       const webhookPayload = {
         firstName: validatedData.firstName,
         lastName: validatedData.lastName,
@@ -70,6 +69,9 @@ export const CallbackForm = ({
         source: 'Value Build Homes Chatbot'
       };
 
+      console.log('[VBH Widget] Submitting callback to Zapier:', ZAPIER_WEBHOOK_URL);
+      console.log('[VBH Widget] Payload:', JSON.stringify(webhookPayload));
+
       await fetch(ZAPIER_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -77,7 +79,7 @@ export const CallbackForm = ({
         body: JSON.stringify(webhookPayload),
       });
 
-      console.log('Callback request sent successfully');
+      console.log('[VBH Widget] Callback request sent successfully');
       
       // Show success state
       setShowSuccess(true);

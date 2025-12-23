@@ -1,5 +1,5 @@
 (function () {
-  // Loader for the real Shadow DOM widget bundle (served from /widget-dist)
+  // Loader for the real Shadow DOM widget bundle
   const scriptSrc =
     document.currentScript?.src ||
     document.querySelector('script[src*="chatbot-widget.js"]')?.src;
@@ -10,7 +10,7 @@
   if (document.querySelector('script[data-vbh-widget-bundle="true"]')) return;
 
   const widgetScript = document.createElement('script');
-  widgetScript.src = origin + '/widget-dist/chatbot-widget-v2.js';
+  widgetScript.src = origin + '/widget-dist/chatbot-widget.js';
   widgetScript.async = true;
   widgetScript.defer = true;
   widgetScript.dataset.vbhWidgetBundle = 'true';
