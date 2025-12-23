@@ -1,7 +1,8 @@
 /**
- * VBH Widget v2.1.0 - Shadow DOM Implementation
+ * VBH Widget v2.1.1 - Shadow DOM Implementation
  * This script creates a shadow DOM widget for the VBH chatbot.
  * NO IFRAMES - pure Shadow DOM encapsulation.
+ * Rebuilt to replace kill-switch with working widget.
  */
 import React from 'react';
 import { createRoot } from 'react-dom/client';
@@ -25,7 +26,7 @@ class VBHChatbot extends HTMLElement {
   private container: HTMLDivElement | null = null;
 
   connectedCallback() {
-    console.log('[VBH Widget] v2.1.0 - Initializing Shadow DOM widget');
+    console.log('[VBH Widget] v2.1.1 - Initializing Shadow DOM widget');
     
     // Create shadow root for style isolation
     const shadow = this.attachShadow({ mode: 'open' });
