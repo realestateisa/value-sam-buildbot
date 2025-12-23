@@ -12,9 +12,9 @@
   
   if (scriptSrc) {
     var scriptUrl = new URL(scriptSrc);
-    var basePath = scriptUrl.href.replace(/\/widget-dist\/chatbot-widget\.js(\?.*)?$/, "/widget-dist/");
+    var basePath = scriptUrl.href.replace(/\/chatbot-widget\.js(\?.*)?$/, "/");
     var widgetScript = document.createElement('script');
-    widgetScript.src = basePath + 'chatbot-widget-v2.js';
+    widgetScript.src = basePath + 'widget-dist/chatbot-widget-v2.js';
     widgetScript.async = true;
     document.head.appendChild(widgetScript);
   }
