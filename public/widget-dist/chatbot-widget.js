@@ -1,15 +1,11 @@
 (function () {
-  // VBH Widget Loader v2.0.2
-  // This loader injects the real widget bundle from /widget-dist
-  var LOADER_VERSION = '2.0.2';
-  console.info('[VBH Widget] Root loader v' + LOADER_VERSION + ' initializing...');
+  // VBH Widget Loader v2.0.3
+  // Loads the widget bundle from jsDelivr CDN
+  var LOADER_VERSION = '2.0.3';
+  console.info('[VBH Widget] Loader v' + LOADER_VERSION + ' initializing...');
 
-  var scriptSrc =
-    document.currentScript && document.currentScript.src ||
-    (document.querySelector('script[src*="chatbot-widget.js"]') || {}).src;
-
-  var origin = scriptSrc ? new URL(scriptSrc).origin : window.location.origin;
-  var bundleUrl = origin + '/widget-dist/chatbot-widget-bundle.js';
+  // Bundle URL from jsDelivr CDN (auto-updated by GitHub Actions)
+  var bundleUrl = 'https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/chatbot-widget-bundle.js';
 
   // Avoid double-inject
   if (document.querySelector('script[data-vbh-widget-bundle="true"]')) {
@@ -24,7 +20,7 @@
   widgetScript.dataset.vbhWidgetBundle = 'true';
 
   widgetScript.onload = function() {
-    console.info('[VBH Widget] Bundle loaded successfully from ' + bundleUrl);
+    console.info('[VBH Widget] Bundle loaded successfully');
   };
 
   widgetScript.onerror = function() {
