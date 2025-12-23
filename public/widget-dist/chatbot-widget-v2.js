@@ -1,15 +1,13 @@
-// Value Build Homes Chatbot Widget Loader (stable URL)
-// Loads the real bundle: /widget-dist/chatbot-widget.bundle.js
+// Value Build Homes Chatbot Widget Loader (legacy v2 URL)
+// Kept for backwards compatibility with older embeds.
 (function () {
   var currentScript = document.currentScript;
   var scriptSrc = (currentScript && currentScript.src) || '';
   var origin = scriptSrc ? new URL(scriptSrc, window.location.href).origin : window.location.origin;
 
-  // Prevent accidental self-recursion
-  if (scriptSrc && scriptSrc.indexOf('chatbot-widget.bundle.js') !== -1) return;
-
+  // Legacy v2 should load the stable loader, which then loads the real bundle.
   var widgetScript = document.createElement('script');
-  widgetScript.src = origin + '/widget-dist/chatbot-widget.bundle.js';
+  widgetScript.src = origin + '/widget-dist/chatbot-widget.js';
   widgetScript.async = true;
 
   // Preserve auto-inject setting
