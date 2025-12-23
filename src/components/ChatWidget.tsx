@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import TypingIndicator from "@/components/TypingIndicator";
 import { saveChatSession, loadChatSession, clearChatSession } from "@/utils/chatStorage";
 import { CallbackForm } from "@/components/CallbackForm";
+// Logo is inlined as base64 via assetsInlineLimit in vite config
 import logo from "@/assets/logo.png";
 
 const TERRITORY_ADDRESSES: Record<string, string> = {
