@@ -95,6 +95,24 @@ export default defineConfig(({ mode }) => {
 
           const inlineQueryRE = /\?inline$/;
 
+          const extensions = [".tsx", ".ts", ".jsx", ".js", ".json"];
+
+          function resolveWithExtensions(basePath: string): string | null {
+            // Already has extension
+            if (fs.existsSync(basePath)) return basePath;
+            // Try each extension
+            for (const ext of extensions) {
+              const withExt = basePath + ext;
+              if (fs.existsSync(withExt)) return withExt;
+            }
+            // Try index files
+            for (const ext of extensions) {
+              const indexPath = path.join(basePath, "index" + ext);
+              if (fs.existsSync(indexPath)) return indexPath;
+            }
+            return null;
+          }
+
           const result = await esbuild({
             entryPoints: [path.resolve(__dirname, "src/widget-entry.tsx")],
             bundle: true,
@@ -103,6 +121,7 @@ export default defineConfig(({ mode }) => {
             target: ["es2019"],
             write: false,
             minify: true,
+            resolveExtensions: extensions,
             loader: {
               ".png": "dataurl",
               ".jpg": "dataurl",
@@ -117,10 +136,11 @@ export default defineConfig(({ mode }) => {
                 setup(build) {
                   build.onResolve({ filter: inlineQueryRE }, (args) => {
                     const cleaned = args.path.replace(inlineQueryRE, "");
+                    const resolved = path.isAbsolute(cleaned)
+                      ? cleaned
+                      : path.resolve(args.resolveDir, cleaned);
                     return {
-                      path: path.isAbsolute(cleaned)
-                        ? cleaned
-                        : path.resolve(args.resolveDir, cleaned),
+                      path: resolved,
                       namespace: "inline-file",
                     };
                   });
@@ -135,9 +155,14 @@ export default defineConfig(({ mode }) => {
                 name: "alias-at",
                 setup(build) {
                   build.onResolve({ filter: /^@\// }, (args) => {
-                    return {
-                      path: path.resolve(__dirname, "src", args.path.slice(2)),
-                    };
+                    const relativePath = args.path.slice(2); // remove "@/"
+                    const basePath = path.resolve(__dirname, "src", relativePath);
+                    const resolved = resolveWithExtensions(basePath);
+                    if (resolved) {
+                      return { path: resolved };
+                    }
+                    // Fallback - let esbuild try
+                    return { path: basePath };
                   });
                 },
               },
