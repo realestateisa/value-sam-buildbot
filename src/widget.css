@@ -13,6 +13,10 @@
 @layer base {
   /* Shadow DOM root - replaces :root */
   :host {
+    /* Shadow DOM specific */
+    all: initial;
+    display: block;
+
     /* Core theme colors */
     --background: 0 0% 100%;
     --foreground: 0 0% 20%;
@@ -43,7 +47,7 @@
     --ring: 5 82% 53%;
 
     --radius: 0.75rem;
-    
+
     --chat-shadow: 0 4px 24px rgba(226, 54, 43, 0.15);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -55,10 +59,6 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
-    
-    /* Shadow DOM specific */
-    all: initial;
-    display: block;
   }
 
   /* Dark mode support - scoped to Shadow DOM */

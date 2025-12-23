@@ -32,23 +32,48 @@ class VBHChatbot extends HTMLElement {
 
   connectedCallback() {
     console.log('[VBH Widget] v2.2.0 - Initializing Shadow DOM widget');
-    
-    // No positioning on host element - Shadow DOM CSS handles it
-    this.style.cssText = '';
-    
+
+    // Defensive host styles (override any legacy site CSS that hid the widget)
+    this.style.setProperty('display', 'block', 'important');
+    this.style.setProperty('visibility', 'visible', 'important');
+    this.style.setProperty('opacity', '1', 'important');
+    this.style.setProperty('pointer-events', 'auto', 'important');
+    this.style.setProperty('position', 'fixed', 'important');
+    this.style.setProperty('inset', 'auto', 'important');
+    this.style.setProperty('right', '0', 'important');
+    this.style.setProperty('bottom', '0', 'important');
+    this.style.setProperty('z-index', '2147483647', 'important');
+
     // Attach Shadow DOM for style isolation
     this.shadow = this.attachShadow({ mode: 'open' });
-    
+
     // Create container with ID matching CSS selectors
     this.container = document.createElement('div');
     this.container.id = 'vbh-widget-root';
     this.container.style.cssText = '';
     this.shadow.appendChild(this.container);
-    
+
     // Inject styles and mount React
     this.injectStyles();
     this.mountReactApp();
-    
+
+    // Diagnostics: prove the host is visible and has size
+    try {
+      const cs = window.getComputedStyle(this);
+      const rect = this.getBoundingClientRect();
+      console.log('[VBH Widget] Host computed styles', {
+        display: cs.display,
+        visibility: cs.visibility,
+        opacity: cs.opacity,
+        pointerEvents: cs.pointerEvents,
+        position: cs.position,
+        zIndex: cs.zIndex,
+        rect,
+      });
+    } catch (e) {
+      console.warn('[VBH Widget] Diagnostics failed', e);
+    }
+
     console.log('[VBH Widget] Shadow DOM widget mounted successfully');
   }
 
