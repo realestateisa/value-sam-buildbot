@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-route
 import EmbedDemo from "./pages/EmbedDemo";
 import EmbedDemoCreekside from "./pages/EmbedDemoCreekside";
 import NotFound from "./pages/NotFound";
+import Widget from "./pages/Widget";
 import { ChatWidget } from "./components/ChatWidget";
 import { ChatWidgetCreekside } from "./components/ChatWidgetCreekside";
 
@@ -42,6 +43,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to="/embed-demo" replace />} />
+          <Route path="/widget" element={<Widget />} />
           <Route path="/embed-demo" element={<EmbedDemo />} />
           <Route path="/embed-demo-creekside" element={<EmbedDemoCreekside />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
