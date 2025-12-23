@@ -1,54 +1,47 @@
 /**
- * VBH Widget Loader v2.2.0 - Simple Redirect
- * This loader simply loads the v2 bundle. No cleanup, no removal.
+ * VBH Widget Loader v2.0.7 - DISABLED / KILL SWITCH
+ * This loader removes any existing VBH widget elements immediately.
  */
 (function() {
   'use strict';
   
-  console.log('[VBH Widget Loader] v2.2.0 - Loading widget bundle');
+  console.log('[VBH Widget Loader] v2.0.7 - Widget disabled, cleaning up');
   
-  // Determine base path from this script's location
+  // Immediately remove any existing VBH widget elements
+  var selectors = [
+    'vbh-chatbot',
+    '#vbh-chatbot',
+    '.vbh-chatbot',
+    '#widget-container',
+    '.vbh-widget-container',
+    '[id*="vbh"]',
+    '[class*="vbh-widget"]',
+    'iframe[src*="widget"]',
+    'iframe[src*="vbh"]',
+    'iframe[src*="chatbot"]'
+  ];
+  
+  selectors.forEach(function(selector) {
+    try {
+      var elements = document.querySelectorAll(selector);
+      elements.forEach(function(el) {
+        el.remove();
+      });
+    } catch (e) {}
+  });
+  
+  // Also load the v2 bundle which has additional cleanup
   var currentScript = document.currentScript;
-  var scriptSrc = currentScript && currentScript.src;
-  
-  if (!scriptSrc) {
-    // Fallback: try to find the script by selector
-    var scripts = document.querySelectorAll('script[src*="chatbot-widget.js"]');
-    if (scripts.length > 0) {
-      scriptSrc = scripts[scripts.length - 1].src;
-    }
-  }
+  var scriptSrc = currentScript?.src || document.querySelector('script[src*="chatbot-widget.js"]')?.src;
   
   if (scriptSrc) {
-    try {
-      var scriptUrl = new URL(scriptSrc);
-      var basePath = scriptUrl.href.replace(/chatbot-widget\.js(\?.*)?$/, '');
-      var v2BundleUrl = basePath + 'chatbot-widget-v2.js';
-      
-      // Check if v2 is already loaded
-      var existingV2 = document.querySelector('script[src*="chatbot-widget-v2.js"]');
-      if (existingV2) {
-        console.log('[VBH Widget Loader] v2 bundle already loaded, skipping');
-        return;
-      }
-      
-      // Load the v2 bundle
-      var widgetScript = document.createElement('script');
-      widgetScript.src = v2BundleUrl;
-      widgetScript.async = true;
-      widgetScript.onload = function() {
-        console.log('[VBH Widget Loader] v2 bundle loaded successfully');
-      };
-      widgetScript.onerror = function() {
-        console.error('[VBH Widget Loader] Failed to load v2 bundle from:', v2BundleUrl);
-      };
-      document.head.appendChild(widgetScript);
-      
-      console.log('[VBH Widget Loader] Loading v2 bundle from:', v2BundleUrl);
-    } catch (e) {
-      console.error('[VBH Widget Loader] Error determining script path:', e);
-    }
-  } else {
-    console.error('[VBH Widget Loader] Could not determine script source');
+    var scriptUrl = new URL(scriptSrc);
+    var basePath = scriptUrl.href.replace(/\/chatbot-widget\.js(\?.*)?$/, "/");
+    var widgetScript = document.createElement('script');
+    widgetScript.src = new URL('widget-dist/chatbot-widget-v2.js', basePath).toString();
+    widgetScript.async = true;
+    document.head.appendChild(widgetScript);
   }
+  
+  console.log('[VBH Widget Loader] Cleanup complete');
 })();
