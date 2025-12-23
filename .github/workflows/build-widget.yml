@@ -37,14 +37,11 @@ jobs:
         run: npm ci
       
       - name: Build Value Build widget
-        run: BUILD_TARGET=widget npx vite build
-      
-      - name: Copy VBH widget for backwards compatibility
-        run: cp public/widget-dist/chatbot-widget.js public/widget-dist/chatbot-widget-v2.js
+        run: npx vite build --config vite.config.widget.ts
       
       - name: Build Creekside widget
         run: npx vite build --config vite.config.creekside.ts
-      
+
       - name: Check for changes
         id: git-check
         run: |
