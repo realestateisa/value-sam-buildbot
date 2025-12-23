@@ -794,58 +794,57 @@ export const ChatWidgetVBH = () => {
 
           {/* Input Area - hidden when calendar, location input, or callback form is shown */}
           {!showCallbackForm && !showLocationInput && !showCalendar && (
-            <div className="border-t border-border/30 p-3 bg-background/80 backdrop-blur-sm rounded-b-2xl">
-              {/* Action Buttons */}
-              <div className="flex gap-2 mb-3">
+            <div className="border-t border-border/30 bg-background/80 backdrop-blur-sm rounded-b-2xl">
+              {/* Schedule Appointment Button - Full Width Red */}
+              <div className="p-3 pb-2 bg-gradient-to-b from-transparent to-background/50">
                 <Button 
-                  variant="outline" 
-                  size="sm" 
                   onClick={handleScheduleAppointment}
-                  className="flex-1 text-xs font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-200"
+                  className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl"
                 >
-                  <Calendar className="h-3.5 w-3.5 mr-1.5" />
+                  <Calendar className="h-5 w-5 mr-2" />
                   Schedule Appointment
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleCallbackRequest}
-                  className="flex-1 text-xs font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-200"
-                >
-                  <Phone className="h-3.5 w-3.5 mr-1.5" />
-                  Request Callback
                 </Button>
               </div>
 
               {/* Message Input */}
-              <div className="flex items-end gap-2">
-                <Textarea 
-                  ref={textareaRef}
-                  placeholder="Type your message..." 
-                  value={inputMessage} 
-                  onChange={(e) => setInputMessage(e.target.value)} 
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }} 
-                  className="flex-1 min-h-[44px] max-h-[120px] resize-none text-sm rounded-xl border-border/50 focus:border-primary/50 transition-colors duration-200"
-                  rows={1}
-                  disabled={isLoading}
-                />
-                <Button 
-                  onClick={handleSendMessage} 
-                  disabled={!inputMessage.trim() || isLoading} 
-                  size="icon" 
-                  className="h-11 w-11 rounded-xl bg-primary hover:bg-primary/90 transition-all duration-200 flex-shrink-0"
+              <div className="p-3 pt-2">
+                <div className="flex items-end gap-2">
+                  <Textarea 
+                    ref={textareaRef}
+                    placeholder="Type your message..." 
+                    value={inputMessage} 
+                    onChange={(e) => setInputMessage(e.target.value)} 
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }} 
+                    className="flex-1 min-h-[44px] max-h-[120px] resize-none text-sm rounded-xl border-border/50 focus:border-primary/50 transition-colors duration-200"
+                    rows={1}
+                    disabled={isLoading}
+                  />
+                  <Button 
+                    onClick={handleSendMessage} 
+                    disabled={!inputMessage.trim() || isLoading} 
+                    size="icon" 
+                    className="h-11 w-11 rounded-xl bg-primary hover:bg-primary/90 transition-all duration-200 flex-shrink-0"
+                  >
+                    {isLoading ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <Send className="h-5 w-5" />
+                    )}
+                  </Button>
+                </div>
+                {/* Secondary Request Callback Link */}
+                <button 
+                  onClick={handleCallbackRequest}
+                  className="w-full mt-2 text-xs text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center justify-center gap-1"
                 >
-                  {isLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <Send className="h-5 w-5" />
-                  )}
-                </Button>
+                  <Phone className="h-3 w-3" />
+                  Or request a callback
+                </button>
               </div>
             </div>
           )}
