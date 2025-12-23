@@ -38,18 +38,31 @@ jobs:
       
       - name: Build Value Build widget
         run: BUILD_TARGET=widget npx vite build
-      
+
+      - name: Normalize VBH bundle filename
+        run: |
+          # Vite lib mode will typically emit *.iife.js for iife format.
+          # We standardize on chatbot-widget.bundle.js for the stable loader.
+          if [ -f "public/widget-dist/chatbot-widget.bundle.iife.js" ]; then
+            mv -f "public/widget-dist/chatbot-widget.bundle.iife.js" "public/widget-dist/chatbot-widget.bundle.js"
+          fi
+          if [ -f "public/widget-dist/chatbot-widget.bundle.js.iife.js" ]; then
+            mv -f "public/widget-dist/chatbot-widget.bundle.js.iife.js" "public/widget-dist/chatbot-widget.bundle.js"
+          fi
+
       - name: Build Creekside widget
         run: npx vite build --config vite.config.creekside.ts
-      
+
       - name: Verify VBH bundle exists
         run: |
           if [ ! -f "public/widget-dist/chatbot-widget.bundle.js" ]; then
             echo "ERROR: chatbot-widget.bundle.js was not created by the build!"
+            echo "Contents of public/widget-dist/:"
+            ls -la public/widget-dist/ || true
             exit 1
           fi
           echo "✅ VBH bundle verified: $(wc -c < public/widget-dist/chatbot-widget.bundle.js) bytes"
-      
+
       - name: Verify Creekside bundle exists
         run: |
           if [ ! -f "public/widget-dist/creekside-chatbot-widget.js" ]; then
@@ -57,12 +70,12 @@ jobs:
             exit 1
           fi
           echo "✅ Creekside bundle verified: $(wc -c < public/widget-dist/creekside-chatbot-widget.js) bytes"
-      
+
       - name: Check for changes
         id: git-check
         run: |
           git diff --exit-code public/widget-dist/ || echo "changed=true" >> $GITHUB_OUTPUT
-      
+
       - name: Commit widget build
         if: steps.git-check.outputs.changed == 'true'
         run: |
@@ -70,7 +83,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add public/widget-dist/
           git commit -m "chore: auto-build widget [skip ci]"
-      
+
       - name: Push changes
         if: steps.git-check.outputs.changed == 'true'
         uses: ad-m/github-push-action@master
