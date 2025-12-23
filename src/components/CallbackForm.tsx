@@ -59,21 +59,16 @@ export const CallbackForm = ({
       });
       
       setIsSubmitting(true);
-      
+      console.log('Sending callback request to Zapier webhook...');
+
       const webhookPayload = {
         firstName: validatedData.firstName,
         lastName: validatedData.lastName,
         phone: validatedData.phone,
         email: validatedData.email,
         timestamp: new Date().toISOString(),
-        source: 'Value Build Homes Chatbot',
-        page_url: typeof window !== 'undefined' ? window.location.href : 'unknown'
+        source: 'Value Build Homes Chatbot'
       };
-
-      // Enhanced logging for debugging on client sites
-      console.info('%c[VBH Widget] sending webhook', 'color: #3b82f6; font-weight: bold;');
-      console.info('[VBH Widget] webhook target:', ZAPIER_WEBHOOK_URL);
-      console.info('[VBH Widget] webhook payload:', JSON.stringify(webhookPayload, null, 2));
 
       await fetch(ZAPIER_WEBHOOK_URL, {
         method: 'POST',
@@ -82,7 +77,7 @@ export const CallbackForm = ({
         body: JSON.stringify(webhookPayload),
       });
 
-      console.info('%c[VBH Widget] webhook sent successfully', 'color: #22c55e; font-weight: bold;');
+      console.log('Callback request sent successfully');
       
       // Show success state
       setShowSuccess(true);
