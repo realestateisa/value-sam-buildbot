@@ -1,50 +1,90 @@
 /**
- * VBH Widget v2.0.7 - DISABLED / KILL SWITCH
- * This script removes any existing VBH widget elements and does nothing else.
- * No widget will appear on client sites.
+ * VBH Widget v2.1.0 - Shadow DOM Implementation
+ * This script creates a shadow DOM widget for the VBH chatbot.
+ * NO IFRAMES - pure Shadow DOM encapsulation.
  */
-(function() {
-  'use strict';
-  
-  console.log('[VBH Widget] v2.0.7 - Widget disabled, cleaning up any existing elements');
-  
-  // Remove any existing VBH widget elements from the DOM
-  const selectorsToRemove = [
-    'vbh-chatbot',
-    '#vbh-chatbot',
-    '.vbh-chatbot',
-    '#widget-container',
-    '.vbh-widget-container',
-    '[id*="vbh"]',
-    '[class*="vbh-widget"]',
-    'iframe[src*="widget"]',
-    'iframe[src*="vbh"]',
-    'iframe[src*="chatbot"]',
-  ];
-  
-  selectorsToRemove.forEach(selector => {
-    try {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(el => {
-        console.log('[VBH Widget] Removing element:', el.tagName, el.id || el.className);
-        el.remove();
-      });
-    } catch (e) {
-      // Ignore invalid selectors
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ChatWidget } from './components/ChatWidget';
+import widgetStyles from './widget.css?inline';
+
+// Create a query client for React Query
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+// Define the VBH Chatbot custom element
+class VBHChatbot extends HTMLElement {
+  private root: ReturnType<typeof createRoot> | null = null;
+  private container: HTMLDivElement | null = null;
+
+  connectedCallback() {
+    console.log('[VBH Widget] v2.1.0 - Initializing Shadow DOM widget');
+    
+    // Create shadow root for style isolation
+    const shadow = this.attachShadow({ mode: 'open' });
+    
+    // Inject styles into shadow DOM
+    const styleElement = document.createElement('style');
+    styleElement.textContent = widgetStyles;
+    shadow.appendChild(styleElement);
+    
+    // Create container for React app
+    this.container = document.createElement('div');
+    this.container.id = 'vbh-widget-root';
+    this.container.style.cssText = 'position: fixed; bottom: 0; right: 0; z-index: 2147483647; font-family: system-ui, -apple-system, sans-serif;';
+    shadow.appendChild(this.container);
+    
+    // Mount React app
+    this.root = createRoot(this.container);
+    this.root.render(
+      <React.StrictMode>
+        <QueryClientProvider client={queryClient}>
+          <ChatWidget />
+        </QueryClientProvider>
+      </React.StrictMode>
+    );
+    
+    console.log('[VBH Widget] Shadow DOM widget mounted successfully');
+  }
+
+  disconnectedCallback() {
+    console.log('[VBH Widget] Cleaning up widget');
+    if (this.root) {
+      this.root.unmount();
+      this.root = null;
     }
-  });
+  }
+}
+
+// Register custom element if not already registered
+if (!customElements.get('vbh-chatbot')) {
+  customElements.define('vbh-chatbot', VBHChatbot);
+  console.log('[VBH Widget] Custom element registered');
+}
+
+// Auto-inject the widget into the page
+function injectWidget() {
+  // Don't inject if already present
+  if (document.querySelector('vbh-chatbot')) {
+    console.log('[VBH Widget] Widget already exists, skipping injection');
+    return;
+  }
   
-  // Also remove any shadow roots that might contain widget content
-  const allElements = document.querySelectorAll('*');
-  allElements.forEach(el => {
-    if (el.shadowRoot) {
-      const shadowContent = el.shadowRoot.innerHTML || '';
-      if (shadowContent.includes('vbh') || shadowContent.includes('chatbot') || shadowContent.includes('widget')) {
-        console.log('[VBH Widget] Removing element with shadow root:', el.tagName);
-        el.remove();
-      }
-    }
-  });
-  
-  console.log('[VBH Widget] Cleanup complete - no widget will be displayed');
-})();
+  const widget = document.createElement('vbh-chatbot');
+  document.body.appendChild(widget);
+  console.log('[VBH Widget] Widget injected into page');
+}
+
+// Inject when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', injectWidget);
+} else {
+  injectWidget();
+}
