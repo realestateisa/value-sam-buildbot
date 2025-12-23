@@ -65,27 +65,19 @@ jobs:
       - name: Purge jsDelivr CDN Cache
         if: steps.git-check.outputs.changed == 'true'
         run: |
-          echo "Purging jsDelivr CDN cache for widget files..."
+          echo "Purging jsDelivr CDN cache..."
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js"
-          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget-v2.js"
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/creekside-chatbot-widget.js"
-          echo "CDN cache purged successfully!"
       
       - name: Display CDN URLs
         if: steps.git-check.outputs.changed == 'true'
         run: |
-          echo "## Widget Deployment Successful! 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "## Widget Deployment Successful!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### CDN URLs (jsDelivr):" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Value Build Widget:**" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/chatbot-widget.js" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Creekside Widget:**" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/public/widget-dist/creekside-chatbot-widget.js" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Widgets are now available worldwide via jsDelivr CDN! 🌍" >> $GITHUB_STEP_SUMMARY
