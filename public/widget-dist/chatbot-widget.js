@@ -1,42 +1,39 @@
 /**
- * Value Build Homes Chatbot Widget (canonical) Loader
- * @version 2.4.1 - 2025-12-23
- *
- * Stable embed URL:
- *   <script src="https://vbh-chat-bot.com/widget-dist/chatbot-widget.js" async></script>
+ * Value Build Homes Chatbot Widget Loader
+ * This script loads the main widget bundle from the widget-dist directory
+ * @version 1.0.1 - 2025-12-23 - Trigger rebuild for logo inlining
  */
-(function () {
+(function() {
   'use strict';
-
-  const VERSION = '2.4.1';
-  const CDN_BUNDLE =
-    'https://cdn.jsdelivr.net/gh/realestateisa/value-sam-buildbot@main/public/widget-dist/chatbot-widget.js';
-
-  if (window.__VBH_WIDGET_CANON_LOADING__ || window.__VBH_WIDGET_CANON_LOADED__) {
+  
+  // Get the base URL from the current script's location
+  const currentScript = document.currentScript;
+  const scriptSrc = currentScript?.src || document.querySelector('script[src*="chatbot-widget.js"]')?.src;
+  
+  if (!scriptSrc) {
+    console.error('[VBH Widget] Could not determine script source');
     return;
   }
-  window.__VBH_WIDGET_CANON_LOADING__ = true;
+  
+  const scriptUrl = new URL(scriptSrc);
 
-  console.log(`[VBH Widget loader] v${VERSION} -> ${CDN_BUNDLE}`);
+  // Base path is the directory containing this loader file.
+  // On jsDelivr this is typically: .../public/
+  const basePath = scriptUrl.href.replace(/\/chatbot-widget\.js(\?.*)?$/, "/");
 
-  const script = document.createElement('script');
-  script.src = `${CDN_BUNDLE}?v=${encodeURIComponent(VERSION)}`;
-  script.async = true;
-
-  const currentScript = document.currentScript;
+  // Create and load the main widget script (v2 embed)
+  const widgetScript = document.createElement('script');
+  widgetScript.src = new URL('widget-dist/chatbot-widget-v2.js', basePath).toString();
+  widgetScript.async = true;
+  
+  // Preserve data-auto-inject attribute if set
   if (currentScript?.getAttribute('data-auto-inject') === 'false') {
-    script.setAttribute('data-auto-inject', 'false');
+    widgetScript.setAttribute('data-auto-inject', 'false');
   }
-
-  script.onload = function () {
-    window.__VBH_WIDGET_CANON_LOADED__ = true;
-    window.__VBH_WIDGET_CANON_LOADING__ = false;
+  
+  widgetScript.onerror = function() {
+    console.error('[VBH Widget] Failed to load widget bundle from:', widgetScript.src);
   };
-
-  script.onerror = function () {
-    window.__VBH_WIDGET_CANON_LOADING__ = false;
-    console.error('[VBH Widget loader] Failed to load CDN bundle:', script.src);
-  };
-
-  document.head.appendChild(script);
+  
+  document.head.appendChild(widgetScript);
 })();
