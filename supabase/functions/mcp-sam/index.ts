@@ -8,8 +8,7 @@ const mcpServer = new McpServer({
   version: "1.0.0",
 });
 
-mcpServer.tool({
-  name: "ask_sam",
+mcpServer.tool("ask_sam", {
   description:
     "Ask SAM, the Value Build Homes digital assistant, a question about home building, financing, floor plans, territories, and appointments in North Carolina and South Carolina.",
   inputSchema: {
@@ -40,7 +39,6 @@ mcpServer.tool({
 
       let conversationSessionId = sessionId;
 
-      // Create conversation if no session
       if (!conversationSessionId) {
         const createRes = await fetch(
           `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations`,
@@ -66,7 +64,6 @@ mcpServer.tool({
         conversationSessionId = createData.data.session_id;
       }
 
-      // Send message
       const msgRes = await fetch(
         `https://app.customgpt.ai/api/v1/projects/${CUSTOMGPT_PROJECT_ID}/conversations/${conversationSessionId}/messages`,
         {
@@ -97,7 +94,6 @@ mcpServer.tool({
         msgData.response ||
         "Sorry, I could not process your request.";
 
-      // Fetch citations
       const citationIds: string[] = msgData.data?.citations || [];
       let citationsText = "";
 
