@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.detect-territory]
 verify_jwt = false
+
+[functions.mcp-sam]
+verify_jwt = false
